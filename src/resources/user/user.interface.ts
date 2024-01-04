@@ -6,6 +6,7 @@ export interface IUser extends Document {
   lastName: string,
   password: string,
   username: string,
+  phoneNumber: string,
   role: string,
   verified: boolean,
   emailToken: string,
@@ -22,7 +23,7 @@ export interface IUser extends Document {
   }[],
   createdFamilies: string[],
   joinedFamilies: string[],
-  accountNumber: number,
+  accountNumber: string,
   accountBalance: number,
 
   isValidPassword(password: string): Promise<Error | boolean>,

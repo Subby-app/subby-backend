@@ -27,6 +27,11 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  phoneNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   role: {
     type: String,
     required: true,
@@ -73,8 +78,11 @@ const UserSchema = new Schema({
   },
   createdFamilies: [String],
   joinedFamilies: [String],
-  accountNumber: Number,
-  accountBalance: Number,
+  accountNumber: String,
+  accountBalance: {
+    type: Number,
+    default: 0,
+  },
 }, {
   timestamps: true,
 });
