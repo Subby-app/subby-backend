@@ -4,6 +4,9 @@
   "description": "Subby API",
   "main": "index.js",
   "scripts": {
+    "start": "node ./dist/index.js",
+    "dev": "tsc-watch --onSuccess \"npm start\"",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "snowsenpai",
@@ -42,5 +45,10 @@
     "ts-node": "^10.9.2",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.3.3"
+  },
+  "_moduleAliases": {
+    "@/resources": "dist/resources",
+    "@/middlewares": "dist/middlewares",
+    "@/utils": "dist/utils"
   }
 }
