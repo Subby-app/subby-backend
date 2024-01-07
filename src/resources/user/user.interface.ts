@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, Schema } from 'mongoose';
 
 export interface IUser extends Document {
   email: string,
@@ -21,4 +21,21 @@ export interface IUser extends Document {
   accountBalance: number,
 
   isValidPassword(password: string): Promise<Error | boolean>,
+}
+
+export type TUserFilter = {
+  _id?: string,
+  email?: string,
+  username?: string,
+  phoneNumber?: string,
+}
+
+export type TFilterOptions = {
+  sensitiveFields?: boolean,
+  populateFields?: boolean,
+}
+
+export type TUpdateUser = {
+  firstName?: string,
+  lastName?: string,
 }
