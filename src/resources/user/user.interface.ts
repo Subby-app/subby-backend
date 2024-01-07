@@ -10,7 +10,7 @@ export interface IUser extends Document {
   role: string,
   verified: boolean,
   otp: string,
-  otpCreatedAt: string,
+  otpExpiration: string,
   recoveryCodes: {
     hash: string,
     used: boolean,

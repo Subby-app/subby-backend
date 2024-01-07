@@ -30,26 +30,34 @@ class AuthService {
   }
 
   public serializeUser(user: IUser): ISerializedUser {
-    const {password, otp, otpCreatedAt, accountBalance, recoveryCodes, ...serializedUser} = user;
+    const {password, otp, otpExpiration, accountBalance, recoveryCodes, ...serializedUser} = user;
     return serializedUser;
   }
 
-  public async generateOtp(email: string) {
+  public async sendOtp(email: string) {
     const user = await this.UserService.getFullUser({email});
 
-    user.otp = generateOtp();
-    // !handle otp expiration
-    user.save();
-    return { otpGenerated: true, email: user.email};
+    const otp = generateOtp();
+    const futureDate = new Date();
+    futureDate.setMinutes(futureDate.getMinutes() + 5);
+    const expiration = futureDate.getTime().toString();
+
+    user.otp = otp;
+    user.otpExpiration = expiration;
+    await user.save();
+    // *send to user's email
+    return { otpSent: true, email: user.email};
   }
 
-  public async validateOtp(email: string, otp: string) {
+  public async verifyOtp(email: string, otp: string) {
     const user = await this.UserService.getFullUser({email});
 
-    if (otp !== user.otp) {
-      // !handle otp expiration
-      throw new HttpException(HttpStatus.BAD_REQUEST, 'otp expired or invalid');
+    if (otp !== user.otp || parseInt(user.otpExpiration) < new Date().getTime()) {
+      throw new HttpException(HttpStatus.FORBIDDEN, 'otp expired or invalid');
     }
+    user.otp = '';
+    user.otpExpiration = '';
+    await user.save();
     return {validOtp: true};
   }
 }
