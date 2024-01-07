@@ -60,6 +60,40 @@ class AuthService {
     await user.save();
     return {validOtp: true};
   }
+
+  public async verifyAccount(email: string) {
+    const user = await this.UserService.findOne({email});
+    if (user.verified) throw new HttpException(HttpStatus.BAD_REQUEST, 'user is already verified');
+
+    await this.sendOtp(email);
+  }
+
+  public async verifyEmail(email: string, otp: string){
+    const user = await this.UserService.findOne({email});
+
+    const {validOtp} = await this.verifyOtp(email, otp);
+    if (validOtp) {
+      user.verified = true;
+      await user.save();
+    }
+    return {accountVerified: true, email};
+  }
+
+  public async resetPasswordRequest(email: string) {
+    const user = await this.UserService.findOne({email});
+    return await this.sendOtp(user.email);
+  }
+
+  public async resetPassword(email: string, newPassword: string) {
+    const user = await this.UserService.getFullUser({email});
+    // !security: better to verify otp and newPassword in one request
+    if (await user.isValidPassword(newPassword)) {
+      throw new HttpException(HttpStatus.FORBIDDEN, 'old password cannot be new password, use a different password');
+    }
+    user.password = newPassword;
+    await user.save();
+    return {passwordReset: true};
+  }
 }
 
 export { AuthService };
