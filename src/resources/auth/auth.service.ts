@@ -2,6 +2,7 @@ import { HttpException, HttpStatus } from '@/utils/exceptions';
 import { UserService } from '../user/user.service';
 import * as token from '@/utils/token.util';
 import { generateOtp } from '@/utils/otp.util';
+import { ISerializedUser, IUser } from '../user/user.interface';
 
 class AuthService {
   private UserService = new UserService();
@@ -24,7 +25,13 @@ class AuthService {
     }
     return {
       accessToken: token.createToken({id: user._id}),
+      user: this.serializeUser(user),
     };
+  }
+
+  public serializeUser(user: IUser): ISerializedUser {
+    const {password, otp, otpCreatedAt, accountBalance, recoveryCodes, ...serializedUser} = user;
+    return serializedUser;
   }
 
   public async generateOtp(email: string) {
