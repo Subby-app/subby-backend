@@ -12,8 +12,6 @@ export interface TokenData {
 
 export interface EncodedData extends Object {
   id?: Schema.Types.ObjectId,
-  emailToken?: string,
-  passwordToken?: string,
 }
 
 /**

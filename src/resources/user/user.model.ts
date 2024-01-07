@@ -40,35 +40,11 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  emailToken: {
+  otp: {
     type: String,
     select: false,
   },
-  passwordToken: {
-    type: String,
-    select: false,
-  },
-  passwordResetRequest: {
-    type: Boolean,
-    default: false,
-  },
-  grantPasswordReset: {
-    type: Boolean,
-    default: false,
-  },
-  otpEnabled: {
-    type: Boolean,
-    default: false,
-  },
-  otpVerified: {
-    type: Boolean,
-    default: false,
-  },
-  otpBase32Secret: {
-    type: String,
-    select: false,
-  },
-  otpAuthUrl: {
+  otpCreatedAt: {
     type: String,
     select: false,
   },
