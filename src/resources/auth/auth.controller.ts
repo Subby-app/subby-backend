@@ -34,7 +34,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 
 export async function sendOtp(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await authService.sendOtp(req.body.email);
+    const data = await authService.sendOtp(req.user?.email!);
 
     res.status(HttpStatus.OK).json({
       message: 'otp has been sent',
@@ -47,8 +47,7 @@ export async function sendOtp(req: Request, res: Response, next: NextFunction) {
 
 export async function verifyOtp(req: Request, res: Response, next: NextFunction) {
   try {
-    const {email, otp} = req.body;
-    const data = await authService.verifyOtp(email, otp);
+    const data = await authService.verifyOtp(req.user?.email!, req.body.otp);
 
     res.status(HttpStatus.OK).json({
       message: 'otp is valid',
@@ -61,7 +60,7 @@ export async function verifyOtp(req: Request, res: Response, next: NextFunction)
 
 export async function verifyAccount(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await authService.verifyAccount(req.body.email);
+    const data = await authService.verifyAccount(req.user?.email!);
 
     res.status(HttpStatus.OK).json({
       message: 'an otp has been to your email',
@@ -74,8 +73,7 @@ export async function verifyAccount(req: Request, res: Response, next: NextFunct
 
 export async function verifyEmail(req: Request, res: Response, next: NextFunction) {
   try {
-    const {email, otp} = req.body;
-    const data = await authService.verifyEmail(email, otp);
+    const data = await authService.verifyEmail(req.user?.email!, req.body.otp);
 
     res.status(HttpStatus.OK).json({
       message: 'your account is verified',
@@ -88,7 +86,7 @@ export async function verifyEmail(req: Request, res: Response, next: NextFunctio
 
 export async function resetPasswordRequest(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await authService.resetPasswordRequest(req.body.email);
+    const data = await authService.resetPasswordRequest(req.user?.email!);
 
     res.status(HttpStatus.OK).json({
       message: 'an otp has been sent to your email',
@@ -101,8 +99,7 @@ export async function resetPasswordRequest(req: Request, res: Response, next: Ne
 
 export async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
-    const {email, newPassword} = req.body;
-    const data = await authService.resetPassword(email, newPassword);
+    const data = await authService.resetPassword(req.user?.email!, req.body.newPassword);
 
     res.status(HttpStatus.OK).json({
       message: 'password reset successful',
