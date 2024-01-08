@@ -9,7 +9,7 @@ export const signup = Joi.object({
   lastName: Joi.string().required(),
   password: password.required(),
   username: Joi.string().required(),
-  phoneNumber: Joi.string().length(13).required(),
+  phoneNumber: Joi.string().regex(/^\d+$/).length(13).required(),
 });
 
 export const login = Joi.object({
