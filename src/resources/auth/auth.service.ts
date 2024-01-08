@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@/utils/exceptions';
 import { UserService } from '../user/user.service';
 import * as token from '@/utils/token.util';
 import { generateOtp } from '@/utils/otp.util';
-import { ISerializedUser, IUser } from '../user/user.interface';
+import { IUser } from '../user/user.interface';
 
 class AuthService {
   private UserService = new UserService();
@@ -36,10 +36,20 @@ class AuthService {
     };
   }
 
-  public serializeUser(user: IUser): ISerializedUser {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, otp, otpExpiration, accountBalance, recoveryCodes, ...serializedUser } = user;
-    return serializedUser;
+  public serializeUser(user: IUser) {
+    return {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      verified: user.verified,
+      createdFamilies: user.createdFamilies,
+      joinedFamilies: user.joinedFamilies,
+      accountBalance: user.accountBalance,
+      accountNumber: user.accountNumber,
+    };
   }
 
   public async sendOtp(email: string) {

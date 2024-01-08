@@ -23,17 +23,6 @@ export interface IUser extends Document {
   isValidPassword(password: string): Promise<Error | boolean>;
 }
 
-type safeFields =
-  | '_id'
-  | 'id'
-  | 'email'
-  | 'firstName'
-  | 'lastName'
-  | 'username'
-  | 'phoneNumber'
-  | 'role';
-export type ISerializedUser = Pick<IUser, safeFields>;
-
 export type TUserFilter = {
   _id?: string;
   email?: string;
