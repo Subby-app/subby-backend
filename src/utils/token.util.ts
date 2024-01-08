@@ -2,16 +2,16 @@ import jwt from 'jsonwebtoken';
 import { Schema } from 'mongoose';
 
 export interface Token extends EncodedData {
-  expiresIn: number,
+  expiresIn: number;
 }
 
 export interface TokenData {
-  token: string,
-  expiresIn: number,
+  token: string;
+  expiresIn: number;
 }
 
 export interface EncodedData extends Object {
-  id?: Schema.Types.ObjectId,
+  id?: Schema.Types.ObjectId;
 }
 
 /**

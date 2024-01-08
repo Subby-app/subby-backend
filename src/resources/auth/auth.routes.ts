@@ -16,8 +16,23 @@ authRouter.post(`${basePath}/signup`, validation(validate.signup, 'body'), authC
 
 authRouter.post(`${basePath}/login`, validation(validate.login, 'body'), authController.login);
 
-authRouter.post(`${basePath}/verify/otp`, validation(validate.verifyOtp, 'body'), authenticated, authController.verifyOtp);
+authRouter.post(
+  `${basePath}/verify/otp`,
+  validation(validate.verifyOtp, 'body'),
+  authenticated,
+  authController.verifyOtp,
+);
 
-authRouter.post(`${basePath}/verify/account`, validation(validate.verifyOtp, 'body'), authenticated, authController.verifyEmail);
+authRouter.post(
+  `${basePath}/verify/account`,
+  validation(validate.verifyOtp, 'body'),
+  authenticated,
+  authController.verifyEmail,
+);
 
-authRouter.post(`${basePath}/reset/password`, validation(validate.resetPassword, 'body'), authenticated, authController.resetPassword);
+authRouter.post(
+  `${basePath}/reset/password`,
+  validation(validate.resetPassword, 'body'),
+  authenticated,
+  authController.resetPassword,
+);

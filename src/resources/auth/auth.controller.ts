@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { HttpStatus } from '@/utils/exceptions';
@@ -7,7 +8,14 @@ const authService = new AuthService();
 export async function signup(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, firstName, lastName, password, username, phoneNumber } = req.body;
-    const data = await authService.register(email, firstName, lastName, password, username, phoneNumber);
+    const data = await authService.register(
+      email,
+      firstName,
+      lastName,
+      password,
+      username,
+      phoneNumber,
+    );
 
     res.status(HttpStatus.OK).json({
       message: 'successful signup',
@@ -20,7 +28,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     const data = await authService.login(email, password);
 
     res.status(HttpStatus.OK).json({

@@ -5,12 +5,12 @@ export function errorMiddleware(
   error: HttpException,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const status = error.status || HttpStatus.INTERNAL_SERVER_ERROR;
   let message = error.message;
   if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
     message = 'Something went wrong, please reach out to our support';
   }
-  res.status(status).json({ error: message })
+  res.status(status).json({ error: message });
 }

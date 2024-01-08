@@ -6,5 +6,5 @@ import { apiRouters } from './resources';
 
 mongooseConnect();
 
-const app = new App(apiRouters, +(process.env.PORT!));
+const app = new App(apiRouters, +process.env.PORT!);
 app.listen();

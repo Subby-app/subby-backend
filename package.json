@@ -8,8 +8,6 @@
     "dev": "tsc-watch --onSuccess \"npm start\"",
     "build": "tsc",
     "lint": "eslint \"src/**/*.ts\" --fix",
-    "pretty": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "format": "npm run pretty && npm run lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "snowsenpai",

@@ -7,7 +7,7 @@ class UserService {
   private sensitiveUserFields = ['+password', '+otp', '+otpCreatedAt', '+recoveryCodes'];
 
   public async register(
-    email:string,
+    email: string,
     firstName: string,
     lastName: string,
     password: string,
@@ -24,7 +24,7 @@ class UserService {
       throw new HttpException(HttpStatus.FORBIDDEN, 'phoneNumber already taken');
     }
     const role = 'user';
-    await this.user.create({email, firstName, lastName, password, username, phoneNumber});
+    await this.user.create({ email, firstName, lastName, password, username, phoneNumber, role });
 
     return { accountCreated: true, email };
   }
@@ -44,19 +44,21 @@ class UserService {
   }
 
   public async getFullUser(filter: TUserFilter) {
-    return await this.findOne(filter, {sensitiveFields: true});
+    return await this.findOne(filter, { sensitiveFields: true });
   }
 
   public async updateUser(filter: TUserFilter, updateFields: TUpdateUser) {
-    const user = await this.user.findOneAndUpdate(filter, updateFields, {new: true});
-    if (!user) throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+    const user = await this.user.findOneAndUpdate(filter, updateFields, { new: true });
+    if (!user)
+      throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
     return user;
   }
 
   public async deleteUser(filter: TUserFilter) {
     const user = await this.user.findOneAndDelete(filter);
-    if (!user) throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-    return {accountDeleted: true, email: user.email};
+    if (!user)
+      throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+    return { accountDeleted: true, email: user.email };
   }
 }
 

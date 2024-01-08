@@ -29,7 +29,7 @@ class App {
 
   private initializeRoutes(apiRoutes: Router[]) {
     apiRoutes.forEach((route: Router) => this.express.use('/api/v1', route));
-    this.express.use('*', handleInvalidRoutes)
+    this.express.use('*', handleInvalidRoutes);
   }
 
   private initializeErrorHandling() {
@@ -37,7 +37,11 @@ class App {
   }
 
   public listen() {
-    this.express.listen(this.port, () => console.log(`server running in "${process.env.NODE_ENV}" and listening on port "${this.port}"`));
+    this.express.listen(this.port, () =>
+      console.log(
+        `server running in "${process.env.NODE_ENV}" and listening on port "${this.port}"`,
+      ),
+    );
   }
 }
 
