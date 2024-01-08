@@ -69,6 +69,7 @@ class AuthService {
 
   public async verifyOtp(email: string, otp: string) {
     const user = await this.UserService.getFullUser({ email });
+    if (user.otp == '') throw new HttpException(HttpStatus.BAD_REQUEST, 'user has no otp');
 
     if (otp !== user.otp || parseInt(user.otpExpiration) < new Date().getTime()) {
       throw new HttpException(HttpStatus.FORBIDDEN, 'otp expired or invalid');
@@ -83,7 +84,7 @@ class AuthService {
     const user = await this.UserService.findOne({ email });
     if (user.verified) throw new HttpException(HttpStatus.BAD_REQUEST, 'user is already verified');
 
-    await this.sendOtp(email);
+    return await this.sendOtp(email);
   }
 
   public async verifyEmail(email: string, otp: string) {
