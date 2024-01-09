@@ -103,15 +103,16 @@ class AuthService {
     return await this.sendOtp(user.email);
   }
 
-  public async resetPassword(email: string, newPassword: string) {
+  public async resetPassword(email: string, newPassword: string, otp: string) {
     const user = await this.UserService.getFullUser({ email });
-    // !security: better to verify otp and newPassword in one request
+
     if (await user.isValidPassword(newPassword)) {
       throw new HttpException(
         HttpStatus.FORBIDDEN,
         'old password cannot be new password, use a different password',
       );
     }
+    await this.verifyOtp(email, otp);
     user.password = newPassword;
     await user.save();
     return { passwordReset: true };

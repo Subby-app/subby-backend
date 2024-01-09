@@ -107,7 +107,8 @@ export async function resetPasswordRequest(req: Request, res: Response, next: Ne
 
 export async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
-    const data = await authService.resetPassword(req.user?.email!, req.body.newPassword);
+    const { newPassword, otp } = req.body;
+    const data = await authService.resetPassword(req.user?.email!, newPassword, otp);
 
     res.status(HttpStatus.OK).json({
       message: 'password reset successful',

@@ -2,6 +2,7 @@ import Joi from 'joi';
 
 const email = Joi.string().email().lowercase();
 const password = Joi.string().min(6);
+const otp = Joi.string().min(6);
 
 export const signup = Joi.object({
   email: email.required(),
@@ -18,9 +19,10 @@ export const login = Joi.object({
 });
 
 export const verifyOtp = Joi.object({
-  otp: Joi.string().min(6).required(),
+  otp: otp.required(),
 });
 
 export const resetPassword = Joi.object({
   newPassword: password.required(),
+  otp: otp.required(),
 });
