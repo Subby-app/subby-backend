@@ -22,7 +22,8 @@ class FamilyService {
       spotsAvailable: familyLabel.maxSubs,
       membershipPrice: familyLabel.price,
     });
-    // !add family to owners families[]
+
+    await this.UserService.addFamily(owner, _id.toString());
     return { familyCreated: true, id: _id };
   }
 
@@ -60,8 +61,9 @@ class FamilyService {
     // !decrement family's spotsAvailable
     // !check if family isFull
     const updatedFamily = await family.save();
-    // !add family to subscriber's subscriptions[]
-    return { newSubscriber: true, familY: updatedFamily };
+
+    await this.UserService.addSubscription(newSubscriberId, familyId);
+    return { newSubscriber: true, family: updatedFamily };
   }
 }
 

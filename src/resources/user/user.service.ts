@@ -54,6 +54,16 @@ class UserService {
     return user;
   }
 
+  public async addFamily(ownerId: string, familyId: string) {
+    // eslint-disable-next-line prettier/prettier
+    await this.user.findOneAndUpdate({ _id: ownerId }, { "$push": { families: familyId } });
+  }
+
+  public async addSubscription(subscriberId: string, familyId: string) {
+    // eslint-disable-next-line prettier/prettier
+    await this.user.findOneAndUpdate({ _id: subscriberId }, { "$push": { subscriptions: familyId } });
+  }
+
   public async deleteUser(filter: TUserFilter) {
     const user = await this.user.findOneAndDelete(filter);
     if (!user)
