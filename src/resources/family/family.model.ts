@@ -3,7 +3,7 @@ import { IFamily } from './family.interface';
 
 const FamilySchema = new Schema(
   {
-    creator: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -12,28 +12,41 @@ const FamilySchema = new Schema(
       type: String,
       required: true,
     },
-    members: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+    subscribers: {
+      type: [
+        {
+          subscriber: { type: Schema.Types.ObjectId, ref: 'User' },
+          joinedAt: Date,
+          joinMethod: String,
+          isActive: Boolean,
+          revokeAccess: Boolean,
+        },
+      ],
+    },
     type: {
       type: String,
       required: true,
     },
-    maxCount: {
+    maxSubscribers: {
       type: Number,
+      required: true,
+    },
+    spotsAvailable: {
+      type: Number,
+      required: true,
+    },
+    isFull: {
+      type: Boolean,
+      default: false,
       required: true,
     },
     membershipPrice: {
       type: Number,
       required: true,
     },
-    membersLinks: [
+    subscribeLinks: [
       {
         type: String,
-        required: true,
       },
     ],
   },
@@ -43,12 +56,12 @@ const FamilySchema = new Schema(
 );
 
 FamilySchema.post('save', async function (doc, next) {
-  await doc.populate('creator members', 'email username');
+  await doc.populate('owner subscribers');
   next();
 });
 
 FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
-  this.populate('creator', 'members');
+  this.populate('owner', 'subscribers');
   next();
 });
 

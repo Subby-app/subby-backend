@@ -1,11 +1,20 @@
 import { Document } from 'mongoose';
+import { IUser } from '../user/user.interface';
 
 export interface IFamily extends Document {
-  creator: string;
+  owner: string;
   name: string;
-  members: string[];
+  subscribers: {
+    subscriber: IUser;
+    joinedAt: string;
+    joinMethod: string;
+    isActive: boolean;
+    revokeAccess: boolean;
+  }[];
   type: string;
-  maxCount: number;
+  maxSubscribers: number;
+  spotsAvailable: number;
+  isFull: boolean;
   membershipPrice: number;
-  membersLinks: string[];
+  subscribeLinks: string[];
 }
