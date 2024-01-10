@@ -50,17 +50,31 @@ class FamilyService {
 
     const joinedAt = Date.now().toString();
 
-    // !improve queries, don't use 'save()' method in memory
-    family.subscribers.push({
-      subscriber: newSubscriberId,
-      joinMethod,
-      isActive: true,
-      revokeAccess: false,
-      joinedAt,
-    });
-    // !decrement family's spotsAvailable
-    // !check if family isFull
-    const updatedFamily = await family.save();
+    const updatedFamily = await this.family.findOneAndUpdate(
+      { _id: familyId },
+      {
+        $push: {
+          subscribers: {
+            subscriber: newSubscriberId,
+            joinMethod,
+            isActive: true,
+            revokeAccess: false,
+            joinedAt,
+          },
+        },
+        $inc: { spotsAvailable: -1 },
+        $set: {
+          isFull: {
+            $cond: {
+              if: { $eq: ['$spotsAvailable', 0] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      { new: true },
+    );
 
     await this.UserService.addSubscription(newSubscriberId, familyId);
     return { newSubscriber: true, family: updatedFamily };
