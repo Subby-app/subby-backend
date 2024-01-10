@@ -23,7 +23,7 @@ const FamilySchema = new Schema(
         },
       ],
     },
-    type: {
+    label: {
       type: String,
       required: true,
     },

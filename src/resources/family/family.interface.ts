@@ -1,20 +1,29 @@
 import { Document } from 'mongoose';
-import { IUser } from '../user/user.interface';
 
 export interface IFamily extends Document {
   owner: string;
   name: string;
   subscribers: {
-    subscriber: IUser;
+    subscriber: string;
     joinedAt: string;
     joinMethod: string;
     isActive: boolean;
     revokeAccess: boolean;
   }[];
-  type: string;
+  label: TFamilyLabel;
   maxSubscribers: number;
   spotsAvailable: number;
   isFull: boolean;
   membershipPrice: number;
   subscribeLinks: string[];
 }
+
+export type TFamilyLabel = 'netflix' | 'spotify';
+
+export type TFamilyFilter = {
+  _id?: string;
+  name?: string;
+  owner?: string;
+  label?: string;
+  isFull?: boolean;
+};
