@@ -45,10 +45,9 @@ class AuthService {
       lastName: user.lastName,
       phoneNumber: user.phoneNumber,
       verified: user.verified,
-      createdFamilies: user.createdFamilies,
-      joinedFamilies: user.joinedFamilies,
-      accountBalance: user.accountBalance,
-      accountNumber: user.accountNumber,
+      families: user.families,
+      subscriptions: user.subscriptions,
+      wallet: user.wallet,
     };
   }
 

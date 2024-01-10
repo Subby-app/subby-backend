@@ -3,6 +3,7 @@ import { HttpStatus, HttpException } from '@/utils/exceptions';
 import { UserService } from '../user/user.service';
 import { familyLabels } from './family.config';
 import { TFamilyLabel, TFamilyFilter } from './family.interface';
+import mongoose from 'mongoose';
 
 class FamilyService {
   private family = FamilyModel;
@@ -11,7 +12,7 @@ class FamilyService {
   public async create(owner: string, name: string, label: TFamilyLabel) {
     const familyLabel = familyLabels[label];
 
-    this.family.create({
+    await this.family.create({
       owner,
       name,
       label: familyLabel.label,
@@ -19,6 +20,8 @@ class FamilyService {
       spotsAvailable: familyLabel.maxSubs,
       membershipPrice: familyLabel.price,
     });
+    // !add family to owners families[]
+    return { familyCreated: true, name };
   }
 
   public async findOne(query: TFamilyFilter) {
@@ -31,7 +34,8 @@ class FamilyService {
     const family = await this.findOne({ _id: familyId });
     if (family.isFull) throw new HttpException(HttpStatus.BAD_REQUEST, 'family is full');
 
-    if (family.owner === newSubscriberId)
+    const ownerObjId = new mongoose.Types.ObjectId(family.owner);
+    if (ownerObjId.equals(newSubscriberId))
       throw new HttpException(HttpStatus.FORBIDDEN, 'family owner cannot be a subscriber');
 
     let isSubscriber = false;
@@ -44,6 +48,7 @@ class FamilyService {
 
     const joinedAt = Date.now().toString();
 
+    // !improve queries, don't use 'save()' method in memory
     family.subscribers.push({
       subscriber: newSubscriberId,
       joinMethod,
@@ -52,6 +57,7 @@ class FamilyService {
       joinedAt,
     });
     const updatedFamily = await family.save();
+    // !add family to subscriber's subscriptions[]
     return { newSubscriber: true, familY: updatedFamily };
   }
 }
