@@ -28,7 +28,7 @@ class FamilyService {
   }
 
   public async findOne(query: TFamilyFilter) {
-    const family = await this.family.findOne(query);
+    const family = await this.family.findOne(query).populate('subscribers.subscriber');
     if (!family) throw new HttpException(HttpStatus.NOT_FOUND, 'family not found');
     return family;
   }
@@ -46,11 +46,11 @@ class FamilyService {
     });
 
     if (isSubscriber)
-      throw new HttpException(HttpStatus.FORBIDDEN, 'new subscriber is already in this family');
+      throw new HttpException(HttpStatus.FORBIDDEN, 'subscriber is already in this family');
 
     const joinedAt = Date.now().toString();
 
-    const updatedFamily = await this.family.findOneAndUpdate(
+    const addSub = await this.family.findOneAndUpdate(
       { _id: familyId },
       {
         $push: {
@@ -63,18 +63,13 @@ class FamilyService {
           },
         },
         $inc: { spotsAvailable: -1 },
-        $set: {
-          isFull: {
-            $cond: {
-              if: { $eq: ['$spotsAvailable', 0] },
-              then: true,
-              else: false,
-            },
-          },
-        },
       },
       { new: true },
     );
+    const full = addSub?.spotsAvailable === 0;
+    const updatedFamily = await this.family
+      .findOneAndUpdate({ _id: familyId }, { $set: { isFull: full } }, { new: true })
+      .populate('subscribers.subscriber');
 
     await this.UserService.addSubscription(newSubscriberId, familyId);
     return { newSubscriber: true, family: updatedFamily };
