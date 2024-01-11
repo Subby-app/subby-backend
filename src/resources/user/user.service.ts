@@ -60,6 +60,12 @@ class UserService {
       .populate('families');
   }
 
+  public async removeFamily(ownerId: string, familyId: string) {
+    await this.user
+      .findOneAndUpdate({ _id: ownerId }, { $pull: { families: familyId } })
+      .populate('families');
+  }
+
   public async isSubscribed(userId: string, familyId: string) {
     const user = await this.findOne({ _id: userId });
     let isSubscribed = false;
@@ -72,6 +78,16 @@ class UserService {
   public async addSubscription(subscriberId: string, familyId: string) {
     await this.user
       .findOneAndUpdate({ _id: subscriberId }, { $push: { subscriptions: familyId } })
+      .populate('subscriptions');
+  }
+
+  public async getSubscriptions(userId: string) {
+    return (await this.findOne({ _id: userId })).populate('subscriptions');
+  }
+
+  public async removeSubscription(subscriberId: string, familyId: string) {
+    await this.user
+      .findOneAndUpdate({ _id: subscriberId }, { $pull: { subscriptions: familyId } })
       .populate('subscriptions');
   }
 

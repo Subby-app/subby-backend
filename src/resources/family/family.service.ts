@@ -83,6 +83,51 @@ class FamilyService {
     });
     return isSubscriber;
   }
+
+  public async revokeAccess(ownerId: string, familyId: string, subscriberId: string) {
+    const family = await this.findOne({ _id: familyId });
+
+    if (!mongooseUtil.isEqualObjectId(family.owner, ownerId))
+      throw new HttpException(HttpStatus.FORBIDDEN, `you are not the family's owner`);
+
+    const updatedFamily = await this.family.findOneAndUpdate(
+      { _id: familyId },
+      {
+        $set: {
+          subscribers: {
+            subscriber: subscriberId,
+            revokeAccess: true,
+          },
+        },
+      },
+      { new: true },
+    );
+    return updatedFamily;
+  }
+
+  public async leaveFamily(familyId: string, subscriberId: string) {
+    const removeSub = await this.family.findOneAndUpdate(
+      { _id: familyId },
+      {
+        $pull: {
+          subscribers: {
+            subscriber: subscriberId,
+          },
+        },
+        $inc: { spotsAvailable: 1 },
+      },
+      { new: true },
+    );
+    const full = removeSub?.spotsAvailable === 0;
+    await this.family
+      .findOneAndUpdate({ _id: familyId }, { $set: { isFull: full } }, { new: true })
+      .populate('subscribers.subscriber');
+    await this.UserService.removeSubscription(subscriberId, familyId);
+    const subscriptions = await this.UserService.getSubscriptions(subscriberId);
+    return subscriptions;
+  }
+
+  public async deleteFamily() {}
 }
 
 export { FamilyService };
