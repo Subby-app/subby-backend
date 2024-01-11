@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { familyLabels } from './family.config';
 import { TFamilyLabel, TFamilyFilter } from './family.interface';
 import * as mongooseUtil from '@/utils/database/mongoose.util';
+import { TSubscribers } from './family.interface';
 
 class FamilyService {
   private family = FamilyModel;
@@ -40,12 +41,12 @@ class FamilyService {
     if (mongooseUtil.isEqualObjectId(family.owner, newSubscriberId))
       throw new HttpException(HttpStatus.FORBIDDEN, 'family owner cannot be a subscriber');
 
-    let isSubscriber = false;
-    family.subscribers.forEach((subscriber) => {
-      if (subscriber.subscriber.toString() === newSubscriberId.toString()) isSubscriber = true;
-    });
+    // prevent multiple subscriptions to same family
+    if (await this.UserService.isSubscribed(newSubscriberId, familyId))
+      throw new HttpException(HttpStatus.FORBIDDEN, 'user is already subscribed');
 
-    if (isSubscriber)
+    // prevent multiple subscribers to same family
+    if (this.isSubscribed(family.subscribers, newSubscriberId))
       throw new HttpException(HttpStatus.FORBIDDEN, 'subscriber is already in this family');
 
     const joinedAt = Date.now().toString();
@@ -73,6 +74,14 @@ class FamilyService {
 
     await this.UserService.addSubscription(newSubscriberId, familyId);
     return { newSubscriber: true, family: updatedFamily };
+  }
+
+  public isSubscribed(subscribers: TSubscribers, subscriberId: string) {
+    let isSubscriber = false;
+    subscribers.forEach((subscriber) => {
+      if (subscriber.subscriber.toString() === subscriberId.toString()) isSubscriber = true;
+    });
+    return isSubscriber;
   }
 }
 

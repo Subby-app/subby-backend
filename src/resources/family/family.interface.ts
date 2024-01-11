@@ -27,3 +27,11 @@ export type TFamilyFilter = {
   label?: string;
   isFull?: boolean;
 };
+
+export type TSubscribers = {
+  subscriber: string;
+  joinedAt: string;
+  joinMethod: string;
+  isActive: boolean;
+  revokeAccess: boolean;
+}[];

@@ -55,13 +55,24 @@ class UserService {
   }
 
   public async addFamily(ownerId: string, familyId: string) {
-    // eslint-disable-next-line prettier/prettier
-    await this.user.findOneAndUpdate({ _id: ownerId }, { "$push": { families: familyId } });
+    await this.user
+      .findOneAndUpdate({ _id: ownerId }, { $push: { families: familyId } })
+      .populate('families');
+  }
+
+  public async isSubscribed(userId: string, familyId: string) {
+    const user = await this.findOne({ _id: userId });
+    let isSubscribed = false;
+    user.subscriptions.forEach((subscription) => {
+      if (subscription.toString() === familyId.toString()) isSubscribed = true;
+    });
+    return isSubscribed;
   }
 
   public async addSubscription(subscriberId: string, familyId: string) {
-    // eslint-disable-next-line prettier/prettier
-    await this.user.findOneAndUpdate({ _id: subscriberId }, { "$push": { subscriptions: familyId } });
+    await this.user
+      .findOneAndUpdate({ _id: subscriberId }, { $push: { subscriptions: familyId } })
+      .populate('subscriptions');
   }
 
   public async deleteUser(filter: TUserFilter) {
