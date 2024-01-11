@@ -2,6 +2,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '@/utils/exceptions';
 import { FamilyService } from './family.service';
+import { TFamilyFilter } from './family.interface';
 
 const familyService = new FamilyService();
 
@@ -19,10 +20,18 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export async function findMany() {}
+
+export async function familyOwner() {}
+
+export async function subscriptions() {}
+
 export async function findOne(req: Request, res: Response, next: NextFunction) {
   try {
-    const { id } = req.query;
-    const data = await familyService.findOne({ _id: id as string });
+    const _id = req.params.familyId;
+    const _filter: TFamilyFilter = req.query;
+    const filter = { ..._filter, _id };
+    const data = await familyService.findOne(filter);
 
     res.status(HttpStatus.OK).json({
       message: 'family found',
@@ -33,16 +42,33 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function addSubscriber(req: Request, res: Response, next: NextFunction) {
+export async function joinFamily(req: Request, res: Response, next: NextFunction) {
   try {
-    const { familyId, newSubscriberId, joinMethod } = req.body;
-    const data = await familyService.addSubscriber(familyId, newSubscriberId, joinMethod);
+    const data = await familyService.addSubscriber(req.params.familyId, req.user?._id!, 'join');
 
     res.status(HttpStatus.OK).json({
-      message: 'subscriber added to family successfully',
+      message: 'you have been added to the family successfully',
       data,
     });
   } catch (error) {
     next(error);
   }
 }
+
+export async function inviteSubscriber(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { familyId, subscriberId } = req.params;
+    const data = await familyService.addSubscriber(familyId, subscriberId, 'invite');
+
+    res.status(HttpStatus.OK).json({
+      message: 'subscriber added, an invitation link has been sent',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateSubscriber() {}
+
+export async function removeSubscriber() {}

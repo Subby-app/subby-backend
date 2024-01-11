@@ -9,7 +9,19 @@ const basePath = '/family';
 
 familyRouter.get(
   `${basePath}`,
-  validation(validate.findOne, 'query'),
+  validation(validate.find, 'query'),
+  authenticated,
+  familyController.findMany,
+);
+
+familyRouter.get(`${basePath}/owner`, authenticated, familyController.familyOwner);
+
+familyRouter.get(`${basePath}/subscriptions`, authenticated, familyController.subscriptions);
+
+familyRouter.get(
+  `${basePath}/:familyId`,
+  validation(validate.familyId, 'params'),
+  validation(validate.find, 'query'),
   authenticated,
   familyController.findOne,
 );
@@ -22,8 +34,30 @@ familyRouter.post(
 );
 
 familyRouter.post(
-  `${basePath}/subscriber`,
-  validation(validate.addSubscriber, 'body'),
+  `${basePath}/:familyId/subscribers`,
+  validation(validate.familyId, 'params'),
   authenticated,
-  familyController.addSubscriber,
+  familyController.joinFamily,
+);
+
+familyRouter.post(
+  `${basePath}/:familyId/subscribers/:subscriberId`,
+  validation(validate.familySubscribers, 'params'),
+  authenticated,
+  familyController.inviteSubscriber,
+);
+
+familyRouter.patch(
+  `${basePath}/:familyId/subscribers/:subscriberId`,
+  validation(validate.familySubscribers, 'params'),
+  validation(validate.patchSubscriber, 'query'),
+  authenticated,
+  familyController.updateSubscriber,
+);
+
+familyRouter.delete(
+  `${basePath}/:familyId/subscribers`,
+  validation(validate.familyId, 'params'),
+  authenticated,
+  familyController.removeSubscriber,
 );

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const id = Joi.string();
+const _id = Joi.string().hex().length(24);
 const label = Joi.string();
 const name = Joi.string();
 
@@ -9,16 +9,29 @@ export const create = Joi.object({
   label: label.required(),
 });
 
-export const findOne = Joi.object({
-  id,
-  owner: id,
+export const find = Joi.object({
+  _id,
+  owner: _id,
   name,
   label,
   isFull: Joi.bool(),
 });
 
+export const familyId = Joi.object({
+  familyId: _id.required(),
+});
+
+export const familySubscribers = Joi.object({
+  familyId: _id.required(),
+  subscriberId: _id.required(),
+});
+
+export const patchSubscriber = Joi.object({
+  revoke: Joi.bool(),
+});
+
 export const addSubscriber = Joi.object({
-  familyId: id.required(),
-  newSubscriberId: id.required(),
+  familyId: _id.required(),
+  newSubscriberId: _id.required(),
   joinMethod: Joi.string().required(),
 });
