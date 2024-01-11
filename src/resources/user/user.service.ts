@@ -54,6 +54,10 @@ class UserService {
     return user;
   }
 
+  public async getFamily(userId: string) {
+    return (await this.findOne({ _id: userId })).populate('families');
+  }
+
   public async addFamily(ownerId: string, familyId: string) {
     await this.user
       .findOneAndUpdate({ _id: ownerId }, { $push: { families: familyId } })
@@ -95,6 +99,7 @@ class UserService {
     const user = await this.user.findOneAndDelete(filter);
     if (!user)
       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+    // !delete user's families
     return { accountDeleted: true, email: user.email };
   }
 }

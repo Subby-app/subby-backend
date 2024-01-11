@@ -127,7 +127,20 @@ class FamilyService {
     return subscriptions;
   }
 
-  public async deleteFamily() {}
+  public async deleteFamily(familyId: string, ownerId: string) {
+    const family = await this.findOne({ _id: familyId });
+
+    if (!mongooseUtil.isEqualObjectId(family.owner, ownerId))
+      throw new HttpException(HttpStatus.FORBIDDEN, `you are not the family's owner`);
+
+    await this.UserService.removeFamily(ownerId, familyId);
+
+    family.subscribers.forEach(async (subscriberObj) => {
+      await this.UserService.removeSubscription(subscriberObj.subscriber, familyId);
+    });
+    await family.deleteOne();
+    return { familyDeleted: true };
+  }
 }
 
 export { FamilyService };
