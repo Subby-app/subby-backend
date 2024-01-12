@@ -22,7 +22,18 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 
 export async function findMany() {}
 
-export async function familyOwner() {}
+export async function familyOwner(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await familyService.familiesOfOwner(req.user?._id!);
+
+    res.status(HttpStatus.OK).json({
+      message: 'all families retrieved',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function familyOverview(req: Request, res: Response, next: NextFunction) {
   try {

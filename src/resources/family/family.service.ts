@@ -54,6 +54,13 @@ class FamilyService {
     };
   }
 
+  public async familiesOfOwner(ownerId: string) {
+    return await this.family
+      .find({ owner: ownerId })
+      .populate('owner', 'name')
+      .populate('subscribers.subscriber', 'name');
+  }
+
   public async addSubscriber(familyId: string, newSubscriberId: string, joinMethod: string) {
     const family = await this.findOne({ _id: familyId });
     if (family.isFull) throw new HttpException(HttpStatus.BAD_REQUEST, 'family is full');
