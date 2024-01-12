@@ -60,7 +60,18 @@ export async function familyOverview(req: Request, res: Response, next: NextFunc
   }
 }
 
-export async function subscriptions() {}
+export async function subscriptions(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await familyService.getAllSubscriptions(req.user?._id!);
+
+    res.status(HttpStatus.OK).json({
+      message: 'all subscriptions retrieved',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function findOne(req: Request, res: Response, next: NextFunction) {
   try {

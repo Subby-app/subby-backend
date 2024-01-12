@@ -65,6 +65,40 @@ class FamilyService {
       .populate('subscribers.subscriber', 'name');
   }
 
+  public async getAllSubscriptions(subscriberId: string) {
+    const active = await this.family
+      .find(
+        {
+          'subscribers.subscriber': subscriberId,
+          'subscribers.revokeAccess': true,
+        },
+        {
+          name: 1,
+          owner: 1,
+          'subscribers.$': 1,
+        },
+      )
+      .populate('owner', 'name username')
+      .populate('subscribers.subscriber', 'name username');
+
+    const inActive = await this.family
+      .find(
+        {
+          'subscribers.subscriber': subscriberId,
+          'subscribers.revokeAccess': false,
+        },
+        {
+          name: 1,
+          owner: 1,
+          'subscribers.$': 1,
+        },
+      )
+      .populate('owner', 'name username')
+      .populate('subscribers.subscriber', 'name username');
+
+    return { active, inActive };
+  }
+
   public async addSubscriber(familyId: string, newSubscriberId: string, joinMethod: string) {
     const family = await this.findOne({ _id: familyId });
     if (family.isFull) throw new HttpException(HttpStatus.BAD_REQUEST, 'family is full');
