@@ -107,4 +107,15 @@ export async function inviteSubscriber(req: Request, res: Response, next: NextFu
 
 export async function updateSubscriber() {}
 
-export async function removeSubscriber() {}
+export async function removeSubscriber(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await familyService.leaveFamily(req.params.familyId, req.user?._id!);
+
+    res.status(HttpStatus.OK).json({
+      message: 'you have left the family successfully',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
