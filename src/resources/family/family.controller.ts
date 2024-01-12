@@ -24,6 +24,19 @@ export async function findMany() {}
 
 export async function familyOwner() {}
 
+export async function familyOverview(req: Request, res: Response, next: NextFunction) {
+  try {
+    const data = await familyService.familyOverview(req.user?._id!);
+
+    res.status(HttpStatus.OK).json({
+      message: 'overview generated',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function subscriptions() {}
 
 export async function findOne(req: Request, res: Response, next: NextFunction) {

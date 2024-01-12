@@ -34,6 +34,26 @@ class FamilyService {
     return family;
   }
 
+  public async familyOverview(ownerId: string) {
+    const families = await this.family
+      .find({ owner: ownerId })
+      .populate('owner', 'name')
+      .populate('subscribers.subscriber', 'name');
+
+    const familyCount = families.length;
+    let subCount = 0;
+    families.forEach((family) => {
+      const activeSubs = family.subscribers.filter((subscriber) => (subscriber.isActive = true));
+      subCount = activeSubs.length;
+    });
+
+    return {
+      totalFamilies: familyCount,
+      activeSubs: subCount,
+      families,
+    };
+  }
+
   public async addSubscriber(familyId: string, newSubscriberId: string, joinMethod: string) {
     const family = await this.findOne({ _id: familyId });
     if (family.isFull) throw new HttpException(HttpStatus.BAD_REQUEST, 'family is full');

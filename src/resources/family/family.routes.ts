@@ -16,6 +16,8 @@ familyRouter.get(
 
 familyRouter.get(`${basePath}/owner`, authenticated, familyController.familyOwner);
 
+familyRouter.get(`${basePath}/overview`, authenticated, familyController.familyOverview);
+
 familyRouter.get(`${basePath}/subscriptions`, authenticated, familyController.subscriptions);
 
 familyRouter.get(
