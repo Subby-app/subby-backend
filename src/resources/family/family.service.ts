@@ -34,6 +34,10 @@ class FamilyService {
     return family;
   }
 
+  public async findMany(filter: TFamilyFilter) {
+    return await this.family.find(filter).populate('owner', 'username');
+  }
+
   public async familyOverview(ownerId: string) {
     const families = await this.family
       .find({ owner: ownerId })

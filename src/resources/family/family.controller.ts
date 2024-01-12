@@ -20,7 +20,19 @@ export async function create(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findMany() {}
+export async function findMany(req: Request, res: Response, next: NextFunction) {
+  try {
+    const filter: TFamilyFilter = req.query;
+    const data = await familyService.findMany(filter);
+
+    res.status(HttpStatus.OK).json({
+      message: 'families retrieved',
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 
 export async function familyOwner(req: Request, res: Response, next: NextFunction) {
   try {
