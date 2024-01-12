@@ -66,37 +66,50 @@ class FamilyService {
   }
 
   public async getAllSubscriptions(subscriberId: string) {
-    const active = await this.family
-      .find(
-        {
-          'subscribers.subscriber': subscriberId,
-          'subscribers.revokeAccess': true,
-        },
-        {
-          name: 1,
-          owner: 1,
-          'subscribers.$': 1,
-        },
-      )
-      .populate('owner', 'name username')
-      .populate('subscribers.subscriber', 'name username');
+    const active = await this.family.find(
+      {
+        'subscribers.subscriber': subscriberId,
+        'subscribers.revokeAccess': false,
+      },
+      {
+        name: 1,
+        owner: 1,
+        subscribers: 1,
+      },
+    );
+    const activeCount = active.length;
+    if (activeCount > 0) {
+      active.forEach((family) => {
+        family.subscribers = family.subscribers.filter(
+          (subscriberObj) => subscriberObj.subscriber.toString() === subscriberId.toString(),
+        );
+      });
+    }
 
-    const inActive = await this.family
-      .find(
-        {
-          'subscribers.subscriber': subscriberId,
-          'subscribers.revokeAccess': false,
-        },
-        {
-          name: 1,
-          owner: 1,
-          'subscribers.$': 1,
-        },
-      )
-      .populate('owner', 'name username')
-      .populate('subscribers.subscriber', 'name username');
+    const inActive = await this.family.find(
+      {
+        'subscribers.subscriber': subscriberId,
+        'subscribers.revokeAccess': true,
+      },
+      {
+        name: 1,
+        owner: 1,
+        subscribers: 1,
+      },
+    );
+    const inActiveCount = inActive.length;
+    if (inActiveCount > 0) {
+      inActive.forEach((family) => {
+        family.subscribers = family.subscribers.filter(
+          (subscriberObj) => subscriberObj.subscriber.toString() === subscriberId.toString(),
+        );
+      });
+    }
 
-    return { active, inActive };
+    return {
+      active: { count: activeCount, families: active },
+      inActive: { count: inActiveCount, families: inActive },
+    };
   }
 
   public async addSubscriber(familyId: string, newSubscriberId: string, joinMethod: string) {
