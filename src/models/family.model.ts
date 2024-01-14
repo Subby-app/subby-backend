@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IFamily } from './family.interface';
+import { IFamily } from '../interfaces/family.interface';
 
 const FamilySchema = new Schema(
   {

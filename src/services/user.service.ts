@@ -1,6 +1,6 @@
-import { UserModel } from './user.model';
+import { UserModel } from '../models/user.model';
 import { HttpStatus, HttpException } from '@/utils/exceptions';
-import { TUserFilter, TFilterOptions, TUpdateUser } from './user.interface';
+import { TUserFilter, TFilterOptions, TUpdateUser } from '../interfaces/user.interface';
 
 class UserService {
   private user = UserModel;

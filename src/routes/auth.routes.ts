@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authenticated, validation } from '../../middlewares';
-import * as authController from './auth.controller';
-import * as validate from './auth.validation';
+import { authenticated, validation } from '../middlewares';
+import * as authController from '../controllers/auth.controller';
+import * as validate from '../validators/auth.validation';
 
 export const authRouter = Router();
 const basePath = '/auth';

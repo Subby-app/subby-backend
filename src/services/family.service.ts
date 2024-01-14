@@ -1,12 +1,12 @@
-import { FamilyModel } from './family.model';
+import { FamilyModel } from '../models/family.model';
 import { HttpStatus, HttpException } from '@/utils/exceptions';
-import { UserService } from '../user/user.service';
-import { familyLabels } from './family.config';
-import { TFamilyLabel, TFamilyFilter } from './family.interface';
+import { UserService } from './user.service';
+import { familyLabels } from '../resources/family/family.config';
+import { TFamilyLabel, TFamilyFilter } from '../interfaces/family.interface';
 import * as mongooseUtil from '@/utils/database/mongoose.util';
-import { TSubscribers } from './family.interface';
+import { TSubscribers } from '../interfaces/family.interface';
 
-class FamilyService {
+export class FamilyService {
   private family = FamilyModel;
   private UserService = new UserService();
 
@@ -221,4 +221,4 @@ class FamilyService {
   }
 }
 
-export { FamilyService };
+// export { FamilyService };

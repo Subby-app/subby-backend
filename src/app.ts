@@ -7,7 +7,7 @@ import { errorMiddleware, handleInvalidRoutes } from './middlewares';
 
 class App {
   private express: Application;
-  private port: Number;
+  private port: number;
 
   constructor(apiRoutes: Router[], port: number) {
     this.express = express();
