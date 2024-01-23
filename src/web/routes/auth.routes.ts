@@ -15,10 +15,15 @@ authRouter.post('/signup', validation(validate.signup, 'body'), authController.s
 
 authRouter.post('/login', validation(validate.login, 'body'), authController.login);
 
-authRouter.post('/verify/otp', validation(validate.verifyOtp, 'body'), authenticated, authController.verifyOtp,
+authRouter.post(
+  '/verify/otp',
+  validation(validate.verifyOtp, 'body'),
+  authenticated,
+  authController.verifyOtp,
 );
 
-authRouter.post('/verify/account',
+authRouter.post(
+  '/verify/account',
   validation(validate.verifyOtp, 'body'),
   authenticated,
   authController.verifyEmail,

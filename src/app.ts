@@ -28,7 +28,6 @@ class App {
   }
 
   private initializeRoutes(apiRoutes: Router) {
-    // apiRoutes.forEach((route: Router) => this.express.use('/api/v1', route));
     this.express.use('/api/v1', apiRoutes);
     this.express.use('*', handleInvalidRoutes);
   }
