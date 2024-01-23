@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { IUser } from './user.interface';
+import { IAdmin } from '../interfaces/admin.interface';
 
-const UserSchema = new Schema(
+const AdminSchema = new Schema(
   {
     email: {
       type: String,
@@ -23,16 +23,6 @@ const UserSchema = new Schema(
       required: true,
       select: false,
     },
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    phoneNumber: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     role: {
       type: String,
       required: true,
@@ -41,11 +31,19 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    otp: {
+    otpEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false,
+    },
+    otpBase32Secret: {
       type: String,
       select: false,
     },
-    otpExpiration: {
+    otpAuthUrl: {
       type: String,
       select: false,
     },
@@ -53,39 +51,13 @@ const UserSchema = new Schema(
       type: [{ hash: String, used: Boolean }],
       select: false,
     },
-    families: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
-    maxFamilies: {
-      type: Number,
-      default: 0,
-    },
-    subscriptions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
-    accountNumber: {
-      type: String,
-    },
-    wallet: {
-      type: String,
-    },
-    earnings: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,
   },
 );
 
-UserSchema.pre<IUser>('save', async function (next) {
+AdminSchema.pre<IAdmin>('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -94,8 +66,8 @@ UserSchema.pre<IUser>('save', async function (next) {
   next();
 });
 
-UserSchema.methods.isValidPassword = async function (password: string): Promise<Error | boolean> {
+AdminSchema.methods.isValidPassword = async function (password: string): Promise<Error | boolean> {
   return await bcrypt.compare(password, this.password);
 };
 
-export const UserModel = model<IUser>('User', UserSchema);
+export const AdminModel = model<IAdmin>('Admin', AdminSchema);

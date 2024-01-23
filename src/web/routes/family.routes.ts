@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { authenticated, validation } from '../../middlewares';
-import * as familyController from './family.controller';
-import * as validate from './family.validation';
+import { authenticated, validation } from '../middlewares';
+import * as familyController from '../controllers/family.controller';
+import * as validate from '../validators/family.validation';
 
 export const familyRouter = Router();
 

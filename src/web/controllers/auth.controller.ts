@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from './auth.service';
+import { AuthService } from '../../logic/services/auth.service';
 import { HttpStatus } from '@/utils/exceptions';
 
 const authService = new AuthService();

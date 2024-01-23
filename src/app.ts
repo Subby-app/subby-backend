@@ -3,13 +3,13 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { errorMiddleware, handleInvalidRoutes } from './middlewares';
+import { errorMiddleware, handleInvalidRoutes } from './web/middlewares';
 
 class App {
   private express: Application;
-  private port: Number;
+  private port: number;
 
-  constructor(apiRoutes: Router[], port: number) {
+  constructor(apiRoutes: Router, port: number) {
     this.express = express();
     this.port = port;
 
@@ -27,8 +27,9 @@ class App {
     this.express.use(compression());
   }
 
-  private initializeRoutes(apiRoutes: Router[]) {
-    apiRoutes.forEach((route: Router) => this.express.use('/api/v1', route));
+  private initializeRoutes(apiRoutes: Router) {
+    // apiRoutes.forEach((route: Router) => this.express.use('/api/v1', route));
+    this.express.use('/api/v1', apiRoutes);
     this.express.use('*', handleInvalidRoutes);
   }
 

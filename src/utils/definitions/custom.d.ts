@@ -1,4 +1,4 @@
-import { IUser } from '@/resources/user/user.interface';
+import { IUser } from 'data/interfaces/user.interface';
 
 declare global {
   namespace Express {

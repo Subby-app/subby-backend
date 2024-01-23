@@ -5,10 +5,9 @@ export const mongooseConnect = () => {
 
   mongoose
     .connect(MONGODB_URI!)
-    .then(() => console.log('connected to mongodb')) //!use logger for all logging
+    .then(() => console.log('connected to mongodb'))
     .catch((err) => {
-      console.log('failed to connect to mongodb');
-      console.log(err);
+      console.log('failed to connect to mongodb', err.message);
       handleReconnection();
     });
 };
@@ -17,5 +16,5 @@ const handleReconnection = () => {
   setTimeout(() => {
     console.log('reconnecting to mongodb...');
     mongooseConnect();
-  }, 10000); //!use env var
+  }, 10000);
 };

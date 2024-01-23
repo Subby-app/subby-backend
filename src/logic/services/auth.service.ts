@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus } from '@/utils/exceptions';
-import { UserService } from '../user/user.service';
+import { UserService } from './user.service';
 import * as token from '@/utils/token.util';
 import { generateOtp } from '@/utils/otp.util';
-import { IUser } from '../user/user.interface';
+import { IUser } from '../../data/interfaces/user.interface';
 
-class AuthService {
+export class AuthService {
   private UserService = new UserService();
 
   public async register(
@@ -118,4 +118,4 @@ class AuthService {
   }
 }
 
-export { AuthService };
+// export { AuthService };

@@ -1,8 +1,8 @@
 import 'dotenv/config';
 import 'module-alias/register';
-import { mongooseConnect } from './utils/database/mongoose';
+import { mongooseConnect } from './data/database/mongoose';
 import { App } from './app';
-import { apiRouters } from './resources';
+import { apiRouters } from './web/routes/index';
 
 mongooseConnect();
 
