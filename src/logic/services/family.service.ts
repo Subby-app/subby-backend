@@ -1,10 +1,10 @@
-import { FamilyModel } from '../models/family.model';
+import { FamilyModel } from '../../data/models/family.model';
 import { HttpStatus, HttpException } from '@/utils/exceptions';
 import { UserService } from './user.service';
-import { familyLabels } from '../resources/family/family.config';
-import { TFamilyLabel, TFamilyFilter } from '../interfaces/family.interface';
-import * as mongooseUtil from '@/utils/database/mongoose.util';
-import { TSubscribers } from '../interfaces/family.interface';
+import { familyLabels } from '../../config/family.config';
+import { TFamilyLabel, TFamilyFilter } from '../../data/interfaces/family.interface';
+import * as mongooseUtil from '../../data/database/mongoose.util';
+import { TSubscribers } from '../../data/interfaces/family.interface';
 
 export class FamilyService {
   private family = FamilyModel;

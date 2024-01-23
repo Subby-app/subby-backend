@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Request, Response, NextFunction } from 'express';
 import { HttpStatus } from '@/utils/exceptions';
-import { FamilyService } from '../services/family.service';
-import { TFamilyFilter } from '../interfaces/family.interface';
+import { FamilyService } from '../../logic/services/family.service';
+import { TFamilyFilter } from '../../data/interfaces/family.interface';
 
 const familyService = new FamilyService();
 

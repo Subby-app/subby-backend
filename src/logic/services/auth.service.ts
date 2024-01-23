@@ -2,7 +2,7 @@ import { HttpException, HttpStatus } from '@/utils/exceptions';
 import { UserService } from './user.service';
 import * as token from '@/utils/token.util';
 import { generateOtp } from '@/utils/otp.util';
-import { IUser } from '../interfaces/user.interface';
+import { IUser } from '../../data/interfaces/user.interface';
 
 export class AuthService {
   private UserService = new UserService();
