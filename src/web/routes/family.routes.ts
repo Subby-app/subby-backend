@@ -5,52 +5,40 @@ import * as validate from '../validators/family.validation';
 
 export const familyRouter = Router();
 
-const basePath = '/family';
+familyRouter.get('/', validation(validate.find, 'query'), authenticated, familyController.findMany);
+
+familyRouter.get('/owner', authenticated, familyController.familyOwner);
+
+familyRouter.get('/overview', authenticated, familyController.familyOverview);
+
+familyRouter.get('/subscriptions', authenticated, familyController.subscriptions);
 
 familyRouter.get(
-  `${basePath}`,
-  validation(validate.find, 'query'),
-  authenticated,
-  familyController.findMany,
-);
-
-familyRouter.get(`${basePath}/owner`, authenticated, familyController.familyOwner);
-
-familyRouter.get(`${basePath}/overview`, authenticated, familyController.familyOverview);
-
-familyRouter.get(`${basePath}/subscriptions`, authenticated, familyController.subscriptions);
-
-familyRouter.get(
-  `${basePath}/:familyId`,
+  '/:familyId',
   validation(validate.familyId, 'params'),
   validation(validate.find, 'query'),
   authenticated,
   familyController.findOne,
 );
 
-familyRouter.post(
-  basePath,
-  validation(validate.create, 'body'),
-  authenticated,
-  familyController.create,
-);
+familyRouter.post('/', validation(validate.create, 'body'), authenticated, familyController.create);
 
 familyRouter.post(
-  `${basePath}/:familyId/subscribers`,
+  '/:familyId/subscribers',
   validation(validate.familyId, 'params'),
   authenticated,
   familyController.joinFamily,
 );
 
 familyRouter.post(
-  `${basePath}/:familyId/subscribers/:subscriberId`,
+  '/:familyId/subscribers/:subscriberId',
   validation(validate.familySubscribers, 'params'),
   authenticated,
   familyController.inviteSubscriber,
 );
 
 familyRouter.patch(
-  `${basePath}/:familyId/subscribers/:subscriberId`,
+  '/:familyId/subscribers/:subscriberId',
   validation(validate.familySubscribers, 'params'),
   validation(validate.patchSubscriber, 'query'),
   authenticated,
@@ -58,7 +46,7 @@ familyRouter.patch(
 );
 
 familyRouter.delete(
-  `${basePath}/:familyId/subscribers`,
+  '/:familyId/subscribers',
   validation(validate.familyId, 'params'),
   authenticated,
   familyController.removeSubscriber,
