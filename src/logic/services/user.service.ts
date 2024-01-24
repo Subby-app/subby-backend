@@ -1,9 +1,12 @@
 import { UserModel } from '../../data/models/user.model';
+import { WalletService } from './wallet.service';
+import { createObjectId } from '../../data/database/mongoose.util';
 import { HttpStatus, HttpException } from '@/utils/exceptions';
 import { TUserFilter, TFilterOptions, TUpdateUser } from '../../data/interfaces/user.interface';
 
 class UserService {
   private user = UserModel;
+  private WalletService = new WalletService();
   private sensitiveUserFields = ['+password', '+otp', '+otpCreatedAt', '+recoveryCodes'];
 
   public async register(
@@ -24,8 +27,18 @@ class UserService {
       throw new HttpException(HttpStatus.FORBIDDEN, 'phoneNumber already taken');
     }
     const role = 'user';
-    await this.user.create({ email, firstName, lastName, password, username, phoneNumber, role });
-
+    const userId = createObjectId();
+    await this.user.create({
+      _id: userId,
+      email,
+      firstName,
+      lastName,
+      password,
+      username,
+      phoneNumber,
+      role,
+    });
+    await this.WalletService.create(userId.toString());
     return { accountCreated: true, email };
   }
 

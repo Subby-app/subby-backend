@@ -19,6 +19,10 @@ class WalletService {
     return wallet;
   }
 
+  public async safeFind(filter: TWalletFilter) {
+    return await this.wallet.findOne(filter);
+  }
+
   public async updateBalance(filter: TWalletFilter, newBalance: TUpdateBalance) {
     return await this.wallet.findOneAndUpdate(filter, newBalance, { new: true });
   }
