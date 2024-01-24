@@ -2,7 +2,7 @@ import { WalletModel } from '../../data/models';
 import { createObjectId } from '../../data/database/mongoose.util';
 import { TUpdateBalance, TWalletFilter } from '../../data/interfaces/wallet.interface';
 import { HttpException, HttpStatus } from '@/utils/exceptions';
-import { EWalletStatus } from 'data/enums/wallet.enum';
+import { EWalletStatus } from '../../data/enums/wallet.enum';
 
 class WalletService {
   private wallet = WalletModel;
