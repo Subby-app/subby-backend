@@ -12,7 +12,8 @@ export type TWalletFilter = {
   userId?: string;
 };
 
-export type TUpdateBalance = {
+export type TUpdateWallet = {
   balance?: number;
   availableBalance?: number;
+  status?: 'active' | 'inactive' | 'suspended';
 };

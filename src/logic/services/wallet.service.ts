@@ -1,8 +1,7 @@
 import { WalletModel } from '../../data/models';
 import { createObjectId } from '../../data/database/mongoose.util';
-import { TUpdateBalance, TWalletFilter } from '../../data/interfaces/wallet.interface';
+import { TUpdateWallet, TWalletFilter } from '../../data/interfaces/wallet.interface';
 import { HttpException, HttpStatus } from '@/utils/exceptions';
-import { EWalletStatus } from '../../data/enums/wallet.enum';
 
 class WalletService {
   private wallet = WalletModel;
@@ -23,12 +22,8 @@ class WalletService {
     return await this.wallet.findOne(filter);
   }
 
-  public async updateBalance(filter: TWalletFilter, newBalance: TUpdateBalance) {
-    return await this.wallet.findOneAndUpdate(filter, newBalance, { new: true });
-  }
-
-  public async updateStatus(filter: TWalletFilter, status: EWalletStatus) {
-    return await this.wallet.findOneAndUpdate(filter, { status }, { new: true });
+  public async update(filter: TWalletFilter, newData: TUpdateWallet) {
+    return await this.wallet.findOneAndUpdate(filter, newData, { new: true });
   }
 }
 
