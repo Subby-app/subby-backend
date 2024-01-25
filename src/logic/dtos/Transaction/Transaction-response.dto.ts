@@ -1,11 +1,14 @@
+import { createObjectId } from 'data/database/mongoose.util';
 import {
   TransanctionType,
   TransanctionStatus,
   TransanctionCurrency,
 } from '../../../utils/helpers/transaction.helpers';
+import { ObjectId } from 'mongoose';
 
 export class TransactionResponseDto {
-  userId: string;
+  _id: typeof createObjectId;
+  userId: ObjectId;
   type: TransanctionType;
   status: TransanctionStatus;
   amount: number;
@@ -18,28 +21,41 @@ export class TransactionResponseDto {
   currency: TransanctionCurrency;
   recipent: string | null;
 
-  constructor(transaction: TransactionResponseDto) {
-    this.userId = transaction.userId;
-    this.type = transaction.type;
-    this.status = transaction.status;
-    this.amount = transaction.amount;
-    this.method = transaction.method;
-    this.tax = transaction.tax;
-    this.currency = transaction.currency;
-    this.recipent = transaction.recipent;
+  constructor({
+    _id,
+    userId,
+    type,
+    status,
+    amount,
+    method,
+    tax,
+    currency,
+    recipent,
+  }: TransactionResponseDto) {
+    this._id = _id;
+    this.userId = userId;
+    this.type = type;
+    this.status = status;
+    this.amount = amount;
+    this.method = method;
+    this.tax = tax;
+    this.currency = currency;
+    this.recipent = recipent;
   }
 
-  // Additional static method to create a TransactionResponseDto from a raw transaction
   static from(transaction: any): TransactionResponseDto {
+    const { _id, userId, type, status, amount, method, tax, currency, recipent } = transaction;
+
     return new TransactionResponseDto({
-      userId: transaction.userId,
-      type: transaction.type,
-      status: transaction.status,
-      amount: transaction.amount,
-      method: transaction.method,
-      tax: transaction.tax,
-      currency: transaction.currency,
-      recipent: transaction.recipent,
+      _id,
+      userId,
+      type,
+      status,
+      amount,
+      method,
+      tax,
+      currency,
+      recipent,
     });
   }
 

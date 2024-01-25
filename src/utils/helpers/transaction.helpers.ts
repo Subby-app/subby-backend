@@ -28,7 +28,7 @@ export const TransanctionStatuses: string[] = Object.values(TransanctionStatus);
  */
 export enum TransanctionCurrency {
   NARIA = 'NGN',
-  DOLLAR = 'DOL',
+  DOLLAR = 'USD',
 }
 
 export const TransanctionCurrencies: string[] = Object.values(TransanctionCurrency);
