@@ -4,7 +4,7 @@ import {
   TransanctionCurrency,
 } from '../../../utils/helpers/transaction.helpers';
 
-export class TransactionRequestDto {
+export class CreateTransactionRequestDto {
   userId: string;
   type: TransanctionType;
   status: TransanctionStatus;
@@ -17,7 +17,7 @@ export class TransactionRequestDto {
   currency: TransanctionCurrency;
   recipent: string | null;
 
-  constructor(transaction: TransactionRequestDto) {
+  constructor(transaction: CreateTransactionRequestDto) {
     this.userId = transaction.userId;
     this.type = transaction.type;
     this.status = transaction.status;
@@ -27,8 +27,8 @@ export class TransactionRequestDto {
     this.recipent = transaction.recipent;
   }
 
-  static from(transaction: any): TransactionRequestDto {
-    return new TransactionRequestDto({
+  static from(transaction: any): CreateTransactionRequestDto {
+    return new CreateTransactionRequestDto({
       userId: transaction.userId,
       type: transaction.type,
       status: transaction.status,
