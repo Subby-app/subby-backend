@@ -1,7 +1,6 @@
 import { FamilyModel } from '../../data/models/family.model';
 import { HttpStatus, HttpException } from '@/utils/exceptions';
-import { UserService } from './user.service';
-import { WalletService } from './wallet.service';
+import { UserService, WalletService } from './index';
 import { familyLabels } from '../../config/family.config';
 import { TFamilyLabel, TFamilyFilter } from '../../data/interfaces/family.interface';
 import * as mongooseUtil from '../../data/database/mongoose.util';
@@ -52,7 +51,7 @@ export class FamilyService {
       const activeSubs = family.subscribers.filter((subscriber) => (subscriber.isActive = true));
       subCount = activeSubs.length;
     });
-    const wallet = await this.WalletService.safeFind({ userId: ownerId });
+    const wallet = await WalletService.getWallet(ownerId);
 
     return {
       totalFamilies: familyCount,

@@ -1,7 +1,16 @@
 import { Router } from 'express';
-import { authenticated, validation } from '../middlewares';
+import { authenticated, ValidateRequest } from '../middlewares/index';
 import * as authController from '../controllers/auth.controller';
-import * as validate from '../validators/auth.validation';
+import { CreateUserRequestDto } from '../../logic/dtos/auth/create-user-request.dto';
+import {
+  LoginValidation,
+  ResetPasswordValidation,
+  SignupValidation,
+  VerifyOtpValidation,
+} from '../../web/validators/auth.validation';
+import { LoginRequestDto } from '../../logic/dtos/auth/login-request.dto';
+import { VerifyOtpRequestDto } from '../../logic/dtos/auth/verify-otp-request.dto';
+import { ResetPasswordRequestDto } from '../../logic/dtos/auth/reset-passwrod-request.dto';
 
 export const authRouter = Router();
 
@@ -11,27 +20,35 @@ authRouter.get('/verify/account', authenticated, authController.verifyAccount);
 
 authRouter.get('/reset/password', authenticated, authController.resetPasswordRequest);
 
-authRouter.post('/signup', validation(validate.signup, 'body'), authController.signup);
+authRouter.post(
+  '/signup',
+  ValidateRequest.with(SignupValidation, CreateUserRequestDto),
+  authController.signup,
+);
 
-authRouter.post('/login', validation(validate.login, 'body'), authController.login);
+authRouter.post(
+  '/login',
+  ValidateRequest.with(LoginValidation, LoginRequestDto),
+  authController.login,
+);
 
 authRouter.post(
   '/verify/otp',
-  validation(validate.verifyOtp, 'body'),
   authenticated,
+  ValidateRequest.with(VerifyOtpValidation, VerifyOtpRequestDto),
   authController.verifyOtp,
 );
 
 authRouter.post(
   '/verify/account',
-  validation(validate.verifyOtp, 'body'),
+  ValidateRequest.with(VerifyOtpValidation, VerifyOtpRequestDto),
   authenticated,
   authController.verifyEmail,
 );
 
 authRouter.post(
   '/reset/password',
-  validation(validate.resetPassword, 'body'),
+  ValidateRequest.with(ResetPasswordValidation, ResetPasswordRequestDto),
   authenticated,
   authController.resetPassword,
 );

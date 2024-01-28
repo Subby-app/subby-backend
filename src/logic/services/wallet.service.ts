@@ -1,30 +1,48 @@
-import { WalletModel } from '../../data/models';
-import { createObjectId } from '../../data/database/mongoose.util';
-import { TUpdateWallet, TWalletFilter } from '../../data/interfaces/wallet.interface';
+import { WalletResponseDto } from '../../logic/dtos/Wallet';
+import { WalletModel } from '../../data/models/wallet.model';
 import { HttpException, HttpStatus } from '@/utils/exceptions';
 
-class WalletService {
-  private wallet = WalletModel;
+export class WalletService {
+  static async create(walletDto: any): Promise<{ message: string; data: WalletResponseDto }> {
+    const wallet = await WalletModel.create(walletDto);
 
-  public async create(userId: string) {
-    const walletId = createObjectId();
-    await this.wallet.create({ _id: walletId, userId });
-    return walletId;
+    return {
+      message: 'Wallet created',
+      data: WalletResponseDto.from(wallet),
+    };
   }
 
-  public async findOne(filter: TWalletFilter) {
-    const wallet = await this.wallet.findOne(filter);
-    if (!wallet) throw new HttpException(HttpStatus.NOT_FOUND, 'wallet not found');
-    return wallet;
+  static async getWallet(userId: string): Promise<{ message: string; data: any }> {
+    const wallet = await WalletModel.findOne({ userId });
+
+    if (!wallet) {
+      throw new HttpException(HttpStatus.NOT_FOUND, 'Wallet not found');
+    }
+
+    return {
+      message: 'Wallet retrieved',
+      data: wallet,
+    };
   }
 
-  public async safeFind(filter: TWalletFilter) {
-    return await this.wallet.findOne(filter);
-  }
+  static async updateBalance(
+    userId: string,
+    amount: number,
+  ): Promise<{ message: string; data: any }> {
+    const wallet = await WalletModel.findOne({ userId });
 
-  public async update(filter: TWalletFilter, newData: TUpdateWallet) {
-    return await this.wallet.findOneAndUpdate(filter, newData, { new: true });
+    if (!wallet) {
+      throw new HttpException(HttpStatus.NOT_FOUND, 'Wallet not found');
+    }
+
+    wallet.balance += amount;
+    wallet.availableBalance = wallet.balance;
+
+    await wallet.save();
+
+    return {
+      message: 'Wallet balance updated',
+      data: wallet,
+    };
   }
 }
-
-export { WalletService };

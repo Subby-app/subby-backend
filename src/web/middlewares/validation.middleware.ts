@@ -1,35 +1,68 @@
-import { HttpStatus } from '@/utils/exceptions';
-import { Request, Response, NextFunction, RequestHandler } from 'express';
-import Joi from 'joi';
+import _ from 'lodash';
+import { ObjectSchema, ValidationError } from 'joi';
+import { refineError } from '../../utils/refine-validation-error.utils';
+import { ValidationException } from '../../utils/exceptions/validation.exception';
 
-export type TRequestField = 'body' | 'params' | 'query' | 'headers';
+interface DtoClass {
+  from: Function;
+}
 
-/**
- * Validates the incoming request field {@link TRequestField}.
- *
- * Utilizes joi.
- * @param schema - joi schema.
- * @param requestField - request field to validate {@link TRequestField}.
- */
-export function validation(schema: Joi.Schema, requestField: TRequestField): RequestHandler {
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const validationOptions = {
-      abortEarly: false,
-      allowUnknown: true,
-      stripUnknown: true,
-    };
+export class ValidateRequest {
+  #validator: ObjectSchema;
+  #DtoClass?: DtoClass;
 
-    const dataToValidate = req[requestField];
-    try {
-      const value = await schema.validateAsync(dataToValidate, validationOptions);
-      req[requestField] = value;
-      next();
-    } catch (e: any) {
-      const errors: string[] = [];
-      e.details.forEach((error: Joi.ValidationErrorItem) => {
-        errors.push(error.message);
-      });
-      res.status(HttpStatus.BAD_REQUEST).send({ errors: errors });
+  constructor(validator: ObjectSchema, DtoClass?: DtoClass) {
+    this.execute = this.execute.bind(this);
+
+    this.#validator = validator;
+    this.#DtoClass = DtoClass;
+  }
+
+  execute(req: any, res: any, next: any) {
+    // Enforcing passing DTO class for POST, PATCH, and PUT requests.
+    if (!_.isEmpty(req.body) && this.#DtoClass === undefined) {
+      throw new Error('A DtoClass is required');
     }
-  };
+
+    const { value, error }: { value: any; error?: ValidationError } = this.#validator.validate(
+      {
+        body: req.body,
+        params: req.params,
+        query: req.query,
+      },
+      { stripUnknown: true, convert: true },
+    );
+
+    // Refining joi validation error
+    if (error) {
+      const err = refineError(error);
+      throw new ValidationException(err);
+    }
+
+    /*
+     * If the request body is not empty and has been validated successfully,
+     * a data transfer object is created using the provided DtoClass and assigned to the request body.
+     * Fields with value "undefined" are stripped from DTOClass object.
+     */
+    if (!_.isEmpty(req.body) && this.#DtoClass !== undefined) {
+      req.body = _.omitBy(this.#DtoClass.from(value.body), _.isUndefined);
+    }
+
+    req.params = value.params || req.params;
+    req.query = value.query || req.query;
+
+    next();
+  }
+
+  /**
+   *
+   * @param {import('joi').ObjectSchema} validator
+   * @param {{from: Function}} [DtoClass]
+   * @returns {(req, res, next) => void}
+   */
+  static with(validator: ObjectSchema, DtoClass?: DtoClass) {
+    if (!validator) throw new Error('Validator is required');
+
+    return new ValidateRequest(validator, DtoClass).execute;
+  }
 }

@@ -26,7 +26,8 @@ export class AuthService {
   }
 
   public async login(email: string, password: string) {
-    const user = await this.UserService.getFullUser({ email });
+    const user = await this.UserService.getFullUser({ email: email });
+
     if (!(await user.isValidPassword(password))) {
       throw new HttpException(HttpStatus.BAD_REQUEST, 'invalid email or password');
     }

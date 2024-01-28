@@ -1,28 +1,41 @@
 import Joi from 'joi';
 
-const email = Joi.string().email().lowercase();
-const password = Joi.string().min(6);
-const otp = Joi.string().min(6);
+const emailSchema = Joi.string().email().label('Email');
+const passwordSchema = Joi.string().label('Password');
+const firstNameSchema = Joi.string().label('First Name');
+const lastNameSchema = Joi.string().label('Last Name');
+const usernameSchema = Joi.string().label('Username');
+const phoneNumberSchema = Joi.string().regex(/^\d+$/).length(11);
+const otpSchema = Joi.string().min(6).label('OTP');
+const newPasswordSchema = Joi.string().label('New Password');
 
-export const signup = Joi.object({
-  email: email.required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  password: password.required(),
-  username: Joi.string().required(),
-  phoneNumber: Joi.string().regex(/^\d+$/).length(13).required(),
+export const SignupValidation = Joi.object({
+  body: Joi.object({
+    email: emailSchema.required(),
+    firstName: firstNameSchema.required(),
+    lastName: lastNameSchema.required(),
+    username: usernameSchema.required(),
+    password: passwordSchema.required(),
+    phoneNumber: phoneNumberSchema.required(),
+  }),
 });
 
-export const login = Joi.object({
-  email: email.required(),
-  password: password.required(),
+export const LoginValidation = Joi.object({
+  body: Joi.object({
+    email: emailSchema.required(),
+    password: passwordSchema.required(),
+  }),
 });
 
-export const verifyOtp = Joi.object({
-  otp: otp.required(),
+export const VerifyOtpValidation = Joi.object({
+  body: Joi.object({
+    otp: otpSchema.required(),
+  }),
 });
 
-export const resetPassword = Joi.object({
-  newPassword: password.required(),
-  otp: otp.required(),
+export const ResetPasswordValidation = Joi.object({
+  body: Joi.object({
+    newPassword: newPasswordSchema,
+    otp: otpSchema.required(),
+  }),
 });

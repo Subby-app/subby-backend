@@ -18,6 +18,8 @@ export interface ITransaction extends Document {
   tax: number;
   currency: TransanctionCurrency;
   recipent: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type ITransactionFilter = {

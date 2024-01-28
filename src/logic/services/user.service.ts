@@ -38,7 +38,7 @@ class UserService {
       phoneNumber,
       role,
     });
-    await this.WalletService.create(userId.toString());
+    // await WalletService.create(userId.toString());
     return { accountCreated: true, email };
   }
 

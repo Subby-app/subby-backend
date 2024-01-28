@@ -1,10 +1,13 @@
-import { Document } from 'mongoose';
+import { EWalletStatus } from '@/utils/helpers/wallet.helpers';
+import { Document, ObjectId } from 'mongoose';
 
 export interface IWallet extends Document {
-  userId: string;
+  userId: ObjectId;
   balance: number;
   availableBalance: number;
-  status: string;
+  status: EWalletStatus;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type TWalletFilter = {
@@ -15,5 +18,5 @@ export type TWalletFilter = {
 export type TUpdateWallet = {
   balance?: number;
   availableBalance?: number;
-  status?: 'active' | 'inactive' | 'suspended';
+  status?: EWalletStatus;
 };

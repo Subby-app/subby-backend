@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IWallet } from '../../data/interfaces/wallet.interface';
-import { EWalletStatus } from '../../data/enums/wallet.enum';
+import { EWalletStatus } from '../../utils/helpers/wallet.helpers';
 
 const WalletSchema = new Schema(
   {
@@ -8,6 +8,7 @@ const WalletSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+      // index: true,
     },
     balance: {
       type: Number,

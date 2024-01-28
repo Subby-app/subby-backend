@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 import {
   TransanctionType,
   TransanctionStatus,
@@ -5,7 +6,7 @@ import {
 } from '../../../utils/helpers/transaction.helpers';
 
 export class CreateTransactionRequestDto {
-  userId: string;
+  userId: ObjectId;
   type: TransanctionType;
   status: TransanctionStatus;
   amount: number;
