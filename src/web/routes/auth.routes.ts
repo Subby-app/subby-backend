@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { authenticated, ValidateRequest } from '../middlewares/index';
-import {AuthController} from '../controllers/auth.controller';
-// import { CreateUserRequestDto } from '../../logic/dtos/auth/create-user-request.dto';
+import { AuthController } from '../controllers/auth.controller';
+import { CreateUserRequestDto } from '../../logic/dtos/User/index';
 import {
   LoginValidation,
   ResetPasswordValidation,
@@ -22,13 +22,13 @@ export const authRouter = Router();
 
 authRouter.post(
   '/signup',
-  //   ValidateRequest.with(SignupValidation, CreateUserRequestDto),
+  ValidateRequest.with(SignupValidation, CreateUserRequestDto),
   AuthController.signup,
 );
 
 authRouter.post(
   '/login',
-  //   ValidateRequest.with(LoginValidation, LoginRequestDto),
+  ValidateRequest.with(LoginValidation, LoginRequestDto),
   AuthController.login,
 );
 

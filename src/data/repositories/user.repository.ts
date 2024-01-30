@@ -18,27 +18,15 @@ export class UserRepository extends BaseRepository {
   }
 
   static async findById(id: string) {
-    try {
-      return User.findById(id);
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+    return User.findById(id);
   }
 
-  static async findOne(filter: string) {
-    try {
-      return User.findById(filter);
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+  static async findOne(filter: any) {
+    return User.findOne(filter);
   }
 
   static async findEmail(email: string) {
-    try {
-      return User.findById({ email });
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+    return User.findOne({ email }).select('+password').exec();
   }
 
   static async update(id: any, entity: any) {

@@ -1,11 +1,16 @@
-import { HttpException, HttpStatus, NotFoundException } from '../../utils/exceptions/index';
+import {
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '../../utils/exceptions/index';
 import * as token from '@/utils/token.util';
 import { IUser } from '../../data/interfaces/user.interface';
 import { ConflictException } from '@/utils/exceptions/conflict.exception';
-import { User } from '../../data/models/user.model';
 import { UserResponseDto } from '../../logic/dtos/User/User-response.dto';
 import { UserRepository } from '../../data/repositories/user.repository';
 import { UserEntity } from '../../data/entities';
+import { Encryption } from '../../utils/encrption.utils';
 
 export class AuthService {
   static async register(userDto: any): Promise<{ message: string; data: any }> {
@@ -21,33 +26,21 @@ export class AuthService {
     };
   }
 
-  static async login(email: string, password: string) {
-    const user = await User.findOne({ email: email });
+  static async login(email: string, password: string): Promise<{ message: string; data: any }> {
+    const user = await UserRepository.findEmail(email);
 
     if (!user) throw new ConflictException({ message: 'User not found' });
 
-    if (!(await user.isValidPassword(password))) {
-      throw new HttpException(HttpStatus.BAD_REQUEST, 'invalid email or password');
-    }
+    const isMatch = Encryption.compare(user.password, password);
+
+    if (!isMatch) throw new UnauthorizedException({ message: 'Invalid email or password' });
+
     return {
       message: 'successful login',
-      accessToken: token.createToken({ id: user._id }),
-      data: UserResponseDto.from(user),
-    };
-  }
-
-  public serializeUser(user: IUser) {
-    return {
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      verified: user.verified,
-      families: user.families,
-      subscriptions: user.subscriptions,
-      wallet: user.wallet,
+      data: {
+        accessToken: token.createToken({ id: user._id }),
+        data: UserResponseDto.from(user),
+      },
     };
   }
 

@@ -145,6 +145,13 @@ export class UserEntity {
       });
     }
 
+    if (!password) {
+      throw new ValidationException({
+        path: 'password',
+        message: 'User entity must have a password.',
+      });
+    }
+
     if (!username) {
       throw new ValidationException({
         path: 'username',
@@ -160,6 +167,7 @@ export class UserEntity {
     }
 
     const hash = Encryption.isEncrypted(password) ? password : Encryption.encryptText(password);
+    console.log(hash, 'hash');
     return this.#create({
       email,
       firstName,
