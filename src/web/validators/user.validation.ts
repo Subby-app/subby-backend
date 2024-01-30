@@ -29,6 +29,7 @@ export const UpdateUserValidation = Joi.object({
   body: Joi.object({
     firstName: nameSchema.label('First Name'),
     lastName: nameSchema.label('Last Name'),
+    username: usernameSchema.label('Username'),
     verified: Joi.boolean().label('Verified'),
     phoneNumber: phoneNumberSchema.label('Phone Number'),
     accountNumber: Joi.string().label('Account Number'),

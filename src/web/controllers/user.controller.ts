@@ -12,8 +12,6 @@ export class UserController {
   }
 
   static async create(req: Request, res: Response) {
-    console.log('sdfgsdfgsd');
-
     const { message, data } = await UserService.create(req.body);
     const result = BaseHttpResponse.success(message, data);
 
@@ -31,9 +29,10 @@ export class UserController {
 
   static async update(req: Request, res: Response) {
     const userId = req.params.id;
-    const updateUserDto = req.body;
+    console.log(userId);
+    console.log('Request Body:', req.body);
 
-    const { message, data } = await UserService.update(userId, updateUserDto);
+    const { message, data } = await UserService.update(userId, req.body);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);

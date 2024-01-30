@@ -1,4 +1,4 @@
-import { NotFoundException } from '@/utils/exceptions';
+import { NotFoundException } from '../../utils/exceptions/index';
 import { UserRepository } from '../../data/repositories/user.repository';
 import { UserResponseDto } from '../../logic/dtos/User';
 import { UserEntity } from '../../data/entities';
@@ -19,7 +19,6 @@ export class UserService {
   static async create(createUserDto: any): Promise<{ message: string; data: any }> {
     const userEntity = UserEntity.make(createUserDto);
     const user = await UserRepository.create(userEntity);
-    console.log('user', user);
 
     if (!user) {
       throw new NotFoundException('Failed to create user');
@@ -39,20 +38,20 @@ export class UserService {
 
     return {
       message: 'User fetched',
-      data: UserResponseDto.from(user.toObject()), // Ensure 'toObject' is called
+      data: UserResponseDto.from(user.toObject()),
     };
   }
 
   static async update(
-    UserId: string,
-    updateUserDto: Partial<UserEntity>,
+    userId: string,
+    updateUserDto: any,
   ): Promise<{ message: string; data: UserResponseDto }> {
-    const user = await UserRepository.findById(UserId);
+    const user = await UserRepository.findById(userId);
     if (!user) {
       throw new NotFoundException('No user found');
     }
 
-    const updatedUser = await UserRepository.update(user, updateUserDto);
+    const updatedUser = await UserRepository.update(userId, updateUserDto);
 
     if (!updatedUser) {
       throw new NotFoundException('No user found after update');

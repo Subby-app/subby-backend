@@ -41,9 +41,9 @@ export class UserRepository extends BaseRepository {
     }
   }
 
-  static async update(entity: any, session: any) {
+  static async update(id: any, entity: any) {
     try {
-      return User.findByIdAndUpdate(entity.id, entity, { new: true, session });
+      return User.findByIdAndUpdate(id, entity, { new: true });
     } catch (error) {
       this.handleRepositoryError(error);
     }

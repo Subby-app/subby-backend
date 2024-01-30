@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import { errorMiddleware, handleInvalidRoutes } from './web/middlewares';
+import logger from './utils/logger.utils';
 
 class App {
   private express: Application;
@@ -22,7 +23,6 @@ class App {
   private initializeMiddlewares() {
     this.express.use(helmet());
     this.express.use(cors());
-    this.express.use(bodyParser());
     this.express.use(morgan('dev'));
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: false }));
@@ -40,7 +40,7 @@ class App {
 
   public listen() {
     this.express.listen(this.port, () =>
-      console.log(
+      logger.info(
         `server running in "${process.env.NODE_ENV}" and listening on port "${this.port}"`,
       ),
     );

@@ -145,13 +145,6 @@ export class UserEntity {
       });
     }
 
-    if (!password) {
-      throw new ValidationException({
-        path: 'password',
-        message: 'User entity must have a password.',
-      });
-    }
-
     if (!username) {
       throw new ValidationException({
         path: 'username',
