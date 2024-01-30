@@ -1,122 +1,120 @@
-import { HttpException, HttpStatus } from '@/utils/exceptions';
-import { UserService } from './user.service';
-import * as token from '@/utils/token.util';
-import { generateOtp } from '@/utils/otp.util';
-import { IUser } from '../../data/interfaces/user.interface';
+// import { HttpException, HttpStatus } from '@/utils/exceptions';
+// import { UserService } from './user.service';
+// import * as token from '@/utils/token.util';
+// import { generateOtp } from '@/utils/otp.util';
+// import { IUser } from '../../data/interfaces/user.interface';
+// import { ConflictException } from '@/utils/exceptions/conflict.exception';
+// import { User } from '../../data/models/user.model';
+// import { UserResponseDto } from '../../logic/dtos/User/User-response.dto';
 
-export class AuthService {
-  private UserService = new UserService();
+// export class AuthService {
+//   private UserService = new UserService();
 
-  public async register(
-    email: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    username: string,
-    phoneNumber: string,
-  ) {
-    return await this.UserService.register(
-      email,
-      firstName,
-      lastName,
-      password,
-      username,
-      phoneNumber,
-    );
-  }
+//   public async register(userDto: any) {
+//     const user = await User.create(userDto);
+//     return {
+//       message: 'User created',
+//       data: UserResponseDto.from(user),
+//     };
 
-  public async login(email: string, password: string) {
-    const user = await this.UserService.getFullUser({ email: email });
+//     // if(user)
+//   }
 
-    if (!(await user.isValidPassword(password))) {
-      throw new HttpException(HttpStatus.BAD_REQUEST, 'invalid email or password');
-    }
-    return {
-      accessToken: token.createToken({ id: user._id }),
-      user: this.serializeUser(user),
-    };
-  }
+//   public async login(email: string, password: string) {
+//     const user = await User.findOne({ email: email });
 
-  public serializeUser(user: IUser) {
-    return {
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      verified: user.verified,
-      families: user.families,
-      subscriptions: user.subscriptions,
-      wallet: user.wallet,
-    };
-  }
+//     if (!user) throw new ConflictException({ message: 'User not found' });
 
-  public async sendOtp(email: string) {
-    const user = await this.UserService.getFullUser({ email });
+//     if (!(await user.isValidPassword(password))) {
+//       throw new HttpException(HttpStatus.BAD_REQUEST, 'invalid email or password');
+//     }
+//     return {
+//       message: 'successful login',
+//       accessToken: token.createToken({ id: user._id }),
+//       data: UserResponseDto.from(user),
+//     };
+//   }
 
-    const otp = generateOtp();
-    const futureDate = new Date();
-    futureDate.setMinutes(futureDate.getMinutes() + 5);
-    const expiration = futureDate.getTime().toString();
+//   public serializeUser(user: IUser) {
+//     return {
+//       _id: user._id,
+//       email: user.email,
+//       username: user.username,
+//       firstName: user.firstName,
+//       lastName: user.lastName,
+//       phoneNumber: user.phoneNumber,
+//       verified: user.verified,
+//       families: user.families,
+//       subscriptions: user.subscriptions,
+//       wallet: user.wallet,
+//     };
+//   }
 
-    user.otp = otp;
-    user.otpExpiration = expiration;
-    await user.save();
-    // *send to user's email
-    return { otpSent: true, email: user.email };
-  }
+//   public async sendOtp(email: string) {
+//     const user = await this.UserService.getFullUser({ email });
 
-  public async verifyOtp(email: string, otp: string) {
-    const user = await this.UserService.getFullUser({ email });
-    if (user.otp == '') throw new HttpException(HttpStatus.BAD_REQUEST, 'user has no otp');
+//     const otp = generateOtp();
+//     const futureDate = new Date();
+//     futureDate.setMinutes(futureDate.getMinutes() + 5);
+//     const expiration = futureDate.getTime().toString();
 
-    if (otp !== user.otp || parseInt(user.otpExpiration) < new Date().getTime()) {
-      throw new HttpException(HttpStatus.FORBIDDEN, 'otp expired or invalid');
-    }
-    user.otp = '';
-    user.otpExpiration = '';
-    await user.save();
-    return { validOtp: true };
-  }
+//     user.otp = otp;
+//     user.otpExpiration = expiration;
+//     await user.save();
+//     // *send to user's email
+//     return { otpSent: true, email: user.email };
+//   }
 
-  public async verifyAccount(email: string) {
-    const user = await this.UserService.findOne({ email });
-    if (user.verified) throw new HttpException(HttpStatus.BAD_REQUEST, 'user is already verified');
+//   public async verifyOtp(email: string, otp: string) {
+//     const user = await this.UserService.getFullUser({ email });
+//     if (user.otp == '') throw new HttpException(HttpStatus.BAD_REQUEST, 'user has no otp');
 
-    return await this.sendOtp(email);
-  }
+//     if (otp !== user.otp || parseInt(user.otpExpiration) < new Date().getTime()) {
+//       throw new HttpException(HttpStatus.FORBIDDEN, 'otp expired or invalid');
+//     }
+//     user.otp = '';
+//     user.otpExpiration = '';
+//     await user.save();
+//     return { validOtp: true };
+//   }
 
-  public async verifyEmail(email: string, otp: string) {
-    const user = await this.UserService.findOne({ email });
+//   public async verifyAccount(email: string) {
+//     const user = await this.UserService.findOne({ email });
+//     if (user.verified) throw new HttpException(HttpStatus.BAD_REQUEST, 'user is already verified');
 
-    const { validOtp } = await this.verifyOtp(email, otp);
-    if (validOtp) {
-      user.verified = true;
-      await user.save();
-    }
-    return { accountVerified: true, email };
-  }
+//     return await this.sendOtp(email);
+//   }
 
-  public async resetPasswordRequest(email: string) {
-    const user = await this.UserService.findOne({ email });
-    return await this.sendOtp(user.email);
-  }
+//   public async verifyEmail(email: string, otp: string) {
+//     const user = await this.UserService.findOne({ email });
 
-  public async resetPassword(email: string, newPassword: string, otp: string) {
-    const user = await this.UserService.getFullUser({ email });
+//     const { validOtp } = await this.verifyOtp(email, otp);
+//     if (validOtp) {
+//       user.verified = true;
+//       await user.save();
+//     }
+//     return { accountVerified: true, email };
+//   }
 
-    if (await user.isValidPassword(newPassword)) {
-      throw new HttpException(
-        HttpStatus.FORBIDDEN,
-        'old password cannot be new password, use a different password',
-      );
-    }
-    await this.verifyOtp(email, otp);
-    user.password = newPassword;
-    await user.save();
-    return { passwordReset: true };
-  }
-}
+//   public async resetPasswordRequest(email: string) {
+//     const user = await this.UserService.findOne({ email });
+//     return await this.sendOtp(user.email);
+//   }
 
-// export { AuthService };
+//   public async resetPassword(email: string, newPassword: string, otp: string) {
+//     const user = await this.UserService.getFullUser({ email });
+
+//     if (await user.isValidPassword(newPassword)) {
+//       throw new HttpException(
+//         HttpStatus.FORBIDDEN,
+//         'old password cannot be new password, use a different password',
+//       );
+//     }
+//     await this.verifyOtp(email, otp);
+//     user.password = newPassword;
+//     await user.save();
+//     return { passwordReset: true };
+//   }
+// }
+
+// // export { AuthService };

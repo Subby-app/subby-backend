@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import 'dotenv/config';
 import 'module-alias/register';
 import { mongooseConnect } from './data/database/mongoose';

@@ -1,120 +1,77 @@
-import { UserModel } from '../../data/models/user.model';
-import { WalletService } from './wallet.service';
-import { createObjectId } from '../../data/database/mongoose.util';
-import { HttpStatus, HttpException } from '@/utils/exceptions';
-import { TUserFilter, TFilterOptions, TUpdateUser } from '../../data/interfaces/user.interface';
+import { NotFoundException } from '@/utils/exceptions';
+import { UserRepository } from '../../data/repositories/user.repository';
+import { UserResponseDto } from '../../logic/dtos/User';
+import { UserEntity } from '../../data/entities';
 
-class UserService {
-  private user = UserModel;
-  private WalletService = new WalletService();
-  private sensitiveUserFields = ['+password', '+otp', '+otpCreatedAt', '+recoveryCodes'];
+export class UserService {
+  static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
+    const users = await UserRepository.find();
+    if (!users || users.length === 0) {
+      throw new NotFoundException('No user found');
+    }
 
-  public async register(
-    email: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    username: string,
-    phoneNumber: string,
-  ) {
-    if (await this.user.findOne({ email })) {
-      throw new HttpException(HttpStatus.FORBIDDEN, 'email already exists');
-    }
-    if (await this.user.findOne({ username })) {
-      throw new HttpException(HttpStatus.FORBIDDEN, 'username already taken');
-    }
-    if (await this.user.findOne({ phoneNumber })) {
-      throw new HttpException(HttpStatus.FORBIDDEN, 'phoneNumber already taken');
-    }
-    const role = 'user';
-    const userId = createObjectId();
-    await this.user.create({
-      _id: userId,
-      email,
-      firstName,
-      lastName,
-      password,
-      username,
-      phoneNumber,
-      role,
-    });
-    // await WalletService.create(userId.toString());
-    return { accountCreated: true, email };
+    return {
+      message: 'Users fetched',
+      data: UserResponseDto.fromMany(users),
+    };
   }
 
-  public async findAll() {
-    return await this.user.find({});
-  }
+  static async create(createUserDto: any): Promise<{ message: string; data: any }> {
+    const userEntity = UserEntity.make(createUserDto);
+    const user = await UserRepository.create(userEntity);
+    console.log('user', user);
 
-  public async findOne(filter: TUserFilter, options?: TFilterOptions) {
-    const query = this.user.findOne(filter);
-    if (options?.sensitiveFields) query.select(this.sensitiveUserFields);
-    const user = await query;
     if (!user) {
-      throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+      throw new NotFoundException('Failed to create user');
     }
-    return user;
+
+    return {
+      message: 'Users Created',
+      data: UserResponseDto.from(user.toObject()),
+    };
   }
 
-  public async getFullUser(filter: TUserFilter) {
-    return await this.findOne(filter, { sensitiveFields: true });
+  static async getById(UserId: string): Promise<{ message: string; data: UserResponseDto }> {
+    const user = await UserRepository.findById(UserId);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
+
+    return {
+      message: 'User fetched',
+      data: UserResponseDto.from(user.toObject()), // Ensure 'toObject' is called
+    };
   }
 
-  public async updateUser(filter: TUserFilter, updateFields: TUpdateUser) {
-    const user = await this.user.findOneAndUpdate(filter, updateFields, { new: true });
-    if (!user)
-      throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-    return user;
+  static async update(
+    UserId: string,
+    updateUserDto: Partial<UserEntity>,
+  ): Promise<{ message: string; data: UserResponseDto }> {
+    const user = await UserRepository.findById(UserId);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
+
+    const updatedUser = await UserRepository.update(user, updateUserDto);
+
+    if (!updatedUser) {
+      throw new NotFoundException('No user found after update');
+    }
+
+    return {
+      message: 'User Updated',
+      data: UserResponseDto.from(updatedUser.toObject()),
+    };
   }
 
-  public async getFamily(userId: string) {
-    return (await this.findOne({ _id: userId })).populate('families');
-  }
+  static async delete(UserId: string): Promise<{ message: string; data?: UserResponseDto }> {
+    const user = await UserRepository.delete(UserId);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
 
-  public async addFamily(ownerId: string, familyId: string) {
-    await this.user
-      .findOneAndUpdate({ _id: ownerId }, { $push: { families: familyId } })
-      .populate('families');
-  }
-
-  public async removeFamily(ownerId: string, familyId: string) {
-    await this.user
-      .findOneAndUpdate({ _id: ownerId }, { $pull: { families: familyId } })
-      .populate('families');
-  }
-
-  public async isSubscribed(userId: string, familyId: string) {
-    const user = await this.findOne({ _id: userId });
-    let isSubscribed = false;
-    user.subscriptions.forEach((subscription) => {
-      if (subscription.toString() === familyId.toString()) isSubscribed = true;
-    });
-    return isSubscribed;
-  }
-
-  public async addSubscription(subscriberId: string, familyId: string) {
-    await this.user
-      .findOneAndUpdate({ _id: subscriberId }, { $push: { subscriptions: familyId } })
-      .populate('subscriptions');
-  }
-
-  public async getSubscriptions(userId: string) {
-    return (await this.findOne({ _id: userId })).populate('subscriptions');
-  }
-
-  public async removeSubscription(subscriberId: string, familyId: string) {
-    await this.user
-      .findOneAndUpdate({ _id: subscriberId }, { $pull: { subscriptions: familyId } })
-      .populate('subscriptions');
-  }
-
-  public async deleteUser(filter: TUserFilter) {
-    const user = await this.user.findOneAndDelete(filter);
-    if (!user)
-      throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-    // !delete user's families
-    return { accountDeleted: true, email: user.email };
+    return {
+      message: 'User deleted',
+    };
   }
 }
-
-export { UserService };

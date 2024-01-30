@@ -7,10 +7,7 @@ import { ApiException } from './api.exception';
  * @param {message} string}
  */
 export class ValidationException extends ApiException {
-  constructor(
-    error: { path: string; message: string },
-    title: string = 'One or more validation errors occurred.',
-  ) {
-    super(400, title, error);
+  constructor(error: { path: string; message: string }) {
+    super(400, error);
   }
 }

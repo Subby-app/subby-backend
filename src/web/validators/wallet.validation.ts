@@ -20,12 +20,12 @@ export const CreateWalletValidation = Joi.object({
 });
 
 export const UpdateWalletValidation = Joi.object({
-  params: Joi.object({
-    id: objectIdSchema.required(),
-  }),
   body: Joi.object({
     balance: Joi.number().label('Balance'),
     availableBalance: Joi.number().label('Available Balance'),
     status: Joi.string().label('Status'),
+  }),
+  params: Joi.object({
+    id: objectIdSchema.required(),
   }),
 });

@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export interface IUser extends Document {
   email: string;
@@ -15,10 +15,12 @@ export interface IUser extends Document {
     hash: string;
     used: boolean;
   }[];
-  families: string[];
-  subscriptions: string[];
-  transactions: string[];
+  families: ObjectId[];
+  maxFamilies: number;
+  subscriptions: ObjectId[];
+  transactions: ObjectId[];
   accountNumber: string;
+  _id: ObjectId;
   wallet: string;
   earnings: number;
 
@@ -26,7 +28,7 @@ export interface IUser extends Document {
 }
 
 export type TUserFilter = {
-  _id?: string;
+  id?: ObjectId;
   email?: string;
   username?: string;
   phoneNumber?: string;

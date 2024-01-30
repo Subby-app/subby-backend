@@ -1,4 +1,4 @@
-import { createObjectId } from 'data/database/mongoose.util';
+import { createObjectId } from '../../../data/database/mongoose.util';
 import {
   TransanctionType,
   TransanctionStatus,
@@ -49,10 +49,8 @@ export class TransactionResponseDto {
     this.updatedAt = new Date();
   }
 
-  static from(
-    transaction: Pick<TransactionResponseDto, keyof TransactionResponseDto>,
-  ): TransactionResponseDto {
-    return new TransactionResponseDto(transaction);
+  static from(transaction: Partial<TransactionResponseDto>): TransactionResponseDto {
+    return new TransactionResponseDto(transaction as TransactionResponseDto);
   }
 
   static fromMany(transactions: TransactionResponseDto[]): TransactionResponseDto[] {

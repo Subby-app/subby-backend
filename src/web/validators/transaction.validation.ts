@@ -5,6 +5,7 @@ import {
   TransanctionStatuses,
   TransanctionTypes,
 } from '../../utils/helpers/transaction.helpers';
+import { objectIdSchema } from './lib/common-schema-validation';
 
 const transactionTypes = Joi.string()
   .valid(...TransanctionTypes)
@@ -15,16 +16,6 @@ const transactionStatus = Joi.string()
   .valid(...TransanctionStatuses)
   .lowercase()
   .label('Transaction status');
-
-const objectIdSchema = Joi.alternatives(
-  Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .messages({ 'string.pattern.base': 'Invalid object id' }),
-  Joi.object().keys({
-    id: Joi.any(),
-    bsontype: Joi.allow('ObjectId'),
-  }),
-);
 
 const methodObjects = Joi.string().allow(null).default(null).lowercase().label('Method');
 

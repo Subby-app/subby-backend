@@ -1,7 +1,6 @@
 export class BaseHttpResponse {
   public success: boolean;
   public message?: string;
-  public title?: string;
   public data?: any;
   public error?: any;
 
@@ -14,9 +13,6 @@ export class BaseHttpResponse {
    */
   constructor(success: boolean, message: string, data?: any, errors?: any) {
     this.success = success;
-
-    if (!data) this.title = message;
-    else this.message = message;
 
     this.data = data;
     this.error = errors;

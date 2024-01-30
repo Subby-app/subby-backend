@@ -1,10 +1,10 @@
 import { WalletResponseDto } from '../../logic/dtos/Wallet';
-import { WalletModel } from '../../data/models/wallet.model';
+import { Wallet } from '../../data/models/wallet.model';
 import { HttpException, HttpStatus } from '@/utils/exceptions';
 
 export class WalletService {
   static async create(walletDto: any): Promise<{ message: string; data: WalletResponseDto }> {
-    const wallet = await WalletModel.create(walletDto);
+    const wallet = await Wallet.create(walletDto);
 
     return {
       message: 'Wallet created',
@@ -13,7 +13,7 @@ export class WalletService {
   }
 
   static async getWallet(userId: string): Promise<{ message: string; data: any }> {
-    const wallet = await WalletModel.findOne({ userId });
+    const wallet = await Wallet.findOne({ userId });
 
     if (!wallet) {
       throw new HttpException(HttpStatus.NOT_FOUND, 'Wallet not found');
@@ -29,7 +29,7 @@ export class WalletService {
     userId: string,
     amount: number,
   ): Promise<{ message: string; data: any }> {
-    const wallet = await WalletModel.findOne({ userId });
+    const wallet = await Wallet.findOne({ userId });
 
     if (!wallet) {
       throw new HttpException(HttpStatus.NOT_FOUND, 'Wallet not found');

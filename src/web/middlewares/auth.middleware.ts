@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, Token } from '@/utils/token.util';
-import { UserModel } from '../../data/models/user.model';
+import { User } from '../../data/models/user.model';
 import { HttpException, HttpStatus } from '@/utils/exceptions/index';
 import jwt from 'jsonwebtoken';
 
@@ -28,7 +28,7 @@ export async function authenticated(
       return next(authError);
     }
 
-    const user = await UserModel.findById(payload.id).exec();
+    const user = await User.findById(payload.id).exec();
 
     if (!user) {
       return next(new HttpException(HttpStatus.NOT_FOUND, 'user not found'));

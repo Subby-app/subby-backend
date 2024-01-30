@@ -7,7 +7,7 @@ import { ApiException } from './api.exception';
  * @param {message} string}
  */
 export class ForbiddenException extends ApiException {
-  constructor(error: { message: string }, title: string = 'Permission Denied') {
-    super(403, title, error);
+  constructor(error: { message: string }) {
+    super(403, error);
   }
 }

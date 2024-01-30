@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { IUser } from '../interfaces/user.interface';
+import { UserRole } from '../../utils/helpers/user.helper';
 
 const UserSchema = new Schema(
   {
@@ -8,6 +9,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      index: true,
       trim: true,
     },
     firstName: {
@@ -35,7 +37,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      required: true,
+      enum: UserRole,
+      default: UserRole.USER,
     },
     verified: {
       type: Boolean,
@@ -98,4 +101,4 @@ UserSchema.methods.isValidPassword = async function (password: string): Promise<
   return await bcrypt.compare(password, this.password);
 };
 
-export const UserModel = model<IUser>('User', UserSchema);
+export const User = model<IUser>('User', UserSchema);
