@@ -6,7 +6,7 @@
 // import * as mongooseUtil from '../../data/database/mongoose.util';
 // import { TSubscribers } from '../../data/interfaces/family.interface';
 
-// export class FamilyService {
+// class FamilyService {
 //   private family = FamilyModel;
 //   private UserService = new UserService();
 //   private WalletService = new WalletService();
@@ -224,4 +224,4 @@
 //   }
 // }
 
-// // export { FamilyService };
+// export { FamilyService };

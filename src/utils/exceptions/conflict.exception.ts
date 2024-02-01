@@ -7,6 +7,6 @@ import { ApiException } from './api.exception';
  */
 export class ConflictException extends ApiException {
   constructor(error: { message: string }) {
-    super(409, error);
+    super(409, 'Conflict', error.message);
   }
 }

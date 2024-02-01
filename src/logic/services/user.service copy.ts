@@ -10,50 +10,50 @@
 //   private WalletService = new WalletService();
 //   private sensitiveUserFields = ['+password', '+otp', '+otpCreatedAt', '+recoveryCodes'];
 
-//   public async register(userDto: any) {
-//     const { email, username, phoneNumber } = userDto;
-//     if (await this.user.findOne({ email })) {
-//       throw new HttpException(HttpStatus.FORBIDDEN, 'email already exists');
-//     }
-//     if (await this.user.findOne({ username })) {
-//       throw new ConflictException({ message: 'username already taken' });
-//     }
-//     if (await this.user.findOne({ phoneNumber })) {
-//       throw new HttpException(HttpStatus.FORBIDDEN, 'phoneNumber already taken');
-//     }
-//     const userId = createObjectId();
-//     await this.user.create({
-//       _id: userId,
-//       userDto,
-//     });
-//     // await WalletService.create(userId.toString());
-//     return { accountCreated: true, email };
-//   }
+//   //   public async register(userDto: any) {
+//   //     const { email, username, phoneNumber } = userDto;
+//   //     if (await this.user.findOne({ email })) {
+//   //       throw new HttpException(HttpStatus.FORBIDDEN, 'email already exists');
+//   //     }
+//   //     if (await this.user.findOne({ username })) {
+//   //       throw new ConflictException({ message: 'username already taken' });
+//   //     }
+//   //     if (await this.user.findOne({ phoneNumber })) {
+//   //       throw new HttpException(HttpStatus.FORBIDDEN, 'phoneNumber already taken');
+//   //     }
+//   //     const userId = createObjectId();
+//   //     await this.user.create({
+//   //       _id: userId,
+//   //       userDto,
+//   //     });
+//   //     // await WalletService.create(userId.toString());
+//   //     return { accountCreated: true, email };
+//   //   }
 
-//   public async findAll() {
-//     return await this.user.find({});
-//   }
+//   //   public async findAll() {
+//   //     return await this.user.find({});
+//   //   }
 
-//   public async findOne(filter: TUserFilter, options?: TFilterOptions) {
-//     const query = this.user.findOne(filter);
-//     if (options?.sensitiveFields) query.select(this.sensitiveUserFields);
-//     const user = await query;
-//     if (!user) {
-//       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-//     }
-//     return user;
-//   }
+//   //   public async findOne(filter: TUserFilter, options?: TFilterOptions) {
+//   //     const query = this.user.findOne(filter);
+//   //     if (options?.sensitiveFields) query.select(this.sensitiveUserFields);
+//   //     const user = await query;
+//   //     if (!user) {
+//   //       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+//   //     }
+//   //     return user;
+//   //   }
 
-//   public async getFullUser(filter: TUserFilter) {
-//     return await this.findOne(filter, { sensitiveFields: true });
-//   }
+//   //   public async getFullUser(filter: TUserFilter) {
+//   //     return await this.findOne(filter, { sensitiveFields: true });
+//   //   }
 
-//   public async updateUser(filter: TUserFilter, updateFields: TUpdateUser) {
-//     const user = await this.user.findOneAndUpdate(filter, updateFields, { new: true });
-//     if (!user)
-//       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-//     return user;
-//   }
+// //   public async updateUser(filter: TUserFilter, updateFields: TUpdateUser) {
+// //     const user = await this.user.findOneAndUpdate(filter, updateFields, { new: true });
+// //     if (!user)
+// //       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+// //     return user;
+// //   }
 
 //   public async getFamily(userId: string) {
 //     return (await this.findOne({ _id: userId })).populate('families');
@@ -96,13 +96,13 @@
 //       .populate('subscriptions');
 //   }
 
-//   public async deleteUser(filter: TUserFilter) {
-//     const user = await this.user.findOneAndDelete(filter);
-//     if (!user)
-//       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
-//     // !delete user's families
-//     return { accountDeleted: true, email: user.email };
-//   }
-// }
+// //   public async deleteUser(filter: TUserFilter) {
+// //     const user = await this.user.findOneAndDelete(filter);
+// //     if (!user)
+// //       throw new HttpException(HttpStatus.NOT_FOUND, `user with filter '${filter}' not found`);
+// //     // !delete user's families
+// //     return { accountDeleted: true, email: user.email };
+// //   }
+// // }
 
 // export { UserService };

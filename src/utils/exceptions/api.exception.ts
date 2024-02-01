@@ -1,22 +1,14 @@
 export class ApiException extends Error {
-  public status: number;
-  public errors?: { message: string; [key: string]: any };
-  public isOperational: boolean;
+  title: string;
+  status: number;
+  errors: string;
+  isOperational: boolean;
 
-  /**
-   *
-   * @param {number} httpStatusCode
-   * @param {{ message: string, [key: string]: * }} [errors]
-   * @param {boolean} [isOperational]
-   */
-  constructor(
-    httpStatusCode: number,
-    errors?: { message: string; [key: string]: any },
-    isOperational: boolean = true,
-  ) {
+  constructor(httpStatusCode: number, title: string, errors: string, isOperational = true) {
     super();
     Object.setPrototypeOf(this, new.target.prototype);
 
+    this.title = title;
     this.status = httpStatusCode;
     this.errors = errors;
     this.isOperational = isOperational;

@@ -3,13 +3,6 @@ import Joi from 'joi';
 
 export const emailSchema = Joi.string().label('Email').trim().lowercase().email().max(255);
 
-export const makeConfirmPasswordSchema = (reference: string) =>
-  Joi.string()
-    .label('Confirm password')
-    .trim()
-    .equal(Joi.ref(reference))
-    .messages({ 'any.only': 'Passwords do not match' });
-
 export const nameSchema = Joi.string()
   .label('Name')
   .trim()

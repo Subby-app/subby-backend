@@ -21,8 +21,8 @@ export class UserEntity {
   wallet: string;
   earnings: number;
   id: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
+  // createdAt: Date;
+  // updatedAt: Date;
 
   constructor({
     id,
@@ -40,8 +40,8 @@ export class UserEntity {
     accountNumber,
     wallet,
     earnings,
-    createdAt,
-    updatedAt,
+    // createdAt,
+    // updatedAt,
   }: {
     id: Types.ObjectId;
     email: string;
@@ -58,8 +58,8 @@ export class UserEntity {
     accountNumber: string;
     wallet: string;
     earnings: number;
-    createdAt: Date;
-    updatedAt: Date;
+    // createdAt: Date;
+    // updatedAt: Date;
   }) {
     this.id = id;
     this.email = email;
@@ -76,8 +76,8 @@ export class UserEntity {
     this.accountNumber = accountNumber;
     this.wallet = wallet;
     this.earnings = earnings;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+    // this.createdAt = createdAt;
+    // this.updatedAt = updatedAt;
   }
 
   static make({
@@ -96,8 +96,8 @@ export class UserEntity {
     wallet,
     earnings,
     _id,
-    createdAt,
-    updatedAt,
+    // createdAt,
+    // updatedAt,
   }: {
     _id: Types.ObjectId;
     email: string;
@@ -114,8 +114,8 @@ export class UserEntity {
     accountNumber: string;
     wallet: string;
     earnings: number;
-    createdAt: Date;
-    updatedAt: Date;
+    // createdAt: Date;
+    // updatedAt: Date;
   }): UserEntity {
     if (_id && !Id.isValidId(_id)) {
       throw new ValidationException({
@@ -167,7 +167,6 @@ export class UserEntity {
     }
 
     const hash = Encryption.isEncrypted(password) ? password : Encryption.encryptText(password);
-    console.log(hash, 'hash');
     return this.#create({
       email,
       firstName,
@@ -184,8 +183,8 @@ export class UserEntity {
       wallet,
       id: _id,
       earnings,
-      createdAt,
-      updatedAt,
+      // createdAt,
+      // updatedAt,
     });
   }
 
@@ -205,8 +204,8 @@ export class UserEntity {
     earnings,
     role = UserRole.USER,
     id = Id.makeId(),
-    createdAt = new Date(),
-    updatedAt = new Date(),
+    // createdAt = new Date(),
+    // updatedAt = new Date(),
   }: {
     id: Types.ObjectId;
     email: string;
@@ -223,8 +222,8 @@ export class UserEntity {
     accountNumber: string;
     wallet: string;
     earnings: number;
-    createdAt: Date;
-    updatedAt: Date;
+    // createdAt: Date;
+    // updatedAt: Date;
   }): UserEntity {
     return new UserEntity({
       id,
@@ -242,8 +241,8 @@ export class UserEntity {
       accountNumber,
       wallet,
       earnings,
-      createdAt,
-      updatedAt,
+      // createdAt,
+      // updatedAt,
     });
   }
 }

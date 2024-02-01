@@ -20,9 +20,6 @@ export class ValidateRequest {
 
   execute(req: any, res: any, next: any) {
     // Enforcing passing DTO class for POST, PATCH, and PUT requests.
-    if (!_.isEmpty(req.body) && this.#DtoClass === undefined) {
-      throw new Error('A DtoClass is required');
-    }
 
     const { value, error }: { value: any; error?: ValidationError } = this.#validator.validate(
       {
@@ -61,8 +58,6 @@ export class ValidateRequest {
    * @returns {(req, res, next) => void}
    */
   static with(validator: ObjectSchema, DtoClass?: DtoClass) {
-    if (!validator) throw new Error('Validator is required');
-
     return new ValidateRequest(validator, DtoClass).execute;
   }
 }

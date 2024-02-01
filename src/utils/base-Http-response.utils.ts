@@ -13,7 +13,7 @@ export class BaseHttpResponse {
    */
   constructor(success: boolean, message: string, data?: any, errors?: any) {
     this.success = success;
-
+    this.message = message;
     this.data = data;
     this.error = errors;
   }
