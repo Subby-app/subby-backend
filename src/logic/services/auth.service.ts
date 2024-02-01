@@ -16,7 +16,7 @@ export class AuthService {
     }
     return {
       message: 'User Created',
-      data: UserResponseDto.from(user.toObject()),
+      data: user.email,
     };
   }
 

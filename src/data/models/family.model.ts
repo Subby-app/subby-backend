@@ -65,4 +65,4 @@ FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
   next();
 });
 
-export const FamilyModel = model<IFamily>('Family', FamilySchema);
+export const Family = model<IFamily>('Family', FamilySchema);
