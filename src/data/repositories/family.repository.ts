@@ -1,7 +1,7 @@
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
 
-export class UserRepository extends BaseRepository {
+export class FamilyRepository extends BaseRepository {
   static async create(entity: any) {
     try {
       const user = new Family(entity);

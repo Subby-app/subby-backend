@@ -38,7 +38,6 @@ const FamilySchema = new Schema(
     isFull: {
       type: Boolean,
       default: false,
-      required: true,
     },
     membershipPrice: {
       type: Number,

@@ -1,10 +1,8 @@
-import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
 import { ValidationException } from '../../utils/exceptions';
 import { Encryption } from '../../utils/encrption.utils';
-import { UserRole } from '@/utils/helpers/user.helper';
-import Id from '../lib/makeId';
-import { createObjectId, isEqualObjectId } from 'data/database/mongoose.util';
+import { UserRole } from '../../utils/helpers/user.helper';
+import { createObjectId, isEqualObjectId } from '../lib/createId';
 
 export class UserEntity {
   email: string;
@@ -15,9 +13,9 @@ export class UserEntity {
   phoneNumber: string;
   role: string;
   verified: boolean;
-  families: ObjectId[];
+  families: Types.ObjectId[];
   maxFamilies: number;
-  subscriptions: ObjectId[];
+  subscriptions: Types.ObjectId[];
   accountNumber: string;
   wallet: string;
   earnings: number;
@@ -49,9 +47,9 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;
@@ -99,9 +97,9 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;
@@ -201,9 +199,9 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;

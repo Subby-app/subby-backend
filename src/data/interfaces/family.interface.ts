@@ -1,7 +1,7 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export interface IFamily extends Document {
-  owner: string;
+  owner: ObjectId;
   name: string;
   subscribers: {
     subscriber: string;
@@ -23,13 +23,13 @@ export type TFamilyLabel = 'netflix' | 'spotify';
 export type TFamilyFilter = {
   _id?: string;
   name?: string;
-  owner?: string;
+  owner?: ObjectId;
   label?: string;
   isFull?: boolean;
 };
 
 export type TSubscribers = {
-  subscriber: string;
+  subscriber: ObjectId;
   joinedAt: string;
   joinMethod: string;
   isActive: boolean;
