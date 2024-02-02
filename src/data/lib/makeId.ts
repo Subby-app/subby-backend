@@ -5,7 +5,7 @@ export default class Id {
     return new mongoose.Types.ObjectId();
   }
 
-  static isValidId(id: any): boolean {
+  static isValidId(id: string): boolean {
     return mongoose.Types.ObjectId.isValid(id);
   }
 }
