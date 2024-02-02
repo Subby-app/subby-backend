@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { ValidationException } from '../../utils/exceptions';
-import { TSubscribers } from '../interfaces/family.interface';
+import { TSubscribers } from '../interfaces/IFamily';
 import { createObjectId, isEqualObjectId } from '../lib/createId';
 
 export class FamilyEntity {

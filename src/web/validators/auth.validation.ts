@@ -1,41 +1,37 @@
 import Joi from 'joi';
+import { emailSchema, nameSchema, phoneNumberSchema } from './lib/common-schema-validation';
 
-const emailSchema = Joi.string().email().label('Email');
 const passwordSchema = Joi.string().label('Password');
-const firstNameSchema = Joi.string().label('First Name');
-const lastNameSchema = Joi.string().label('Last Name');
-const usernameSchema = Joi.string().label('Username');
-const phoneNumberSchema = Joi.string().regex(/^\d+$/).length(11);
 const otpSchema = Joi.string().min(6).label('OTP');
 const newPasswordSchema = Joi.string().label('New Password');
 
 export const SignupValidation = Joi.object({
   body: Joi.object({
-    email: emailSchema.required(),
-    firstName: firstNameSchema.required(),
-    lastName: lastNameSchema.required(),
-    username: usernameSchema.required(),
-    password: passwordSchema.required(),
-    phoneNumber: phoneNumberSchema.required(),
+    email: emailSchema.required().label('email'),
+    firstName: nameSchema.required().label('firstName'),
+    lastName: nameSchema.required().label('LastName'),
+    username: nameSchema.required().label('UserName'),
+    password: passwordSchema.required().label('Password'),
+    phoneNumber: phoneNumberSchema.required().label('Phone nUmber'),
   }),
 });
 
 export const LoginValidation = Joi.object({
   body: Joi.object({
-    email: emailSchema.required(),
-    password: passwordSchema.required(),
+    email: emailSchema.required().label('email'),
+    password: passwordSchema.required().label('Password'),
   }),
 });
 
 export const VerifyOtpValidation = Joi.object({
   body: Joi.object({
-    otp: otpSchema.required(),
+    otp: otpSchema.required().label('otp'),
   }),
 });
 
 export const ResetPasswordValidation = Joi.object({
   body: Joi.object({
-    newPassword: newPasswordSchema,
-    otp: otpSchema.required(),
+    newPassword: newPasswordSchema.label('Password'),
+    otp: otpSchema.required().label('otp'),
   }),
 });

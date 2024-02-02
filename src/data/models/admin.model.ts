@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { IAdmin } from '../interfaces/admin.interface';
+import { IAdmin } from '../interfaces/IAdmin';
 
 const AdminSchema = new Schema(
   {

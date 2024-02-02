@@ -1,5 +1,5 @@
 import { EWalletStatus } from '../../../utils/helpers/wallet.helpers';
-import { IWallet } from '../../../data/interfaces/wallet.interface';
+import { IWallet } from '../../../data/interfaces/IWallet';
 import { ObjectId } from 'mongoose';
 import { createObjectId } from 'data/lib/createId';
 

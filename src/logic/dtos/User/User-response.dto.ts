@@ -1,4 +1,4 @@
-import { IUser } from '../../../data/interfaces/user.interface';
+import { IUser } from '../../../data/interfaces/IUser';
 import { Document, Types } from 'mongoose';
 
 export class UserResponseDto {

@@ -4,7 +4,7 @@ import {
   TransanctionStatus,
   TransanctionType,
 } from '../../utils/helpers/transaction.helpers';
-import { ITransaction } from 'data/interfaces/transaction.interface';
+import { ITransaction } from 'data/interfaces/ITransaction';
 
 const TransactionSchema = new Schema(
   {

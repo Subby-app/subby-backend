@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IWallet } from '../../data/interfaces/wallet.interface';
+import { IWallet } from '../interfaces/IWallet';
 import { EWalletStatus } from '../../utils/helpers/wallet.helpers';
 
 const WalletSchema = new Schema(

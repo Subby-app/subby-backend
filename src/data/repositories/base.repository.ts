@@ -15,7 +15,7 @@ class BaseRepository {
 
   static formatMongoDuplicateError(
     error: Record<string, any>,
-    suffix = 'already exists',
+    suffix = '',
   ): { message: string; path: string } {
     const errorField = Object.keys(error.keyPattern)[0];
 

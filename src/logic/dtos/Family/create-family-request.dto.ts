@@ -1,5 +1,5 @@
 import { ObjectId, Document } from 'mongoose';
-import { IFamily, TFamilyLabel } from 'data/interfaces/family.interface';
+import { IFamily, TFamilyLabel } from 'data/interfaces/IFamily';
 
 type SubscriberData = {
   subscriber: string;

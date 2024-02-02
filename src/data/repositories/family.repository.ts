@@ -1,5 +1,7 @@
+import { FilterQuery } from 'mongoose';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
+import { IFamily } from '../interfaces/IFamily';
 
 export class FamilyRepository extends BaseRepository {
   static async create(entity: any) {
@@ -21,15 +23,19 @@ export class FamilyRepository extends BaseRepository {
     return Family.findById(id);
   }
 
-  static async findOne(filter: any) {
+  static async findOne(filter: FilterQuery<IFamily>) {
     return Family.findOne(filter);
+  }
+
+  static async getSubscribers(subscribers: FilterQuery<IFamily>) {
+    return Family.findOne(subscribers);
   }
 
   static async findEmail(email: string) {
     return Family.findOne({ email });
   }
 
-  static async update(id: any, entity: any) {
+  static async update(id: string, entity: any) {
     try {
       return Family.findByIdAndUpdate(id, entity, { new: true });
     } catch (error) {

@@ -11,19 +11,20 @@ export const familyRouter = Router();
 
 familyRouter.post(
   '/',
-  // authenticated,
+  authenticated,
   ValidateRequest.with(CreateFamilyValidation, CreateFamilyRequestDto),
   FamilyController.create,
 );
 
-familyRouter.get('/', FamilyController.getAll);
+familyRouter.get('/', authenticated, FamilyController.getAll);
 
-familyRouter.get('/:id', FamilyController.getById);
+familyRouter.get('/:id', authenticated, FamilyController.getById);
 
 familyRouter.patch(
   '/:id',
+  authenticated,
   ValidateRequest.with(UpdateFamilyValidation, UpdateFamilyRequestDto),
   FamilyController.update,
 );
 
-familyRouter.delete('/:id', FamilyController.delete);
+familyRouter.delete('/:id', authenticated, FamilyController.delete);
