@@ -32,7 +32,7 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async getSubscribers(subscribers: FilterQuery<IFamily>) {
-    return Family.findOne(subscribers);
+    return Family.find(subscribers);
   }
 
   static async findEmail(email: string) {
