@@ -1,4 +1,3 @@
-import { createObjectId } from '../../../data/database/mongoose.util';
 import {
   TransanctionType,
   TransanctionStatus,
@@ -13,7 +12,7 @@ interface TransactionMethod {
 }
 
 export class TransactionResponseDto {
-  _id: typeof createObjectId;
+  _id: ObjectId;
   userId: ObjectId;
   type: TransanctionType;
   status: TransanctionStatus;

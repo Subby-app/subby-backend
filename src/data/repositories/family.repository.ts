@@ -1,12 +1,13 @@
-import { ObjectId } from 'mongoose';
-import { Transaction } from '../models/index';
+import { FilterQuery } from 'mongoose';
+import { Family } from '../models/index';
 import BaseRepository from './base.repository';
+import { IFamily } from '../interfaces/IFamily';
 
 export class FamilyRepository extends BaseRepository {
-  static async create(entity: any, session: any) {
+  static async create(entity: any) {
     try {
-      const user = new Transaction(entity);
-      await user.save({ session });
+      const user = new Family(entity);
+      await user.save();
 
       return user;
     } catch (error) {
@@ -15,42 +16,34 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async find() {
-    try {
-      return Transaction.find();
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+    return Family.find();
   }
 
-  static async findById(id: ObjectId) {
-    try {
-      return Transaction.findById(id);
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+  static async findById(id: string) {
+    return Family.findById(id);
   }
 
-  static async findOne(filter: string) {
-    try {
-      return Transaction.findById(filter);
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+  static async findOne(filter: FilterQuery<IFamily>) {
+    return Family.findOne(filter);
+  }
+
+  static async getSubscribers(subscribers: FilterQuery<IFamily>) {
+    return Family.findOne(subscribers);
   }
 
   static async findEmail(email: string) {
+    return Family.findOne({ email });
+  }
+
+  static async update(id: string, entity: any) {
     try {
-      return Transaction.findById({ email });
+      return Family.findByIdAndUpdate(id, entity, { new: true });
     } catch (error) {
       this.handleRepositoryError(error);
     }
   }
 
-  static async update(entity: any, session: any) {
-    try {
-      return Transaction.findByIdAndUpdate(entity.id, entity, { new: true, session });
-    } catch (error) {
-      this.handleRepositoryError(error);
-    }
+  static async delete(id: string) {
+    return Family.findByIdAndDelete(id);
   }
 }

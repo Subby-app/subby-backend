@@ -1,132 +1,54 @@
-// /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-// import { Request, Response, NextFunction } from 'express';
-// import { HttpStatus } from '@/utils/exceptions';
-// import { FamilyService } from '../../logic/services/family.service';
-// import { TFamilyFilter } from '../../data/interfaces/family.interface';
+import { Request, Response } from 'express';
+import { FamilyService } from '../../logic/services/family.service';
+import { BaseHttpResponse } from '../../utils/base-Http-response.utils';
+import { HttpStatus } from '../../utils/exceptions/http-status.enum';
 
-// const familyService = new FamilyService();
+export class FamilyController {
+  static async getAll(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getAll();
+    const result = BaseHttpResponse.success(message, data);
 
-// export async function create(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const { name, label } = req.body;
-//     const data = await familyService.create(req.user?._id!, name, label);
+    res.status(HttpStatus.OK).json(result);
+  }
 
-//     res.status(HttpStatus.CREATED).json({
-//       message: 'family created',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+  static async create(req: Request, res: Response) {
+    const { message, data } = await FamilyService.create(req.body);
+    const result = BaseHttpResponse.success(message, data);
 
-// export async function findMany(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const filter: TFamilyFilter = req.query;
-//     const data = await familyService.findMany(filter);
+    res.status(HttpStatus.CREATED).json(result);
+  }
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'families retrieved',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+  static async getById(req: Request, res: Response) {
+    const familyId = req.params.id;
 
-// export async function familyOwner(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const data = await familyService.familiesOfOwner(req.user?._id!);
+    const { message, data } = await FamilyService.getById(familyId);
+    const result = BaseHttpResponse.success(message, data);
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'all families retrieved',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+    res.status(HttpStatus.OK).json(result);
+  }
 
-// export async function familyOverview(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const data = await familyService.familyOverview(req.user?._id!);
+  static async getOwner(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getById(req.body);
+    const result = BaseHttpResponse.success(message, data);
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'overview generated',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+    res.status(HttpStatus.OK).json(result);
+  }
 
-// export async function subscriptions(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const data = await familyService.getAllSubscriptions(req.user?._id!);
+  static async update(req: Request, res: Response) {
+    const familyId = req.params.id;
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'all subscriptions retrieved',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+    const { message, data } = await FamilyService.update(familyId, req.body);
+    const result = BaseHttpResponse.success(message, data);
 
-// export async function findOne(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const _id = req.params.familyId;
-//     const _filter: TFamilyFilter = req.query;
-//     const filter = { ..._filter, _id };
-//     const data = await familyService.findOne(filter);
+    res.status(HttpStatus.OK).json(result);
+  }
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'family found',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+  static async delete(req: Request, res: Response) {
+    const familyId = req.params.id;
 
-// export async function joinFamily(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const data = await familyService.addSubscriber(req.params.familyId, req.user?._id!, 'join');
+    const { message, data } = await FamilyService.delete(familyId);
+    const result = BaseHttpResponse.success(message, data);
 
-//     res.status(HttpStatus.OK).json({
-//       message: 'you have been added to the family successfully',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// export async function inviteSubscriber(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const { familyId, subscriberId } = req.params;
-//     const data = await familyService.addSubscriber(familyId, subscriberId, 'invite');
-
-//     res.status(HttpStatus.OK).json({
-//       message: 'subscriber added, an invitation link has been sent',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
-// export async function updateSubscriber() {}
-
-// export async function removeSubscriber(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const data = await familyService.leaveFamily(req.params.familyId, req.user?._id!);
-
-//     res.status(HttpStatus.OK).json({
-//       message: 'you have left the family successfully',
-//       data,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// }
+    res.status(HttpStatus.OK).json(result);
+  }
+}

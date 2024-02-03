@@ -1,9 +1,8 @@
-import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
 import { ValidationException } from '../../utils/exceptions';
 import { Encryption } from '../../utils/encrption.utils';
-import { UserRole } from '@/utils/helpers/user.helper';
-import Id from '../lib/makeId';
+import { UserRole } from '../../utils/helpers/user.helper';
+import { createObjectId, isEqualObjectId } from '../lib/createId';
 
 export class UserEntity {
   email: string;
@@ -14,15 +13,13 @@ export class UserEntity {
   phoneNumber: string;
   role: string;
   verified: boolean;
-  families: ObjectId[];
+  families: Types.ObjectId[];
   maxFamilies: number;
-  subscriptions: ObjectId[];
+  subscriptions: Types.ObjectId[];
   accountNumber: string;
   wallet: string;
   earnings: number;
   id: Types.ObjectId;
-  // createdAt: Date;
-  // updatedAt: Date;
 
   constructor({
     id,
@@ -40,8 +37,6 @@ export class UserEntity {
     accountNumber,
     wallet,
     earnings,
-    // createdAt,
-    // updatedAt,
   }: {
     id: Types.ObjectId;
     email: string;
@@ -52,14 +47,12 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;
-    // createdAt: Date;
-    // updatedAt: Date;
   }) {
     this.id = id;
     this.email = email;
@@ -76,8 +69,6 @@ export class UserEntity {
     this.accountNumber = accountNumber;
     this.wallet = wallet;
     this.earnings = earnings;
-    // this.createdAt = createdAt;
-    // this.updatedAt = updatedAt;
   }
 
   static make({
@@ -96,8 +87,6 @@ export class UserEntity {
     wallet,
     earnings,
     _id,
-    // createdAt,
-    // updatedAt,
   }: {
     _id: Types.ObjectId;
     email: string;
@@ -108,16 +97,14 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;
-    // createdAt: Date;
-    // updatedAt: Date;
   }): UserEntity {
-    if (_id && !Id.isValidId(_id)) {
+    if (_id && !isEqualObjectId(_id)) {
       throw new ValidationException({
         path: 'id',
         message: 'User entity must have a valid id.',
@@ -183,8 +170,6 @@ export class UserEntity {
       wallet,
       id: _id,
       earnings,
-      // createdAt,
-      // updatedAt,
     });
   }
 
@@ -203,9 +188,7 @@ export class UserEntity {
     wallet,
     earnings,
     role = UserRole.USER,
-    id = Id.makeId(),
-    // createdAt = new Date(),
-    // updatedAt = new Date(),
+    id = createObjectId(),
   }: {
     id: Types.ObjectId;
     email: string;
@@ -216,14 +199,12 @@ export class UserEntity {
     phoneNumber: string;
     role: string;
     verified: boolean;
-    families: ObjectId[];
+    families: Types.ObjectId[];
     maxFamilies: number;
-    subscriptions: ObjectId[];
+    subscriptions: Types.ObjectId[];
     accountNumber: string;
     wallet: string;
     earnings: number;
-    // createdAt: Date;
-    // updatedAt: Date;
   }): UserEntity {
     return new UserEntity({
       id,
@@ -241,8 +222,6 @@ export class UserEntity {
       accountNumber,
       wallet,
       earnings,
-      // createdAt,
-      // updatedAt,
     });
   }
 }

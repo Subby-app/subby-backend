@@ -1,8 +1,8 @@
-import { IUser } from '../../../data/interfaces/user.interface';
-import { Document, ObjectId } from 'mongoose';
+import { IUser } from '../../../data/interfaces/IUser';
+import { Document, Types } from 'mongoose';
 
 export class UserResponseDto {
-  _id: ObjectId;
+  _id: Types.ObjectId;
   email: string;
   firstName: string;
   lastName: string;
@@ -10,108 +10,53 @@ export class UserResponseDto {
   phoneNumber: string;
   role: string;
   verified: boolean;
-  families: ObjectId[];
+  families: Types.ObjectId[];
   maxFamilies: number;
-  subscriptions: ObjectId[];
+  subscriptions: Types.ObjectId[];
   accountNumber?: string;
   wallet?: string;
   earnings: number;
   createdAt?: Date;
   updatedAt?: Date;
 
-  constructor({
-    _id,
-    email,
-    firstName,
-    lastName,
-    username,
-    phoneNumber,
-    role,
-    verified,
-    families,
-    maxFamilies,
-    subscriptions,
-    accountNumber,
-    wallet,
-    earnings,
-    createdAt,
-    updatedAt,
-  }: UserResponseDto) {
-    this._id = _id;
-    this.email = email;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.username = username;
-    this.phoneNumber = phoneNumber;
-    this.role = role;
-    this.verified = verified;
-    this.families = families;
-    this.maxFamilies = maxFamilies;
-    this.subscriptions = subscriptions;
-    this.accountNumber = accountNumber;
-    this.wallet = wallet;
-    this.earnings = earnings;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
+  constructor(user: UserResponseDto) {
+    this._id = user._id;
+    this.email = user.email;
+    this.firstName = user.firstName;
+    this.lastName = user.lastName;
+    this.username = user.username;
+    this.phoneNumber = user.phoneNumber;
+    this.role = user.role;
+    this.verified = user.verified;
+    this.families = user.families;
+    this.maxFamilies = user.maxFamilies;
+    this.subscriptions = user.subscriptions;
+    this.accountNumber = user.accountNumber;
+    this.wallet = user.wallet;
+    this.earnings = user.earnings;
   }
 
-  static from({
-    _id,
-    email,
-    firstName,
-    lastName,
-    username,
-    phoneNumber,
-    role,
-    verified,
-    families,
-    maxFamilies,
-    subscriptions,
-    accountNumber,
-    wallet,
-    earnings,
-    createdAt,
-    updatedAt,
-  }: {
-    _id: ObjectId;
-    email: string;
-    firstName: string;
-    lastName: string;
-    username: string;
-    phoneNumber: string;
-    role: string;
-    verified: boolean;
-    families: ObjectId[];
-    maxFamilies: number;
-    subscriptions: ObjectId[];
-    accountNumber?: string;
-    wallet?: string;
-    earnings: number;
-    createdAt?: Date;
-    updatedAt?: Date;
-  }): UserResponseDto {
+  static from(user: IUser): UserResponseDto {
     return new UserResponseDto({
-      _id,
-      email,
-      firstName,
-      lastName,
-      username,
-      phoneNumber,
-      role,
-      verified,
-      families,
-      maxFamilies,
-      subscriptions,
-      accountNumber,
-      wallet,
-      earnings,
-      createdAt: createdAt || undefined,
-      updatedAt: updatedAt || undefined,
+      _id: user._id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      username: user.username,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      verified: user.verified,
+      families: user.families,
+      maxFamilies: user.maxFamilies,
+      subscriptions: user.subscriptions,
+      accountNumber: user.accountNumber,
+      wallet: user.wallet,
+      earnings: user.earnings,
     });
   }
 
   static fromMany(
-    users: (Document<unknown, {}, IUser> & IUser & { _id: ObjectId })[],
+    users: (Document<unknown, {}, IUser> & IUser & { _id: Types.ObjectId })[],
   ): UserResponseDto[] {
     return users.map((user) => UserResponseDto.from(user.toObject()));
   }

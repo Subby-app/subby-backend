@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { IFamily } from '../interfaces/family.interface';
+import autopopulate from 'mongoose-autopopulate';
+import { IFamily } from '../interfaces/IFamily';
 
 const FamilySchema = new Schema(
   {
@@ -7,6 +8,7 @@ const FamilySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+      autopopulate: { select: 'firstName lastName' },
     },
     name: {
       type: String,
@@ -38,7 +40,6 @@ const FamilySchema = new Schema(
     isFull: {
       type: Boolean,
       default: false,
-      required: true,
     },
     membershipPrice: {
       type: Number,
@@ -65,4 +66,5 @@ FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
   next();
 });
 
-export const FamilyModel = model<IFamily>('Family', FamilySchema);
+FamilySchema.plugin(autopopulate);
+export const Family = model<IFamily>('Family', FamilySchema);
