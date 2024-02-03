@@ -27,6 +27,10 @@ export class FamilyRepository extends BaseRepository {
     return Family.findOne(filter);
   }
 
+  static async findOwners(filter: FilterQuery<IFamily>) {
+    return Family.find(filter);
+  }
+
   static async getSubscribers(subscribers: FilterQuery<IFamily>) {
     return Family.findOne(subscribers);
   }

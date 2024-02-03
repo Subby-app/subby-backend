@@ -28,7 +28,7 @@ export class FamilyController {
   }
 
   static async getOwner(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getById(req.body);
+    const { message, data } = await FamilyService.getFamilyOwner(req.body.owner);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);

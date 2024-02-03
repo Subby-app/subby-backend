@@ -32,7 +32,6 @@ export function errorMiddleware(
     return res.status(error.status).json(response);
   }
 
-  // Inside the errorMiddleware function
   if (error instanceof Error) {
     // Check for MongoDB duplicate key error (E11000) related to a specific field
     if (error.message.includes('duplicate key error collection')) {
