@@ -56,22 +56,10 @@ const UserSchema = new Schema(
       type: [{ hash: String, used: Boolean }],
       select: false,
     },
-    families: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
     maxFamilies: {
       type: Number,
       default: 0,
     },
-    subscriptions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
     accountNumber: {
       type: String,
     },
