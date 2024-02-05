@@ -76,7 +76,8 @@ const UserSchema = new Schema(
       type: String,
     },
     wallet: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Wallet',
     },
     earnings: {
       type: Number,

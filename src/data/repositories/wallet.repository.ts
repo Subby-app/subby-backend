@@ -3,10 +3,10 @@ import { Wallet } from '../models/index';
 import BaseRepository from './base.repository';
 
 export class WalletRepository extends BaseRepository {
-  static async create(entity: any, session: any) {
+  static async create(entity: any) {
     try {
       const user = new Wallet(entity);
-      await user.save({ session });
+      await user.save(entity);
 
       return user;
     } catch (error) {

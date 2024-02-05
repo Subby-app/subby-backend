@@ -4,19 +4,17 @@ import { AuthController } from '../controllers/auth.controller';
 import { CreateUserRequestDto } from '../../logic/dtos/User/index';
 import {
   LoginValidation,
-  ResetPasswordValidation,
+  // ResetPasswordValidation,
   SignupValidation,
-  VerifyOtpValidation,
+  // VerifyOtpValidation,
 } from '../../web/validators/auth.validation';
 import { LoginRequestDto } from '../../logic/dtos/auth/login-request.dto';
-import { VerifyOtpRequestDto } from '../../logic/dtos/auth/verify-otp-request.dto';
-import { ResetPasswordRequestDto } from '../../logic/dtos/auth/reset-passwrod-request.dto';
+// import { VerifyOtpRequestDto } from '../../logic/dtos/auth/verify-otp-request.dto';
+// import { ResetPasswordRequestDto } from '../../logic/dtos/auth/reset-passwrod-request.dto';
 
 export const authRouter = Router();
 
 // authRouter.get('/otp', authenticated, authController.sendOtp);
-
-// authRouter.get('/verify/account', authenticated, authController.verifyAccount);
 
 // authRouter.get('/reset/password', authenticated, authController.resetPasswordRequest);
 
@@ -25,6 +23,8 @@ authRouter.post(
   ValidateRequest.with(SignupValidation, CreateUserRequestDto),
   AuthController.signup,
 );
+
+authRouter.post('/verify', AuthController.verify);
 
 authRouter.post(
   '/login',

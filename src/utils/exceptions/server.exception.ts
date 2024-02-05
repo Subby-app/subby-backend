@@ -9,7 +9,7 @@ export class ServerException extends ApiException {
   public innerException?: Error;
 
   constructor(errors: { message: string; [key: string]: any }, innerException?: Error) {
-    super(500, 'Internal Server Error', errors.message);
+    super(500, errors.message);
     this.innerException = innerException;
   }
 }
