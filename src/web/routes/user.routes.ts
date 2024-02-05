@@ -8,19 +8,19 @@ export const userRouter = Router();
 
 userRouter.post(
   '/',
-  // authenticated,
   ValidateRequest.with(CreateUserValidation, CreateUserRequestDto),
   UserController.create,
 );
 
-userRouter.get('/', UserController.getAll);
+userRouter.get('/', authenticated, UserController.getAll);
 
-userRouter.get('/:id', UserController.getById);
+userRouter.get('/:id', authenticated, UserController.getById);
 
 userRouter.patch(
   '/:id',
+  authenticated,
   ValidateRequest.with(UpdateUserValidation, UpdateUserRequestDto),
   UserController.update,
 );
 
-userRouter.delete('/', UserController.delete);
+userRouter.delete('/:id', authenticated, UserController.delete);
