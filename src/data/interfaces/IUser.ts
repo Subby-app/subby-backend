@@ -15,13 +15,10 @@ export interface IUser extends Document {
     hash: string;
     used: boolean;
   }[];
-  families: Types.ObjectId[];
   maxFamilies: number;
-  subscriptions: Types.ObjectId[];
-  transactions: Types.ObjectId[];
   accountNumber: string;
   _id: Types.ObjectId;
-  wallet: string;
+  wallet: Types.ObjectId;
   earnings: number;
 
   isValidPassword(password: string): Promise<Error | boolean>;

@@ -1,67 +1,34 @@
 import { Schema, model } from 'mongoose';
-import { IFamily } from '../interfaces/IFamily';
+import { ISubscription } from '../../data/interfaces/ISubscription';
 
-const FamilySchema = new Schema(
+const SubscriptionSchema = new Schema(
   {
-    owner: {
+    familyId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Family',
+      required: true,
+    },
+    userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    name: {
+    joinMethod: {
       type: String,
       required: true,
     },
-    subscribers: {
-      type: [
-        {
-          subscriber: { type: Schema.Types.ObjectId, ref: 'User' },
-          joinedAt: Date,
-          joinMethod: String,
-          isActive: Boolean,
-          revokeAccess: Boolean,
-        },
-      ],
+    isActive: {
+      type: Boolean,
+      default: true,
     },
-    label: {
-      type: String,
-      required: true,
-    },
-    maxSubscribers: {
-      type: Number,
-      required: true,
-    },
-    spotsAvailable: {
-      type: Number,
-      required: true,
-    },
-    isFull: {
+    revokeAccess: {
       type: Boolean,
       default: false,
     },
-    membershipPrice: {
-      type: Number,
-      required: true,
-    },
-    subscribeLinks: [
-      {
-        type: String,
-      },
-    ],
   },
   {
     timestamps: true,
   },
 );
 
-FamilySchema.post('save', async function (doc, next) {
-  await doc.populate('owner subscribers');
-  next();
-});
-
-FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
-  this.populate('owner', 'subscribers');
-  next();
-});
-
-export const Family = model<IFamily>('Family', FamilySchema);
+export const Subscription = model<ISubscription>('Subscription', SubscriptionSchema);

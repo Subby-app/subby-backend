@@ -4,7 +4,6 @@
 // import { familyLabels } from '../../config/family.config';
 // import { TFamilyLabel, TFamilyFilter } from '../../data/interfaces/family.interface';
 // import * as mongooseUtil from '../../data/database/mongoose.util';
-// import { TSubscribers } from '../../data/interfaces/family.interface';
 
 // class FamilyService {
 //   private family = FamilyModel;
@@ -121,14 +120,14 @@
 
 //     if (mongooseUtil.isEqualObjectId(family.owner, newSubscriberId))
 //       throw new HttpException(HttpStatus.FORBIDDEN, 'family owner cannot be a subscriber');
-
+//!review isSubscriber logic
 //     // prevent multiple subscriptions to same family
-//     if (await this.UserService.isSubscribed(newSubscriberId, familyId))
-//       throw new HttpException(HttpStatus.FORBIDDEN, 'user is already subscribed');
+////     if (await this.UserService.isSubscribed(newSubscriberId, familyId))
+////       throw new HttpException(HttpStatus.FORBIDDEN, 'user is already subscribed');
 
 //     // prevent multiple subscribers to same family
-//     if (this.isSubscribed(family.subscribers, newSubscriberId))
-//       throw new HttpException(HttpStatus.FORBIDDEN, 'subscriber is already in this family');
+////     if (this.isSubscribed(family.subscribers, newSubscriberId))
+////       throw new HttpException(HttpStatus.FORBIDDEN, 'subscriber is already in this family');
 
 //     const joinedAt = Date.now().toString();
 
@@ -156,14 +155,14 @@
 //     await this.UserService.addSubscription(newSubscriberId, familyId);
 //     return { newSubscriber: true, family: updatedFamily };
 //   }
-
-//   public isSubscribed(subscribers: TSubscribers, subscriberId: string) {
-//     let isSubscriber = false;
-//     subscribers.forEach((subscriber) => {
-//       if (subscriber.subscriber.toString() === subscriberId.toString()) isSubscriber = true;
-//     });
-//     return isSubscriber;
-//   }
+//!review isSubscriber logic
+////   public isSubscribed(subscribers: string[], subscriberId: string) {
+////     let isSubscriber = false;
+////     subscribers.forEach((subscriber) => {
+////       if (subscriber.subscriber.toString() === subscriberId.toString()) isSubscriber = true;
+////     });
+////     return isSubscriber;
+////   }
 
 //   public async revokeAccess(ownerId: string, familyId: string, subscriberId: string) {
 //     const family = await this.findOne({ _id: familyId });

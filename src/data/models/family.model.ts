@@ -14,17 +14,6 @@ const FamilySchema = new Schema(
       type: String,
       required: true,
     },
-    subscribers: {
-      type: [
-        {
-          subscriber: { type: Schema.Types.ObjectId, ref: 'User' },
-          joinedAt: Date,
-          joinMethod: String,
-          isActive: Boolean,
-          revokeAccess: Boolean,
-        },
-      ],
-    },
     label: {
       type: String,
       required: true,

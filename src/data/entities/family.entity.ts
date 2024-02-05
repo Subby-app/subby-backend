@@ -1,12 +1,10 @@
 import { Types } from 'mongoose';
 import { ValidationException } from '../../utils/exceptions';
-import { TSubscribers } from '../interfaces/IFamily';
 import { createObjectId, isEqualObjectId } from '../lib/createId';
 
 export class FamilyEntity {
   owner: Types.ObjectId;
   name: string;
-  subscribers: TSubscribers[];
   label: string;
   maxSubscribers: number;
   spotsAvailable: number;
@@ -19,7 +17,6 @@ export class FamilyEntity {
     id,
     owner,
     name,
-    subscribers,
     label,
     maxSubscribers,
     spotsAvailable,
@@ -30,7 +27,6 @@ export class FamilyEntity {
     id: Types.ObjectId;
     owner: Types.ObjectId;
     name: string;
-    subscribers: TSubscribers[];
     label: string;
     maxSubscribers: number;
     spotsAvailable: number;
@@ -41,7 +37,6 @@ export class FamilyEntity {
     this.id = id;
     this.owner = owner;
     this.name = name;
-    this.subscribers = subscribers;
     this.label = label;
     this.maxSubscribers = maxSubscribers;
     this.spotsAvailable = spotsAvailable;
@@ -157,7 +152,6 @@ export class FamilyEntity {
       id,
       owner,
       name,
-      subscribers: [],
       label,
       maxSubscribers,
       spotsAvailable,
