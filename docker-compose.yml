@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  #Node API service
+  api:
+    build:
+      context: .
+    container_name: Subby-server
+    environment:
+      - PORT=4574
+      - URL=http://localhost
+      - DATABASE_URL_LOCAL=mongodb://subby:27017
+      - DB_NAME=Subby
+      - API_VERSION=v1
+    ports:
+      - '4574:4574'
+    depends_on:
+      - api_mongo
+
+  #MongoDB services
+  api_mongo:
+    image: mongo:latest
+    container_name: Subby-mongodb
+    restart: always
+    volumes:
+      - mongodb_api:/data/db
+    ports:
+      - '27017:27017'
+
+volumes:
+  mongodb_api:
