@@ -15,18 +15,19 @@ class BaseRepository {
 
   static formatMongoDuplicateError(
     error: Record<string, any>,
-    suffix = '',
+    suffix = 'already exist',
   ): { message: string; path: string } {
     const errorField = Object.keys(error.keyPattern)[0];
 
+    const formattedMessage = errorField
+      .charAt(0)
+      .toUpperCase()
+      .concat(errorField.slice(1))
+      .replace(/([A-Z])/g, ' $1')
+      .trim();
+
     return {
-      message: errorField
-        .charAt(0)
-        .toUpperCase()
-        .concat(errorField.slice(1))
-        .replace(/([A-Z])/g, ' $1')
-        .concat(' ', suffix)
-        .trim(),
+      message: suffix ? `${formattedMessage} ${suffix}` : formattedMessage,
       path: errorField,
     };
   }
@@ -46,8 +47,8 @@ class BaseRepository {
         .replace(key, key.charAt(0).toUpperCase().concat(key.slice(1)))
         .trim();
 
-      error.message = message;
       error.path = key;
+      error.message = message;
     }
 
     return error;

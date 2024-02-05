@@ -16,9 +16,11 @@ familyRouter.post(
   FamilyController.create,
 );
 
-familyRouter.get('/', authenticated, FamilyController.getAll);
+familyRouter.get('/owner', FamilyController.getOwner);
 
-familyRouter.get('/:id', authenticated, FamilyController.getById);
+// familyRouter.get('/', authenticated, FamilyController.getAll);
+
+// familyRouter.get('/:id', authenticated, FamilyController.getById);
 
 familyRouter.patch(
   '/:id',

@@ -7,6 +7,6 @@ import { ApiException } from './api.exception';
  */
 export class ForbiddenException extends ApiException {
   constructor(error: { message: string }) {
-    super(403, 'Forbidden', error.message);
+    super(403, error.message);
   }
 }

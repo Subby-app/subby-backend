@@ -8,6 +8,6 @@ import { ApiException } from './api.exception';
  */
 export class ValidationException extends ApiException {
   constructor(error: { path: string; message: string }) {
-    super(400, 'Validation Error', error.message);
+    super(400, error.message);
   }
 }

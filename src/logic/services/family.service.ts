@@ -44,29 +44,29 @@ export class FamilyService {
 
   static async getFamilyOwner(
     owner: string,
-  ): Promise<{ message: string; data: FamilyResponseDto }> {
-    const family = await FamilyRepository.findOne({ owner: owner });
+  ): Promise<{ message: string; data: FamilyResponseDto[] }> {
+    const family = await FamilyRepository.findOwners({ owner });
     if (!family) {
       throw new NotFoundException('No family found');
     }
 
     return {
       message: 'Family fetched',
-      data: FamilyResponseDto.from(family),
+      data: FamilyResponseDto.fromMany(family),
     };
   }
 
   static async getFamilySubscribers(
     subscribers: string,
-  ): Promise<{ message: string; data: FamilyResponseDto }> {
-    const family = await FamilyRepository.getSubscribers({ subscribers: subscribers });
+  ): Promise<{ message: string; data: FamilyResponseDto[] }> {
+    const family = await FamilyRepository.getSubscribers({ subscribers });
     if (!family) {
       throw new NotFoundException('No family found');
     }
 
     return {
       message: 'Family fetched',
-      data: FamilyResponseDto.from(family),
+      data: FamilyResponseDto.fromMany(family),
     };
   }
 
