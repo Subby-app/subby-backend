@@ -1,11 +1,27 @@
 import Joi from 'joi';
+import { z } from 'zod';
 import {
   emailSchema,
+  emailSchemaZ,
+  emptyObject,
   nameSchema,
   objectIdSchema,
   phoneNumberSchema,
   usernameSchema,
 } from './lib/common-schema-validation';
+
+const createUserBody = z.object({
+  email: emailSchemaZ,
+});
+
+export const createUser = z.object({
+  body: createUserBody,
+  params: emptyObject,
+  query: emptyObject,
+});
+
+// move to a dto module
+export type TCreateUserBody = z.infer<typeof createUserBody>;
 
 export const CreateUserValidation = Joi.object({
   body: Joi.object({
