@@ -5,6 +5,10 @@ import {
   emailSchemaZ,
   emptyObject,
   nameSchema,
+  nameSchemaZ,
+  passwordSchemaZ,
+  phoneNumberZ,
+  usernameZ,
   objectIdSchema,
   phoneNumberSchema,
   usernameSchema,
@@ -12,6 +16,11 @@ import {
 
 const createUserBody = z.object({
   email: emailSchemaZ,
+  firstName: nameSchemaZ,
+  lastName: nameSchemaZ,
+  password: passwordSchemaZ,
+  username: usernameZ,
+  phoneNumber: phoneNumberZ,
 });
 
 export const createUser = z.object({

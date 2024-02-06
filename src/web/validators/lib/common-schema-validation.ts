@@ -25,7 +25,7 @@ export const nameSchemaZ = z
   .toLowerCase()
   .min(1)
   .max(255)
-  .refine((val) => val !== 'null', { message: "name cannot be 'null'" });
+  .refine((value) => value !== 'null', { message: "name cannot be 'null'" });
 
 export const objectIdSchema = Joi.alternatives(
   Joi.string()
@@ -40,7 +40,7 @@ export const objectIdSchema = Joi.alternatives(
 export const objectIdZ = z
   .string()
   .trim()
-  .refine((val) => Types.ObjectId.isValid(val), { message: 'invalid objectId' });
+  .refine((value) => Types.ObjectId.isValid(value), { message: 'invalid objectId' });
 
 // export const passwordSchema = joiPassword
 //   .string()
@@ -60,8 +60,22 @@ export const objectIdZ = z
 
 export const passwordSchemaZ = z
   .string()
+  .min(8)
+  .max(35)
   .trim()
-  .regex(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, 'password is too weak');
+  .refine((value) => /\d/.test(value), { message: 'password must contain at least one digit' })
+  .refine((value) => /\W+/.test(value), {
+    message: 'password must contain at least one non-word character',
+  })
+  .refine((value) => !/[.\n]/.test(value), {
+    message: 'password cannot contain periods or newline characters ',
+  })
+  .refine((value) => /[A-Z]/.test(value), {
+    message: 'password must contain at least one uppercase letter',
+  })
+  .refine((value) => /[a-z]/.test(value), {
+    message: 'password must contain at least one uppercase letter',
+  });
 
 export const phoneNumberSchema = Joi.string()
   .trim()
@@ -72,7 +86,7 @@ export const phoneNumberSchema = Joi.string()
     'any.required': '{#label} is required',
   });
 
-export const phoneNumber = z
+export const phoneNumberZ = z
   .string()
   .trim()
   .regex(/^(\+?234|0)(70|[89][01])\d{8}$/);

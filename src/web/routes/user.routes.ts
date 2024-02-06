@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { UserController } from '../controllers/index';
-import { authenticated, ValidateRequest } from '../middlewares/index';
-import { CreateUserValidation, UpdateUserValidation } from '../../web/validators/user.validation';
+import { authenticated, ValidateRequest, validateZ } from '../middlewares/index';
+import { createUser, CreateUserValidation, UpdateUserValidation } from '../../web/validators/user.validation';
 import { CreateUserRequestDto, UpdateUserRequestDto } from '../../logic/dtos/User/index';
 
 export const userRouter = Router();
@@ -10,6 +10,7 @@ userRouter.post(
   '/',
   // authenticated,
   ValidateRequest.with(CreateUserValidation, CreateUserRequestDto),
+  // validateZ(createUser),
   UserController.create,
 );
 

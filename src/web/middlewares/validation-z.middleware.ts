@@ -1,4 +1,5 @@
 import { HttpStatus } from '@/utils/exceptions';
+import { BaseHttpResponse } from '@/utils/base-Http-response.utils';
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
@@ -11,9 +12,8 @@ export function validateZ(schema: z.ZodObject<any, any>) {
       result.error.errors.forEach((issue) => {
         errors.push(`${issue.path.join('.')} is ${issue.message}`);
       });
-      return res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .json({ message: 'validation error', errors });
+      const response = BaseHttpResponse.failed('validation error', errors);
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(response);
     } else {
       req.query = result.data.query;
       req.params = result.data.params;
