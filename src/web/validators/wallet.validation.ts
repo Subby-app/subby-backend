@@ -1,31 +1,35 @@
-import Joi from 'joi';
+import { z } from 'zod';
+import {
+  emptyObjectSchema,
+  incomingRequestSchema,
+  objectIdSchema,
+} from './lib/common-schema-validation';
 
-const objectIdSchema = Joi.alternatives(
-  Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .messages({ 'string.pattern.base': 'Invalid object id' }),
-  Joi.object().keys({
-    id: Joi.any(),
-    bsontype: Joi.allow('ObjectId'),
-  }),
+const createWalletBody = z.object({
+  userId: objectIdSchema,
+  balance: z.number().default(0),
+  availableBalance: z.number().default(0),
+  status: z.string(),
+});
+
+export const createWallet = incomingRequestSchema(
+  createWalletBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
 );
 
-export const CreateWalletValidation = Joi.object({
-  body: Joi.object({
-    userId: objectIdSchema.required(),
-    balance: Joi.number().default(0).label('Balance'),
-    availableBalance: Joi.number().default(0).label('Available Balance'),
-    status: Joi.string().label('Status'),
-  }),
+const updateWalletBody = z.object({
+  balance: z.number().default(0),
+  availableBalance: z.number().default(0),
+  status: z.string(),
 });
 
-export const UpdateWalletValidation = Joi.object({
-  body: Joi.object({
-    balance: Joi.number().label('Balance'),
-    availableBalance: Joi.number().label('Available Balance'),
-    status: Joi.string().label('Status'),
-  }),
-  params: Joi.object({
-    id: objectIdSchema.required(),
-  }),
+const updateWalletParams = z.object({
+  id: objectIdSchema,
 });
+
+export const updateWalletValidation = incomingRequestSchema(
+  updateWalletBody,
+  updateWalletParams,
+  emptyObjectSchema,
+);

@@ -1,20 +1,11 @@
 import { Router } from 'express';
 import { FamilyController } from '../controllers/family.controller';
-import { authenticated, ValidateRequest } from '../middlewares/index';
-import {
-  CreateFamilyValidation,
-  UpdateFamilyValidation,
-} from '../../web/validators/family.validation';
-import { CreateFamilyRequestDto, UpdateFamilyRequestDto } from '../../logic/dtos/Family/index';
+import { authenticated, validateRequest } from '../middlewares/index';
+import { createFamily, updateFamily } from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
 
-familyRouter.post(
-  '/',
-  authenticated,
-  ValidateRequest.with(CreateFamilyValidation, CreateFamilyRequestDto),
-  FamilyController.create,
-);
+familyRouter.post('/', authenticated, validateRequest(createFamily), FamilyController.create);
 
 familyRouter.get('/owner', FamilyController.getOwner);
 
@@ -22,11 +13,6 @@ familyRouter.get('/owner', FamilyController.getOwner);
 
 // familyRouter.get('/:id', authenticated, FamilyController.getById);
 
-familyRouter.patch(
-  '/:id',
-  authenticated,
-  ValidateRequest.with(UpdateFamilyValidation, UpdateFamilyRequestDto),
-  FamilyController.update,
-);
+familyRouter.patch('/:id', authenticated, validateRequest(updateFamily), FamilyController.update);
 
 familyRouter.delete('/:id', authenticated, FamilyController.delete);

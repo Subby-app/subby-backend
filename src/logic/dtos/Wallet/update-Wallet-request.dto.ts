@@ -1,7 +1,7 @@
-import { TransanctionStatus } from '../../../utils/helpers/transaction.helpers';
+import { TransactionStatus } from '../../../utils/helpers/transaction.helpers';
 
 export class UpdateTransactionRequestDto {
-  status: TransanctionStatus;
+  status: TransactionStatus;
   amount: number;
   method: {
     channel: string | null;

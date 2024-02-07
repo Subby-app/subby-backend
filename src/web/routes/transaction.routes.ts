@@ -1,17 +1,17 @@
 import { Router } from 'express';
 import { TransactionController } from '../controllers/transaction.controller';
-import { authenticated, ValidateRequest } from '../middlewares/index';
-import { createTransactionValidation } from '../../web/validators/transaction.validation';
-import { CreateTransactionRequestDto } from '../../logic/dtos/Transaction/index';
+import { authenticated, validateRequest } from '../middlewares/index';
+import { createTransaction } from '../../web/validators/transaction.validation';
 
 export const transactionRouter = Router();
 
 transactionRouter.post(
   '/',
   // authenticated,
-  ValidateRequest.with(createTransactionValidation, CreateTransactionRequestDto),
+  validateRequest(createTransaction),
   TransactionController.create,
 );
+
 transactionRouter.get('/user/:userId', authenticated, TransactionController.getUserTransaction);
 
 transactionRouter.get('/', TransactionController.getAll);

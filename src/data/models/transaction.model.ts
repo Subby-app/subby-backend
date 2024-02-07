@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import {
-  TransanctionCurrency,
-  TransanctionStatus,
-  TransanctionType,
+  TransactionCurrency,
+  TransactionStatus,
+  TransactionType,
 } from '../../utils/helpers/transaction.helpers';
 import { ITransaction } from 'data/interfaces/ITransaction';
 
@@ -17,14 +17,14 @@ const TransactionSchema = new Schema(
 
     type: {
       type: String,
-      enum: TransanctionType,
+      enum: TransactionType,
       required: true,
       index: true,
     },
 
     status: {
       type: String,
-      enum: TransanctionStatus,
+      enum: TransactionStatus,
       required: true,
       index: true,
     },
@@ -57,11 +57,11 @@ const TransactionSchema = new Schema(
 
     currency: {
       type: String,
-      enum: TransanctionCurrency,
+      enum: TransactionCurrency,
       default: 'NGN',
     },
 
-    recipent: {
+    recipient: {
       type: String,
       default: null,
     },

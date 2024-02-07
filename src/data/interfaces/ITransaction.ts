@@ -1,14 +1,14 @@
 import { Document, Schema } from 'mongoose';
 import {
-  TransanctionCurrency,
-  TransanctionStatus,
-  TransanctionType,
+  TransactionCurrency,
+  TransactionStatus,
+  TransactionType,
 } from '../../utils/helpers/transaction.helpers';
 
 export interface ITransaction extends Document {
   userId: Schema.Types.ObjectId;
-  type: TransanctionType;
-  status: TransanctionStatus;
+  type: TransactionType;
+  status: TransactionStatus;
   amount: number;
   method: {
     channel: string | null;
@@ -16,8 +16,8 @@ export interface ITransaction extends Document {
     cardType: string | null;
   };
   tax: number;
-  currency: TransanctionCurrency;
-  recipent: string | null;
+  currency: TransactionCurrency;
+  recipient: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 }

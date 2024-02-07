@@ -1,16 +1,7 @@
 import { Router } from 'express';
-import { authenticated, ValidateRequest } from '../middlewares/index';
+import { authenticated, validateRequest } from '../middlewares/index';
 import { AuthController } from '../controllers/auth.controller';
-import { CreateUserRequestDto } from '../../logic/dtos/User/index';
-import {
-  LoginValidation,
-  // ResetPasswordValidation,
-  SignupValidation,
-  // VerifyOtpValidation,
-} from '../../web/validators/auth.validation';
-import { LoginRequestDto } from '../../logic/dtos/auth/login-request.dto';
-// import { VerifyOtpRequestDto } from '../../logic/dtos/auth/verify-otp-request.dto';
-// import { ResetPasswordRequestDto } from '../../logic/dtos/auth/reset-passwrod-request.dto';
+import { loginUser, signupUser, verifyEmail } from '../../web/validators/auth.validation';
 
 export const authRouter = Router();
 
@@ -18,37 +9,29 @@ export const authRouter = Router();
 
 // authRouter.get('/reset/password', authenticated, authController.resetPasswordRequest);
 
-authRouter.post(
-  '/signup',
-  ValidateRequest.with(SignupValidation, CreateUserRequestDto),
-  AuthController.signup,
-);
+authRouter.post('/signup', validateRequest(signupUser), AuthController.signup);
 
-authRouter.post('/verify', AuthController.verify);
+authRouter.post('/verify', validateRequest(verifyEmail), authenticated, AuthController.verify);
 
-authRouter.post(
-  '/login',
-  ValidateRequest.with(LoginValidation, LoginRequestDto),
-  AuthController.login,
-);
+authRouter.post('/login', validateRequest(loginUser), AuthController.login);
 
 // authRouter.post(
 //   '/verify/otp',
 //   authenticated,
-//   ValidateRequest.with(VerifyOtpValidation, VerifyOtpRequestDto),
+//   validateRequest(verifyEmail),
 //   authController.verifyOtp,
 // );
 
 // authRouter.post(
 //   '/verify/account',
-//   ValidateRequest.with(VerifyOtpValidation, VerifyOtpRequestDto),
+//   validateRequest(verifyEmail),
 //   authenticated,
 //   authController.verifyEmail,
 // );
 
 // authRouter.post(
 //   '/reset/password',
-//   ValidateRequest.with(ResetPasswordValidation, ResetPasswordRequestDto),
+//   validateRequest(verifyEmail)
 //   authenticated,
 //   authController.resetPassword,
 // );

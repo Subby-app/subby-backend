@@ -1,37 +1,65 @@
-import Joi from 'joi';
-import { emailSchema, nameSchema, phoneNumberSchema } from './lib/common-schema-validation';
+import { z } from 'zod';
+import {
+  emailSchema,
+  nameSchema,
+  phoneNumberSchema,
+  passwordSchema,
+  usernameSchema,
+  otpSchema,
+  emptyObjectSchema,
+  incomingRequestSchema,
+} from './lib/common-schema-validation';
 
-const passwordSchema = Joi.string().label('Password');
-const otpSchema = Joi.string().min(6).label('OTP');
-const newPasswordSchema = Joi.string().label('New Password');
-
-export const SignupValidation = Joi.object({
-  body: Joi.object({
-    email: emailSchema.required().label('email'),
-    firstName: nameSchema.required().label('firstName'),
-    lastName: nameSchema.required().label('LastName'),
-    username: nameSchema.required().label('UserName'),
-    password: passwordSchema.required().label('Password'),
-    phoneNumber: phoneNumberSchema.required().label('Phone nUmber'),
-  }),
+const signupUserBody = z.object({
+  email: emailSchema,
+  firstName: nameSchema,
+  lastName: nameSchema,
+  password: passwordSchema,
+  username: usernameSchema,
+  phoneNumber: phoneNumberSchema,
 });
 
-export const LoginValidation = Joi.object({
-  body: Joi.object({
-    email: emailSchema.required().label('email'),
-    password: passwordSchema.required().label('Password'),
-  }),
+export const signupUser = incomingRequestSchema(
+  signupUserBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+const loginUserBody = z.object({
+  email: emailSchema,
+  password: passwordSchema,
 });
 
-export const VerifyOtpValidation = Joi.object({
-  body: Joi.object({
-    otp: otpSchema.required().label('otp'),
-  }),
+export const loginUser = incomingRequestSchema(loginUserBody, emptyObjectSchema, emptyObjectSchema);
+
+const validateOtpBody = z.object({
+  otp: otpSchema,
 });
 
-export const ResetPasswordValidation = Joi.object({
-  body: Joi.object({
-    newPassword: newPasswordSchema.label('Password'),
-    otp: otpSchema.required().label('otp'),
-  }),
+export const validateOtp = incomingRequestSchema(
+  validateOtpBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+const verifyEmailBody = z.object({
+  email: emailSchema,
+  otp: otpSchema,
 });
+
+export const verifyEmail = incomingRequestSchema(
+  verifyEmailBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+const resetPasswordBody = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const resetPassword = incomingRequestSchema(
+  resetPasswordBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);

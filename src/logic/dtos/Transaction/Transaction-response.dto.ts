@@ -1,7 +1,7 @@
 import {
-  TransanctionType,
-  TransanctionStatus,
-  TransanctionCurrency,
+  TransactionType,
+  TransactionStatus,
+  TransactionCurrency,
 } from '../../../utils/helpers/transaction.helpers';
 import { ObjectId } from 'mongoose';
 
@@ -14,13 +14,13 @@ interface TransactionMethod {
 export class TransactionResponseDto {
   _id: ObjectId;
   userId: ObjectId;
-  type: TransanctionType;
-  status: TransanctionStatus;
+  type: TransactionType;
+  status: TransactionStatus;
   amount: number;
   method: TransactionMethod;
   tax: number;
-  currency: TransanctionCurrency;
-  recipent: string | null;
+  currency: TransactionCurrency;
+  recipient: string | null;
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -33,7 +33,7 @@ export class TransactionResponseDto {
     method,
     tax,
     currency,
-    recipent,
+    recipient: recipient,
   }: TransactionResponseDto) {
     this._id = _id;
     this.userId = userId;
@@ -43,7 +43,7 @@ export class TransactionResponseDto {
     this.method = method;
     this.tax = tax;
     this.currency = currency;
-    this.recipent = recipent;
+    this.recipient = recipient;
     this.createdAt = new Date();
     this.updatedAt = new Date();
   }

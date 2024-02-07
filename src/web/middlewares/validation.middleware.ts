@@ -1,63 +1,24 @@
-import _ from 'lodash';
-import { ObjectSchema, ValidationError } from 'joi';
-import { refineError } from '../../utils/refine-validation-error.utils';
-import { ValidationException } from '../../utils/exceptions/validation.exception';
+import { HttpStatus } from '@/utils/exceptions';
+import { BaseHttpResponse } from '@/utils/base-Http-response.utils';
+import { Request, Response, NextFunction } from 'express';
+import { z } from 'zod';
 
-interface DtoClass {
-  from: Function;
-}
+export function validateRequest(schema: z.ZodObject<any, any>) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse({ body: req.body, params: req.params, query: req.query });
 
-export class ValidateRequest {
-  #validator: ObjectSchema;
-  #DtoClass?: DtoClass;
-
-  constructor(validator: ObjectSchema, DtoClass?: DtoClass) {
-    this.execute = this.execute.bind(this);
-
-    this.#validator = validator;
-    this.#DtoClass = DtoClass;
-  }
-
-  execute(req: any, res: any, next: any) {
-    // Enforcing passing DTO class for POST, PATCH, and PUT requests.
-
-    const { value, error }: { value: any; error?: ValidationError } = this.#validator.validate(
-      {
-        body: req.body,
-        params: req.params,
-        query: req.query,
-      },
-      { stripUnknown: true, convert: true },
-    );
-
-    // Refining joi validation error
-    if (error) {
-      const err = refineError(error);
-      throw new ValidationException(err);
+    const errors: string[] = [];
+    if (!result.success) {
+      result.error.errors.forEach((issue) => {
+        errors.push(`${issue.path.join('.')} is ${issue.message}`);
+      });
+      const response = BaseHttpResponse.failed('validation error', errors);
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(response);
+    } else {
+      req.query = result.data.query;
+      req.params = result.data.params;
+      req.body = result.data.body;
+      return next();
     }
-
-    /*
-     * If the request body is not empty and has been validated successfully,
-     * a data transfer object is created using the provided DtoClass and assigned to the request body.
-     * Fields with value "undefined" are stripped from DTOClass object.
-     */
-    if (!_.isEmpty(req.body) && this.#DtoClass !== undefined) {
-      req.body = _.omitBy(this.#DtoClass.from(value.body), _.isUndefined);
-    }
-
-    req.params = value.params || req.params;
-    req.query = value.query || req.query;
-
-    next();
-  }
-
-  /**
-   *
-   * @param {import('joi').ObjectSchema} validator
-   * @param {{from: Function}} [DtoClass]
-   * @returns {(req, res, next) => void}
-   */
-  static with(validator: ObjectSchema, DtoClass?: DtoClass) {
-    return new ValidateRequest(validator, DtoClass).execute;
-  }
+  };
 }

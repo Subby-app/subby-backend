@@ -1,21 +1,21 @@
 import { ObjectId } from 'mongoose';
 import {
-  TransanctionType,
-  TransanctionStatus,
-  TransanctionCurrency,
+  TransactionType,
+  TransactionStatus,
+  TransactionCurrency,
 } from '../../../utils/helpers/transaction.helpers';
 
 export class CreateTransactionRequestDto {
   userId: ObjectId;
-  type: TransanctionType;
-  status: TransanctionStatus;
+  type: TransactionType;
+  status: TransactionStatus;
   amount: number;
   method: {
     channel: string | null;
     bank: string | null;
     cardType: string | null;
   };
-  currency: TransanctionCurrency;
+  currency: TransactionCurrency;
   recipent: string | null;
 
   constructor(transaction: CreateTransactionRequestDto) {
