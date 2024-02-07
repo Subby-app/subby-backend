@@ -10,7 +10,9 @@ export class UserResponseDto {
   phoneNumber: string;
   role: string;
   verified: boolean;
+  // families: Types.ObjectId[];
   maxFamilies: number;
+  // subscriptions: Types.ObjectId[];
   accountNumber?: string;
   wallet?: Types.ObjectId;
   earnings: number;
@@ -27,6 +29,7 @@ export class UserResponseDto {
     this.role = user.role;
     this.verified = user.verified;
     this.maxFamilies = user.maxFamilies;
+    // this.subscriptions = user.subscriptions;
     this.accountNumber = user.accountNumber;
     this.wallet = user.wallet;
     this.earnings = user.earnings;
