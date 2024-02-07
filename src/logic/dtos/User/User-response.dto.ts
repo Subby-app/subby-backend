@@ -10,11 +10,11 @@ export class UserResponseDto {
   phoneNumber: string;
   role: string;
   verified: boolean;
-  families: Types.ObjectId[];
+  // families: Types.ObjectId[];
   maxFamilies: number;
-  subscriptions: Types.ObjectId[];
+  // subscriptions: Types.ObjectId[];
   accountNumber?: string;
-  wallet?: string;
+  wallet?: Types.ObjectId;
   earnings: number;
   createdAt?: Date;
   updatedAt?: Date;
@@ -28,9 +28,8 @@ export class UserResponseDto {
     this.phoneNumber = user.phoneNumber;
     this.role = user.role;
     this.verified = user.verified;
-    this.families = user.families;
     this.maxFamilies = user.maxFamilies;
-    this.subscriptions = user.subscriptions;
+    // this.subscriptions = user.subscriptions;
     this.accountNumber = user.accountNumber;
     this.wallet = user.wallet;
     this.earnings = user.earnings;
@@ -46,9 +45,7 @@ export class UserResponseDto {
       phoneNumber: user.phoneNumber,
       role: user.role,
       verified: user.verified,
-      families: user.families,
       maxFamilies: user.maxFamilies,
-      subscriptions: user.subscriptions,
       accountNumber: user.accountNumber,
       wallet: user.wallet,
       earnings: user.earnings,
