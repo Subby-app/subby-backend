@@ -8,7 +8,7 @@ const FamilySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      autopopulate: { select: 'firstName lastName' },
+      // autopopulate: { select: 'firstName lastName' },
     },
     name: {
       type: String,
@@ -20,7 +20,7 @@ const FamilySchema = new Schema(
     },
     maxSubscribers: {
       type: Number,
-      required: true,
+      // required: true,
     },
     spotsAvailable: {
       type: Number,
@@ -45,15 +45,15 @@ const FamilySchema = new Schema(
   },
 );
 
-FamilySchema.post('save', async function (doc, next) {
-  await doc.populate('owner subscribers');
-  next();
-});
+// FamilySchema.post('save', async function (doc, next) {
+//   await doc.populate('owner subscribers');
+//   next();
+// });
 
-FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
-  this.populate('owner', 'subscribers');
-  next();
-});
+// FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
+//   this.populate('owner', 'subscribers');
+//   next();
+// });
 
 FamilySchema.plugin(autopopulate);
 export const Family = model<IFamily>('Family', FamilySchema);

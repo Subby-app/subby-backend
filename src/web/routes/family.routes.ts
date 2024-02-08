@@ -5,13 +5,17 @@ import { createFamily, updateFamily } from '../../web/validators/family.validati
 
 export const familyRouter = Router();
 
-familyRouter.post('/', authenticated, validateRequest(createFamily), FamilyController.create);
+familyRouter.post(
+  '/',
+  // authenticated, validateRequest(createFamily),
+  FamilyController.create,
+);
 
 familyRouter.get('/owner', FamilyController.getOwner);
 
-// familyRouter.get('/', authenticated, FamilyController.getAll);
+familyRouter.get('/', authenticated, FamilyController.getAll);
 
-// familyRouter.get('/:id', authenticated, FamilyController.getById);
+familyRouter.get('/:id', authenticated, FamilyController.getById);
 
 familyRouter.patch('/:id', authenticated, validateRequest(updateFamily), FamilyController.update);
 

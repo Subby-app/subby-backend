@@ -11,9 +11,17 @@ export const authRouter = Router();
 
 authRouter.post('/signup', validateRequest(signupUser), AuthController.signup);
 
-authRouter.post('/verify', validateRequest(verifyEmail), authenticated, AuthController.verify);
+authRouter.post(
+  '/verify',
+  // validateRequest(verifyEmail), authenticated,
+  AuthController.verify,
+);
 
-authRouter.post('/login', validateRequest(loginUser), AuthController.login);
+authRouter.post(
+  '/login',
+  // validateRequest(loginUser),
+  AuthController.login,
+);
 
 // authRouter.post(
 //   '/verify/otp',

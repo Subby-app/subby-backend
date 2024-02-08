@@ -17,8 +17,8 @@ export class FamilyService {
   }
 
   static async create(createFamilyDto: any): Promise<{ message: string; data: any }> {
-    const familyEntity = FamilyEntity.make(createFamilyDto);
-    const family = await FamilyRepository.create(familyEntity);
+    // const familyEntity = FamilyEntity.make(createFamilyDto);
+    const family = await FamilyRepository.create(createFamilyDto);
 
     if (!family) {
       throw new NotFoundException('Failed to create family');
