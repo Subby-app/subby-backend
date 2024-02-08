@@ -18,6 +18,8 @@ export const createWallet = incomingRequestSchema(
   emptyObjectSchema,
 );
 
+export type TCreateWalletBody = z.infer<typeof createWalletBody>;
+
 const updateWalletBody = z.object({
   balance: z.number().default(0),
   availableBalance: z.number().default(0),
@@ -28,8 +30,12 @@ const updateWalletParams = z.object({
   id: objectIdSchema,
 });
 
-export const updateWalletValidation = incomingRequestSchema(
+export const updateWallet = incomingRequestSchema(
   updateWalletBody,
   updateWalletParams,
   emptyObjectSchema,
 );
+
+export type TUpdateWalletBody = z.infer<typeof createWalletBody>;
+
+export type TUpdateWalletParams = z.infer<typeof createWalletBody>;

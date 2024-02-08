@@ -49,3 +49,6 @@ export const createTransaction = incomingRequestSchema(
   emptyObjectSchema,
   emptyObjectSchema,
 );
+
+// has nested z.object 'transactionMethod'
+export type TCreateTransactionBody = z.infer<typeof createTransactionBody>;

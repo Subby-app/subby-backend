@@ -19,6 +19,8 @@ export const createFamily = incomingRequestSchema(
   emptyObjectSchema,
 );
 
+export type TCreateFamilyBody = z.infer<typeof createFamilyBody>;
+
 export const updateFamilyBody = z.object({
   name: nameSchema,
   // subscribeLinks: z.array(z.string()),
@@ -33,3 +35,7 @@ export const updateFamily = incomingRequestSchema(
   updateFamilyParams,
   emptyObjectSchema,
 );
+
+export type TUpdateFamilyBody = z.infer<typeof updateFamilyBody>;
+
+export type TUpdateFamilyParams = z.infer<typeof updateFamilyParams>;

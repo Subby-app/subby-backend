@@ -25,13 +25,6 @@ export const createUser = incomingRequestSchema(
   emptyObjectSchema,
 );
 
-// export const createUser = z.object({
-//   body: createUserBody,
-//   params: emptyObjectSchema,
-//   query: emptyObjectSchema,
-// });
-
-// move to a dto module
 export type TCreateUserBody = z.infer<typeof createUserBody>;
 
 const updateUserBody = z.object({
@@ -48,3 +41,7 @@ export const updateUser = z.object({
   params: updateUserParams,
   query: emptyObjectSchema,
 });
+
+export type TUpdateUserBody = z.infer<typeof updateUserBody>;
+
+export type TUpdateUserParams = z.infer<typeof updateUserParams>;
