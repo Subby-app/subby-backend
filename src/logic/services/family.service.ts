@@ -1,21 +1,8 @@
 import { NotFoundException } from '../../utils/exceptions/index';
 import { FamilyRepository } from '../../data/repositories/family.repository';
 import { FamilyResponseDto } from '../../logic/dtos/Family';
-import { FamilyEntity } from '../../data/entities/family.entity';
 
 export class FamilyService {
-  static async getAll(): Promise<{ message: string; data: FamilyResponseDto[] }> {
-    const families = await FamilyRepository.find();
-    if (!families || families.length === 0) {
-      throw new NotFoundException('No families found');
-    }
-
-    return {
-      message: 'Families fetched',
-      data: FamilyResponseDto.fromMany(families),
-    };
-  }
-
   static async create(createFamilyDto: any): Promise<{ message: string; data: any }> {
     // const familyEntity = FamilyEntity.make(createFamilyDto);
     const family = await FamilyRepository.create(createFamilyDto);
@@ -27,6 +14,18 @@ export class FamilyService {
     return {
       message: 'Family Created',
       data: FamilyResponseDto.from(family.toObject()),
+    };
+  }
+
+  static async getAll(): Promise<{ message: string; data: FamilyResponseDto[] }> {
+    const families = await FamilyRepository.find();
+    if (!families || families.length === 0) {
+      throw new NotFoundException('No families found');
+    }
+
+    return {
+      message: 'Families fetched',
+      data: FamilyResponseDto.fromMany(families),
     };
   }
 

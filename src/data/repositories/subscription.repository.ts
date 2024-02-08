@@ -6,10 +6,10 @@ import { ISubscription } from '../interfaces/ISubscription';
 export class SubscriptionRepository extends BaseRepository {
   static async create(entity: any) {
     try {
-      const user = new Subscription(entity);
-      await user.save();
+      const subscription = new Subscription(entity);
+      await subscription.save();
 
-      return user;
+      return subscription;
     } catch (error) {
       this.handleRepositoryError(error);
     }
@@ -33,10 +33,6 @@ export class SubscriptionRepository extends BaseRepository {
 
   static async getSubscribers(subscribers: FilterQuery<ISubscription>) {
     return Subscription.find(subscribers);
-  }
-
-  static async findEmail(email: string) {
-    return Subscription.findOne({ email });
   }
 
   static async update(id: string, entity: any) {
