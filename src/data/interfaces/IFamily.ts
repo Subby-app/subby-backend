@@ -13,10 +13,4 @@ export interface IFamily extends Document {
 
 export type TFamilyLabel = 'netflix' | 'spotify';
 
-export type TFamilyFilter = {
-  _id?: string;
-  name?: string;
-  owner?: ObjectId;
-  label?: string;
-  isFull?: boolean;
-};
+export type TFamilyFilter = Pick<Partial<IFamily>, '_id' | 'name' | 'owner' | 'label' | 'isFull'>;

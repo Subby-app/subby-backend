@@ -1,7 +1,9 @@
 import { NotFoundException } from '../../utils/exceptions/index';
 import { UserRepository } from '../../data/repositories/user.repository';
 import { UserResponseDto } from '../../logic/dtos/User';
-import { UserEntity } from '../../data/entities';
+import { TCreateUserBody } from '@/web/validators/user.validation';
+import { Encryption } from '@/utils/encryption.utils';
+import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
 
 export class UserService {
   static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
@@ -16,17 +18,17 @@ export class UserService {
     };
   }
 
-  static async create(createUserDto: any): Promise<{ message: string; data: any }> {
-    const userEntity = UserEntity.make(createUserDto);
-    const user = await UserRepository.create(userEntity);
+  static async create(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
+    const password = await Encryption.encryptText(userEntity.password, 12);
+    const user = await UserRepository.create({ ...userEntity, password });
 
     if (!user) {
       throw new NotFoundException('Failed to create user');
     }
 
     return {
-      message: 'Users Created',
-      data: UserResponseDto.from(user.toObject()),
+      message: 'User Created',
+      data: UserResponseDto.signup(user.toObject()),
     };
   }
 
@@ -40,6 +42,12 @@ export class UserService {
       message: 'User fetched',
       data: UserResponseDto.from(user.toObject()),
     };
+  }
+
+  static async authFind(filter: TUserFilter, options?: TFilterOptions) {
+    const user = await UserRepository.authFind(filter, options);
+    if (!user) throw new NotFoundException('No user found');
+    return user;
   }
 
   static async update(

@@ -1,8 +1,10 @@
 import { User } from '../models';
 import BaseRepository from './base.repository';
+import { TCreateUserBody } from '@/web/validators/user.validation';
+import { TFilterOptions, TUpdateUserEntity, TUserFilter } from '../interfaces/IUser';
 
 export class UserRepository extends BaseRepository {
-  static async create(entity: any) {
+  static async create(entity: TCreateUserBody) {
     try {
       const user = new User(entity);
       await user.save();
@@ -29,7 +31,13 @@ export class UserRepository extends BaseRepository {
     return User.findOne({ email }).select('+password').exec();
   }
 
-  static async update(id: any, entity: any) {
+  static async authFind(filter: TUserFilter, options?: TFilterOptions) {
+    const query = User.findOne(filter);
+    if (options?.sensitive) query.select(options?.sensitiveFields);
+    return await query;
+  }
+
+  static async update(id: any, entity: TUpdateUserEntity) {
     try {
       return User.findByIdAndUpdate(id, entity, { new: true });
     } catch (error) {

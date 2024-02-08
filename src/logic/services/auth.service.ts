@@ -3,21 +3,13 @@ import * as token from '@/utils/token.util';
 import { ConflictException } from '@/utils/exceptions/conflict.exception';
 import { UserResponseDto } from '../../logic/dtos/User/User-response.dto';
 import { UserRepository, WalletRepository } from '../../data/repositories/index';
-import { UserEntity } from '../../data/entities';
-import { Encryption } from '../../utils/encrption.utils';
+import { UserService } from './user.service';
+import { Encryption } from '@/utils/encryption.utils';
+import { TCreateUserBody } from '@/web/validators/user.validation';
 
 export class AuthService {
-  static async register(userDto: any): Promise<{ message: string; data: any }> {
-    const userEntity = UserEntity.make(userDto);
-    const user = await UserRepository.create(userEntity);
-
-    if (!user) {
-      throw new NotFoundException('Failed to create user');
-    }
-    return {
-      message: 'User Created',
-      data: user.email,
-    };
+  static async signup(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
+    return UserService.create(userEntity);
   }
 
   static async verify(email: string): Promise<{ message: string; data: any }> {
@@ -51,11 +43,11 @@ export class AuthService {
   }
 
   static async login(email: string, password: string): Promise<{ message: string; data: any }> {
-    const user = await UserRepository.findEmail(email);
+    const user = await UserService.authFind(
+      { email },
+      { sensitive: true, sensitiveFields: '+password' },
+    );
 
-    if (!user || !user.verified) {
-      throw new ConflictException({ message: user ? 'User not verified' : 'User not found' });
-    }
     const isMatch = Encryption.compare(user.password, password);
 
     if (!isMatch) throw new UnauthorizedException({ message: 'Invalid email or password' });
@@ -64,7 +56,7 @@ export class AuthService {
       message: 'Successful login',
       data: {
         accessToken: token.createToken({ id: user._id }),
-        user: UserResponseDto.from(user),
+        user: UserResponseDto.login(user),
       },
     };
   }
