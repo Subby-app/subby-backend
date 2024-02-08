@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { Request, Response } from 'express';
 import { UserService } from '../../logic/services/index';
 import { BaseHttpResponse } from '../../utils/base-Http-response.utils';
@@ -28,9 +29,7 @@ export class UserController {
   }
 
   static async update(req: Request, res: Response) {
-    const userId = req.params.id;
-    console.log(userId);
-    console.log('Request Body:', req.body);
+    const userId = req.user?._id!;
 
     const { message, data } = await UserService.update(userId, req.body);
     const result = BaseHttpResponse.success(message, data);
@@ -39,7 +38,7 @@ export class UserController {
   }
 
   static async delete(req: Request, res: Response) {
-    const userId = req.params.id;
+    const userId = req.user?._id!;
 
     const { message, data } = await UserService.delete(userId);
     const result = BaseHttpResponse.success(message, data);

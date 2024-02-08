@@ -32,6 +32,8 @@ const updateUserBody = z.object({
   lastName: nameSchema,
   username: usernameSchema,
 });
+
+// no need for id param if req.user is used
 const updateUserParams = z.object({
   id: objectIdSchema,
 });

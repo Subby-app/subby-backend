@@ -48,6 +48,7 @@ export const validateOtp = incomingRequestSchema(
 
 export type TValidateOtpBody = z.infer<typeof validateOtpBody>;
 
+// email should come from req.user
 const verifyEmailBody = z.object({
   email: emailSchema,
   otp: otpSchema,

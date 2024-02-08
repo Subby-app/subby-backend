@@ -63,8 +63,9 @@
     "typescript": "^5.3.3"
   },
   "_moduleAliases": {
-    "@/resources": "dist/resources",
-    "@/middlewares": "dist/middlewares",
-    "@/utils": "dist/utils"
+    "@/data": "dist/data",
+    "@/logic": "dist/logic",
+    "@/utils": "dist/utils",
+    "@/web": "dist/web"
   }
 }

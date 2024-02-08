@@ -17,26 +17,17 @@ export interface IUser extends Document {
   }[];
   maxFamilies: number;
   accountNumber: string;
-  _id: Types.ObjectId;
   wallet: Types.ObjectId;
   earnings: number;
-
-  isValidPassword(password: string): Promise<Error | boolean>;
 }
 
-export type TUserFilter = {
-  id?: Types.ObjectId;
-  email?: string;
-  username?: string;
-  phoneNumber?: string;
-};
+export type TUserFilter = Pick<Partial<IUser>, '_id' | 'email' | 'username' | 'phoneNumber'>;
+
+type TSensitiveFields = '+password' | '+otp' | '+recoveryCodes' | '+otpExpiration';
 
 export type TFilterOptions = {
-  sensitiveFields?: boolean;
-  populateFields?: boolean;
+  sensitive: boolean;
+  sensitiveFields: TSensitiveFields | [TSensitiveFields];
 };
 
-export type TUpdateUser = {
-  firstName?: string;
-  lastName?: string;
-};
+export type TUpdateUserEntity = Pick<Partial<IUser>, 'firstName' | 'verified' | 'lastName'>;

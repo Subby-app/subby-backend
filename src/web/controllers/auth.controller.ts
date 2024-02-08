@@ -6,14 +6,14 @@ import { BaseHttpResponse } from '@/utils/base-Http-response.utils';
 
 export class AuthController {
   static signup = async (req: Request, res: Response) => {
-    const { message, data } = await AuthService.register(req.body);
+    const { message, data } = await AuthService.signup(req.body);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
   };
 
   static verify = async (req: Request, res: Response) => {
-    const { email } = req.body;
+    const email = req.user?.email!;
     const { message, data } = await AuthService.verify(email);
     const result = BaseHttpResponse.success(message, data);
 
