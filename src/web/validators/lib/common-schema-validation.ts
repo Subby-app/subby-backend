@@ -12,7 +12,7 @@ export const emailSchema = z.string().email().trim().toLowerCase().max(255);
 export const nameSchema = z
   .string()
   .trim()
-  .toLowerCase()
+  .toLowerCase() //?lowercase?
   .min(1)
   .max(255)
   .refine((value) => value !== 'null', { message: "name cannot be 'null'" });

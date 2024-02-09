@@ -4,18 +4,19 @@ import { BaseHttpResponse } from '../../utils/base-Http-response.utils';
 import { HttpStatus } from '../../utils/exceptions/http-status.enum';
 
 export class FamilyController {
-  static async getAll(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getAll();
-    const result = BaseHttpResponse.success(message, data);
-
-    res.status(HttpStatus.OK).json(result);
-  }
-
   static async create(req: Request, res: Response) {
-    const { message, data } = await FamilyService.create(req.body);
+    const owner = req.user?._id;
+    const { message, data } = await FamilyService.create(owner, req.body);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.CREATED).json(result);
+  }
+
+  static async getAll(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getAll(req.query);
+    const result = BaseHttpResponse.success(message, data);
+
+    res.status(HttpStatus.OK).json(result);
   }
 
   static async getById(req: Request, res: Response) {
@@ -28,7 +29,8 @@ export class FamilyController {
   }
 
   static async getOwner(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getFamilyOwner(req.body.owner);
+    const reqUser = req.user?._id;
+    const { message, data } = await FamilyService.getFamilyOwner(reqUser);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
@@ -36,8 +38,9 @@ export class FamilyController {
 
   static async update(req: Request, res: Response) {
     const familyId = req.params.id;
+    const reqUser = req.user?._id;
 
-    const { message, data } = await FamilyService.update(familyId, req.body);
+    const { message, data } = await FamilyService.update(familyId, req.body, reqUser);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
@@ -45,8 +48,9 @@ export class FamilyController {
 
   static async delete(req: Request, res: Response) {
     const familyId = req.params.id;
+    const reqUser = req.user?._id;
 
-    const { message, data } = await FamilyService.delete(familyId);
+    const { message, data } = await FamilyService.delete(familyId, reqUser);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);

@@ -1,16 +1,17 @@
-import { Document, ObjectId } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { TCreateFamilyBody } from '@/web/validators/family.validation';
 
-export interface IFamily extends Document {
-  owner: ObjectId;
-  name: string;
-  label: TFamilyLabel;
-  maxSubscribers: number;
-  spotsAvailable: number;
+type TFamilyDoc = Omit<TCreateFamilyBody, 'appId' | 'planId'>;
+
+export interface IFamily extends TFamilyDoc, Document {
+  owner: Types.ObjectId;
+  appId: Types.ObjectId;
+  planId: Types.ObjectId;
+  maxSubscribers: number; //from planId.maxSubs
   isFull: boolean;
-  membershipPrice: number;
-  subscribeLinks: string[];
 }
 
-export type TFamilyLabel = 'netflix' | 'spotify';
-
-export type TFamilyFilter = Pick<Partial<IFamily>, '_id' | 'name' | 'owner' | 'label' | 'isFull'>;
+export type TFamilyFilter = Pick<
+  Partial<IFamily>,
+  'appId' | 'owner' | 'planId' | 'isFull' | 'renewal' | 'name'
+>;

@@ -1,47 +1,44 @@
-import { FilterQuery } from 'mongoose';
+import {
+  TCreateFamilyBody,
+  TUpdateFamilyBody,
+  TFindFamiliesQuery,
+} from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
-import { IFamily } from '../interfaces/IFamily';
+import { createObjectId } from '@/data/lib/createId';
 
 export class FamilyRepository extends BaseRepository {
-  static async create(entity: any) {
+  static async create(familyData: TCreateFamilyBody, ownerId: string) {
     try {
-      const user = new Family(entity);
-      await user.save();
+      const family = new Family({
+        ...familyData,
+        owner: createObjectId(ownerId),
+        appId: createObjectId(familyData.appId),
+        planId: createObjectId(familyData.planId),
+      });
+      await family.save();
 
-      return user;
+      return family;
     } catch (error) {
       this.handleRepositoryError(error);
     }
   }
 
-  static async find() {
-    return Family.find();
+  static async find(filter: TFindFamiliesQuery) {
+    return Family.find(filter);
   }
 
   static async findById(id: string) {
     return Family.findById(id);
   }
 
-  static async findOne(filter: FilterQuery<IFamily>) {
+  static async findOne(filter: TFindFamiliesQuery) {
     return Family.findOne(filter);
   }
 
-  static async findOwners(filter: FilterQuery<IFamily>) {
-    return Family.find(filter);
-  }
-
-  static async getSubscribers(subscribers: FilterQuery<IFamily>) {
-    return Family.find(subscribers);
-  }
-
-  static async findEmail(email: string) {
-    return Family.findOne({ email });
-  }
-
-  static async update(id: string, entity: any) {
+  static async update(id: string, newData: TUpdateFamilyBody) {
     try {
-      return Family.findByIdAndUpdate(id, entity, { new: true });
+      return Family.findByIdAndUpdate(id, newData, { new: true });
     } catch (error) {
       this.handleRepositoryError(error);
     }

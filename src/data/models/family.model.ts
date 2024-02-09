@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { IFamily } from '../interfaces/IFamily';
 
+// when to use Schema<IFamily>
 const FamilySchema = new Schema(
   {
     owner: {
@@ -14,31 +15,50 @@ const FamilySchema = new Schema(
       type: String,
       required: true,
     },
-    label: {
-      type: String,
+    appId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', //!ref App
+      required: true,
+    },
+    planId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', //!ref Plan
       required: true,
     },
     maxSubscribers: {
       type: Number,
       // required: true,
+      default: 6, //! plan.maxSubs
     },
-    spotsAvailable: {
+    slotsAvailable: {
       type: Number,
       required: true,
+    },
+    subscriptionStart: {
+      type: Date,
+      required: true,
+    },
+    renewal: {
+      type: String,
+      required: true,
+    },
+    onboarding: {
+      type: {
+        label: {
+          type: String,
+          required: true,
+        },
+        url: String,
+        email: String,
+        password: String,
+      },
+      required: true,
+      _id: false,
     },
     isFull: {
       type: Boolean,
       default: false,
     },
-    membershipPrice: {
-      type: Number,
-      required: true,
-    },
-    subscribeLinks: [
-      {
-        type: String,
-      },
-    ],
   },
   {
     timestamps: true,
