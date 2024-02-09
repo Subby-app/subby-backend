@@ -16,13 +16,13 @@ export class FamilyResponseDto {
     return families.map((family) => FamilyResponseDto.from(family));
   }
 
-  static create(family: IFamily) {
+  static create(family: IFamily, subscriptionId: string) {
     return {
       id: family._id,
       name: family.name,
-      appName: 'appId.appName',
-      subscriptionId: 'subscriptionId',
-      maxUsers: 'planId.maxUsers',
+      appName: 'app.name',
+      subscriptionId,
+      maxUsers: 'plan.maxUsers',
       slotsAvailable: family.slotsAvailable,
       completed: 'transactionIds[]',
       pending: 'transactionIds[]',

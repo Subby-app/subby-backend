@@ -1,9 +1,24 @@
-import { Document, ObjectId } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { TOnboarding, TRenewal } from '@/web/validators/family.validation';
 
-export interface ISubscription extends Document {
-  userId: ObjectId;
-  familyId: ObjectId;
-  joinMethod: string;
-  isActive: boolean;
-  revokeAccess: boolean;
+export type TSubscriptionCreate = {
+  appId: string;
+  planId: string;
+  slotsAvailable: number;
+  renewal: TRenewal;
+  onboarding: TOnboarding;
+  userId: string;
+};
+
+type TSubscriptionDoc = Omit<TSubscriptionCreate, 'appId' | 'planId' | 'userId'>;
+
+export interface ISubscription extends TSubscriptionDoc, Document {
+  appId: Types.ObjectId;
+  planId: Types.ObjectId;
+  userId: Types.ObjectId;
 }
+
+export type TSubscriptionFilter = Pick<
+  Partial<TSubscriptionCreate>,
+  'appId' | 'planId' | 'userId' | 'renewal'
+>;

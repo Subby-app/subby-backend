@@ -6,6 +6,7 @@ import {
   TFindFamiliesQuery,
   TUpdateFamilyBody,
 } from '@/web/validators/family.validation';
+import { SubscriptionService } from './subscription.service';
 
 export class FamilyService {
   static async create(
@@ -13,8 +14,7 @@ export class FamilyService {
     familyData: TCreateFamilyBody,
   ): Promise<{ message: string; data: any }> {
     // !get app
-    // !get plan -> plan.maxSubs
-    // !create a subscription
+    // !get plan -> plan.maxSubs use in family
     // ! possible transactions {3}
     const family = await FamilyRepository.create(familyData, ownerId);
 
@@ -22,9 +22,18 @@ export class FamilyService {
       throw new NotFoundException('Failed to create family');
     }
 
+    const subscription = await SubscriptionService.create({
+      appId: ownerId, //!app._id
+      planId: ownerId, //!plan._id
+      onboarding: familyData.onboarding,
+      slotsAvailable: family.slotsAvailable,
+      renewal: family.renewal,
+      userId: ownerId,
+    });
+
     return {
       message: 'Family Created',
-      data: FamilyResponseDto.create(family.toObject()),
+      data: FamilyResponseDto.create(family.toObject(), subscription._id),
     };
   }
 

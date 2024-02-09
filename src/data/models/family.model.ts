@@ -1,6 +1,24 @@
 import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { IFamily } from '../interfaces/IFamily';
+import { TOnboarding } from '@/web/validators/family.validation';
+
+export const OnboardingSChema = new Schema<TOnboarding>(
+  {
+    label: {
+      type: String,
+      required: true,
+    },
+    url: String,
+    email: String,
+    password: String,
+  },
+  {
+    _id: false,
+    id: false,
+    timestamps: false,
+  },
+);
 
 // when to use Schema<IFamily>
 const FamilySchema = new Schema(
@@ -43,17 +61,8 @@ const FamilySchema = new Schema(
       required: true,
     },
     onboarding: {
-      type: {
-        label: {
-          type: String,
-          required: true,
-        },
-        url: String,
-        email: String,
-        password: String,
-      },
+      type: OnboardingSChema,
       required: true,
-      _id: false,
     },
     isFull: {
       type: Boolean,

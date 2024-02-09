@@ -5,16 +5,13 @@ import {
 } from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
-import { createObjectId } from '@/data/lib/createId';
 
 export class FamilyRepository extends BaseRepository {
   static async create(familyData: TCreateFamilyBody, ownerId: string) {
     try {
       const family = new Family({
         ...familyData,
-        owner: createObjectId(ownerId),
-        appId: createObjectId(familyData.appId),
-        planId: createObjectId(familyData.planId),
+        owner: ownerId,
       });
       await family.save();
 
