@@ -13,11 +13,11 @@
 //       type: String,
 //       required: true,
 //     },
-//     cost: {
+//     price: {
 //       type: Number,
 //       required: true,
 //     },
-//     AccountSlots: {
+//     accountSlots: {
 //       type: Number,
 //       required: true,
 //     },

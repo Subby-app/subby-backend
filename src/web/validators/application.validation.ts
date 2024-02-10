@@ -6,34 +6,53 @@ import {
   objectIdSchema,
 } from './lib/common-schema-validation';
 
-const createApplicationBody = z.object({
+//Create Application Body
+const createApplicationBodySchema = z.object({
   appName: nameSchema,
   planId: objectIdSchema,
 });
-
-export const createApplication = incomingRequestSchema(
-  createApplicationBody,
+export const createApplicationSchema = incomingRequestSchema(
+  createApplicationBodySchema,
   emptyObjectSchema,
   emptyObjectSchema,
 );
+export type TcreateApplicationBody = z.infer<typeof createApplicationBodySchema>;
 
-export type TCreateApplicationBody = z.infer<typeof createApplicationBody>;
+//Find Application by Query
+const findapplicationsQuerySchema = z.object({
+  appName: nameSchema.optional(),
+  planId: nameSchema.optional(),
+});
+export const findApplicationsSchema = incomingRequestSchema(
+  emptyObjectSchema,
+  emptyObjectSchema,
+  findapplicationsQuerySchema,
+);
+export type TFindApplicationQuery = z.infer<typeof findapplicationsQuerySchema>;
 
-const updateApplicationBody = z.object({
+//Update Application via Params
+const updateApplicationBodySchema = z.object({
   appName: nameSchema,
   planId: objectIdSchema,
 });
-
-const updateApplicationParams = z.object({
+const updateApplicationParamsSchema = z.object({
   id: objectIdSchema,
 });
-
-export const updateApplication = z.object({
-  body: updateApplicationBody,
-  params: updateApplicationParams,
+export const updateApplicationSchema = z.object({
+  body: updateApplicationBodySchema,
+  params: updateApplicationParamsSchema,
   query: emptyObjectSchema,
 });
+export type TUpdateApplicationBodySchema = z.infer<typeof updateApplicationBodySchema>;
+export type TUpdateApplicationParamsSchema = z.infer<typeof updateApplicationParamsSchema>;
 
-export type TUpdateApplicationBody = z.infer<typeof updateApplicationBody>;
-
-export type TUpdateApplicationParams = z.infer<typeof updateApplicationParams>;
+//Delete Application via Params
+const deleteApplicationParamsSchema = z.object({
+  id: objectIdSchema,
+});
+export const deleteApplicationSchema = incomingRequestSchema(
+  emptyObjectSchema,
+  deleteApplicationParamsSchema,
+  emptyObjectSchema,
+);
+export type TDeleteFamilyParams = z.infer<typeof deleteApplicationParamsSchema>;

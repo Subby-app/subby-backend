@@ -50,7 +50,6 @@ export class ApplicationService {
       throw new NotFoundException('No application found');
     }
 
-
     return {
       message: 'Application fetched',
       data: application,
