@@ -16,12 +16,12 @@ export const createApplicationSchema = incomingRequestSchema(
   emptyObjectSchema,
   emptyObjectSchema,
 );
-export type TcreateApplicationBody = z.infer<typeof createApplicationBodySchema>;
+export type TCreateApplicationBody = z.infer<typeof createApplicationBodySchema>;
 
 //Find Application by Query
 const findapplicationsQuerySchema = z.object({
   appName: nameSchema.optional(),
-  planId: nameSchema.optional(),
+  planId: objectIdSchema.optional(),
 });
 export const findApplicationsSchema = incomingRequestSchema(
   emptyObjectSchema,
@@ -55,4 +55,4 @@ export const deleteApplicationSchema = incomingRequestSchema(
   deleteApplicationParamsSchema,
   emptyObjectSchema,
 );
-export type TDeleteFamilyParams = z.infer<typeof deleteApplicationParamsSchema>;
+export type TDeleteApplicationParams = z.infer<typeof deleteApplicationParamsSchema>;

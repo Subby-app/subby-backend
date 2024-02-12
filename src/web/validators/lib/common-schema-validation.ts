@@ -23,6 +23,8 @@ export const nameSchema = z
   .max(255)
   .refine((value) => value !== 'null', { message: "name cannot be 'null'" });
 
+export const numberSchema = z.number().int().positive().min(0);
+
 export const objectIdSchema = z
   .string()
   .trim()

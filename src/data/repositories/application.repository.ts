@@ -1,10 +1,15 @@
+import {
+  TCreateApplicationBody,
+  TFindApplicationQuery,
+  TUpdateApplicationBodySchema,
+} from '@/web/validators/application.validation';
 import { Application } from '../models/application.model';
 import BaseRepository from './base.repository';
 
 export class ApplicationRepository extends BaseRepository {
-  static async create(entity: any) {
+  static async create(createDto: TCreateApplicationBody) {
     try {
-      const application = new Application(entity);
+      const application = new Application(createDto);
       await application.save();
 
       return application;
@@ -13,25 +18,21 @@ export class ApplicationRepository extends BaseRepository {
     }
   }
 
-  static async find() {
-    return Application.find();
+  static async find(filter: TFindApplicationQuery) {
+    return Application.find(filter);
   }
 
   static async findById(id: string) {
     return Application.findById(id);
   }
 
-  static async findOne(filter: any) {
+  static async findOne(filter: TFindApplicationQuery) {
     return Application.findOne(filter);
   }
 
-  static async findEmail(email: string) {
-    return Application.findOne({ email }).exec();
-  }
-
-  static async update(id: any, entity: any) {
+  static async update(id: any, updateDto: TUpdateApplicationBodySchema) {
     try {
-      return Application.findByIdAndUpdate(id, entity, { new: true });
+      return Application.findByIdAndUpdate(id, updateDto, { new: true });
     } catch (error) {
       this.handleRepositoryError(error);
     }
