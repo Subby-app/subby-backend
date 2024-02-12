@@ -5,6 +5,7 @@ import {
   TFindApplicationQuery,
   TUpdateApplicationBodySchema,
 } from '@/web/validators/application.validation';
+import { ApplicationResponseDto } from '../dtos/application/application-response.dto';
 
 export class ApplicationService {
   static async create(createDto: TCreateApplicationBody): Promise<{ message: string; data: any }> {
@@ -16,7 +17,9 @@ export class ApplicationService {
     };
   }
 
-  static async getAll(filter: TFindApplicationQuery): Promise<{ message: string; data: any }> {
+  static async getAll(
+    filter: TFindApplicationQuery,
+  ): Promise<{ message: string; data: ApplicationResponseDto }> {
     const application = await ApplicationRepository.find(filter);
 
     if (!application || application.length === 0) {
@@ -24,11 +27,13 @@ export class ApplicationService {
     }
     return {
       message: 'Application fetched',
-      data: application,
+      data: ApplicationResponseDto.fromMany(application),
     };
   }
 
-  static async getById(applicationId: string): Promise<{ message: string; data: any }> {
+  static async getById(
+    applicationId: string,
+  ): Promise<{ message: string; data: ApplicationResponseDto }> {
     const application = await ApplicationRepository.findById(applicationId);
 
     if (!application) {
@@ -36,14 +41,14 @@ export class ApplicationService {
     }
     return {
       message: 'Application fetched',
-      data: application,
+      data: ApplicationResponseDto.from(application),
     };
   }
 
   static async update(
     applicationId: string,
     updateDto: TUpdateApplicationBodySchema,
-  ): Promise<{ message: string; data: any }> {
+  ): Promise<{ message: string; data: ApplicationResponseDto }> {
     const application = await ApplicationRepository.update(applicationId, updateDto);
 
     if (!application) {
@@ -52,7 +57,7 @@ export class ApplicationService {
 
     return {
       message: 'Application fetched',
-      data: application,
+      data: ApplicationResponseDto.from(application),
     };
   }
 
