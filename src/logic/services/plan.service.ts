@@ -8,13 +8,11 @@ import { PlanResponseDto } from '../dtos/plan/plan-response.dto';
 import { NotFoundException } from '@/utils/exceptions';
 
 export class PlanService {
-  static async create(
-    createDto: TcreatePlanBody,
-  ): Promise<{ message: string; data: PlanResponseDto }> {
+  static async create(createDto: TcreatePlanBody): Promise<{ message: string; data: any }> {
     const plan = await PlanRepository.create(createDto);
     return {
       message: 'Plan created',
-      data: PlanResponseDto.from(plan),
+      data: plan,
     };
   }
 

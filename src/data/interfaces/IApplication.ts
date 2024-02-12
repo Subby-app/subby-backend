@@ -1,14 +1,5 @@
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-export type TApplicationCreate = {
+export interface IApplication extends Document {
   appName: string;
-  planId: string;
-};
-
-type TApplicationDoc = Omit<TApplicationCreate, 'planId'>;
-
-export interface IApplication extends TApplicationDoc, Document {
-  planId: Types.ObjectId;
 }
-
-export type TApplicationFilter = Pick<Partial<TApplicationCreate>, 'planId'>;

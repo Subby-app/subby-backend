@@ -3,6 +3,7 @@ import { Document, Types } from 'mongoose';
 export type TPlanCreate = {
   applicationId: string;
   name: string;
+  price: string;
   accountSlots: Number;
   onBoarding: string;
 };

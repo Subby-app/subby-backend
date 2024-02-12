@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
-import { IFamily } from '../interfaces/IFamily';
+import { IPlan } from '../interfaces/IPlan';
 
 const FamilySchema = new Schema(
   {
@@ -9,14 +9,23 @@ const FamilySchema = new Schema(
       ref: 'Apllication',
       required: true,
     },
+
     name: {
       type: String,
       required: true,
+      unique: true,
     },
+
+    price: {
+      type: Number,
+      required: true,
+    },
+
     accountSlots: {
       type: Number,
       required: true,
     },
+
     onBoarding: {
       type: Number,
       required: true,

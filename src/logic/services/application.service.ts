@@ -5,7 +5,6 @@ import {
   TFindApplicationQuery,
   TUpdateApplicationBodySchema,
 } from '@/web/validators/application.validation';
-import { ApplicationResponseDto } from '../dtos/application/application-response.dto';
 
 export class ApplicationService {
   static async create(createDto: TCreateApplicationBody): Promise<{ message: string; data: any }> {
@@ -13,7 +12,7 @@ export class ApplicationService {
 
     return {
       message: 'Application created',
-      data: ApplicationResponseDto.from(application),
+      data: application,
     };
   }
 
@@ -42,7 +41,7 @@ export class ApplicationService {
   }
 
   static async update(
-    applicationId: TFindApplicationQuery,
+    applicationId: string,
     updateDto: TUpdateApplicationBodySchema,
   ): Promise<{ message: string; data: any }> {
     const application = await ApplicationRepository.update(applicationId, updateDto);
@@ -52,7 +51,7 @@ export class ApplicationService {
     }
 
     return {
-      message: 'Application Updated',
+      message: 'Application fetched',
       data: application,
     };
   }

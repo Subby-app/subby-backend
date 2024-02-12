@@ -7,11 +7,6 @@ const FamilySchema = new Schema(
       type: String,
       required: true,
     },
-    planId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Plan',
-      required: true,
-    },
   },
   {
     timestamps: true,

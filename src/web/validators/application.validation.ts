@@ -9,7 +9,6 @@ import {
 //Create Application Body
 const createApplicationBodySchema = z.object({
   appName: nameSchema,
-  planId: objectIdSchema,
 });
 export const createApplicationSchema = incomingRequestSchema(
   createApplicationBodySchema,
@@ -21,7 +20,6 @@ export type TCreateApplicationBody = z.infer<typeof createApplicationBodySchema>
 //Find Application by Query
 const findapplicationsQuerySchema = z.object({
   appName: nameSchema.optional(),
-  planId: objectIdSchema.optional(),
 });
 export const findApplicationsSchema = incomingRequestSchema(
   emptyObjectSchema,
@@ -33,7 +31,6 @@ export type TFindApplicationQuery = z.infer<typeof findapplicationsQuerySchema>;
 //Update Application via Params
 const updateApplicationBodySchema = z.object({
   appName: nameSchema,
-  planId: objectIdSchema,
 });
 const updateApplicationParamsSchema = z.object({
   id: objectIdSchema,

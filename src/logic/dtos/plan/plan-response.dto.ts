@@ -6,6 +6,7 @@ export class PlanResponseDto {
       _id: plan._id,
       applicationId: plan.applicationId,
       name: plan.name,
+      price: plan.price,
       accountSlots: plan.accountSlots,
       onBoarding: plan.onBoarding,
     };
