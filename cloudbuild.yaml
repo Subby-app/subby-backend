@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-env:
-  PROJECT_ID: enhanced-watch-413121
-
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -32,13 +28,3 @@ jobs:
     - name: Push Docker Image to GCR
       run: |
         docker push gcr.io/enhanced-watch-413121/subby-backend-image:latest
-
-    - name: Deploy to GCE
-      run: |
-        gcloud compute instances create-with-container GCE_INSTANCE  \
-          --image-family=cos-stable \
-          --image-project=cos-cloud \
-          --boot-disk-size=2GB \
-          --boot-disk-type=pd-standard \
-          --container-image=gcr.io/enhanced-watch-413121/subby-backend-image:latest \
-          --container-privileged \
