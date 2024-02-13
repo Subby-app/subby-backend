@@ -7,8 +7,6 @@ on:
 
 env:
   PROJECT_ID: enhanced-watch-413121
-  GCE_INSTANCE: ${{ secrets.GCE_INSTANCE }}
-  GCE_INSTANCE_ZONE:  ${{ secrets.GCE_ZONE }}
 
 
 jobs:
@@ -23,7 +21,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v0.3
       with:
         project_id: enhanced-watch-413121
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        service_account_key: 3452a4982035f4a21e47eb30a7ca7689c5739173
         export_default_credentials: true
 
 
@@ -37,11 +35,10 @@ jobs:
 
     - name: Deploy to GCE
       run: |
-        gcloud compute instances create-with-container $GCE_INSTANCE  \
+        gcloud compute instances create-with-container GCE_INSTANCE  \
           --image-family=cos-stable \
           --image-project=cos-cloud \
           --boot-disk-size=2GB \
           --boot-disk-type=pd-standard \
           --container-image=gcr.io/enhanced-watch-413121/subby-backend-image:latest \
           --container-privileged \
-          --zone $GCE_ZONE
