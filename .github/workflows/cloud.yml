@@ -20,9 +20,6 @@ jobs:
         project_id: ${{ env.PROJECT_ID }}
         export_default_credentials: true
 
-- name: Debug directory contents
-      run: ls -l ./scripts/
-
     - name: Build Docker Image
       run: docker build -t $IMAGE_NAME:latest .
 
