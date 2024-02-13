@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Google Cloud SDK
-      uses: google-github-actions/setup-gcloud@v0.3
+      uses: actions/checkout@v3
       with:
         project_id: enhanced-watch-413121
         service_account_key: 3452a4982035f4a21e47eb30a7ca7689c5739173
