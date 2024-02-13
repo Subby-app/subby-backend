@@ -1,22 +1,23 @@
 import { Router } from 'express';
 import { FamilyController } from '../controllers/family.controller';
 import { authenticated, validateRequest } from '../middlewares/index';
-import { createFamily, updateFamily } from '../../web/validators/family.validation';
+import {
+  createFamily,
+  findFamilies,
+  updateFamily,
+  deleteFamily,
+} from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
 
-familyRouter.post(
-  '/',
-  // authenticated, validateRequest(createFamily),
-  FamilyController.create,
-);
+familyRouter.get('/', validateRequest(findFamilies), FamilyController.getAll);
 
-familyRouter.get('/owner', FamilyController.getOwner);
+familyRouter.get('/owner', authenticated, FamilyController.getOwner);
 
-familyRouter.get('/', authenticated, FamilyController.getAll);
+familyRouter.get('/:id', FamilyController.getById);
 
-familyRouter.get('/:id', authenticated, FamilyController.getById);
+familyRouter.post('/', validateRequest(createFamily), authenticated, FamilyController.create);
 
-familyRouter.patch('/:id', authenticated, validateRequest(updateFamily), FamilyController.update);
+familyRouter.patch('/:id', validateRequest(updateFamily), authenticated, FamilyController.update);
 
-familyRouter.delete('/:id', authenticated, FamilyController.delete);
+familyRouter.delete('/:id', validateRequest(deleteFamily), authenticated, FamilyController.delete);

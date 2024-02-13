@@ -1,29 +1,36 @@
 import { Schema, model } from 'mongoose';
 import { ISubscription } from '../../data/interfaces/ISubscription';
+import { OnboardingSchema } from './family.model';
 
 const SubscriptionSchema = new Schema(
   {
-    familyId: {
+    appId: {
       type: Schema.Types.ObjectId,
-      ref: 'Family',
+      ref: 'User', // !ref App
       required: true,
+    },
+    planId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User', //! ref Plan
+      required: true,
+    },
+    slotsAvailable: {
+      type: Number,
+      required: true,
+    },
+    renewal: {
+      type: String,
+      required: true,
+    },
+    onboarding: {
+      type: OnboardingSchema,
+      required: true,
+      _id: false,
     },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-    },
-    joinMethod: {
-      type: String,
-      required: true,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
-    revokeAccess: {
-      type: Boolean,
-      default: false,
     },
   },
   {
