@@ -5,15 +5,13 @@ on:
     branches:
       - main
 
-env:
-  PROJECT_ID: enhanced-watch-413121
-  GCE_INSTANCE: GCE_INSTANCE 
-  GCE_INSTANCE_ZONE:  us-east1-c
-
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: enhanced-watch-413121
+      GCE_INSTANCE: GCE_INSTANCE 
+      GCE_INSTANCE_ZONE:  us-east1-c
 
     steps:
     - name: Checkout Repository
