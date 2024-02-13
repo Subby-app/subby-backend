@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { ISubscription } from '../../data/interfaces/ISubscription';
-import { OnboardingSChema } from './family.model';
+import { OnboardingSchema } from './family.model';
 
 const SubscriptionSchema = new Schema(
   {
@@ -23,7 +23,7 @@ const SubscriptionSchema = new Schema(
       required: true,
     },
     onboarding: {
-      type: OnboardingSChema,
+      type: OnboardingSchema,
       required: true,
       _id: false,
     },

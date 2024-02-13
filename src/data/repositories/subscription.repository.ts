@@ -7,8 +7,6 @@ export class SubscriptionRepository extends BaseRepository {
     try {
       const subscription = new Subscription(entity);
       await subscription.save();
-      const subscription = new Subscription(entity);
-      await subscription.save();
 
       return subscription;
       return subscription;

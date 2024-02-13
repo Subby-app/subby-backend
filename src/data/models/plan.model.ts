@@ -6,7 +6,7 @@ const FamilySchema = new Schema(
   {
     applicationId: {
       type: Schema.Types.ObjectId,
-      ref: 'Apllication',
+      ref: 'Application',
       required: true,
     },
 

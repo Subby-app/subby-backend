@@ -7,33 +7,38 @@ import {
   TUpdateFamilyBody,
 } from '@/web/validators/family.validation';
 import { SubscriptionService } from './subscription.service';
+import { ApplicationRepository } from '@/data/repositories/application.repository';
+import { PlanRepository } from '@/data/repositories/plan.repository';
 
 export class FamilyService {
   static async create(
     ownerId: string,
     familyData: TCreateFamilyBody,
   ): Promise<{ message: string; data: any }> {
-    // !get app
-    // !get plan -> plan.maxSubs use in family
+    const app = await ApplicationRepository.findById(familyData.appId);
+    if (!app) throw new NotFoundException('Application not found');
+
+    const plan = await PlanRepository.findById(familyData.planId);
+    if (!plan) throw new NotFoundException('Plan not found');
     // ! possible transactions {3}
-    const family = await FamilyRepository.create(familyData, ownerId);
+    const family = await FamilyRepository.create(familyData, ownerId, plan.accountSlots);
 
     if (!family) {
       throw new NotFoundException('Failed to create family');
     }
 
     const subscription = await SubscriptionService.create({
-      appId: ownerId, //!app._id
-      planId: ownerId, //!plan._id
+      appId: familyData.appId,
+      planId: familyData.planId,
       onboarding: familyData.onboarding,
-      slotsAvailable: family.slotsAvailable,
-      renewal: family.renewal,
+      slotsAvailable: familyData.slotsAvailable,
+      renewal: familyData.renewal,
       userId: ownerId,
     });
 
     return {
       message: 'Family Created',
-      data: FamilyResponseDto.create(family.toObject(), subscription._id),
+      data: FamilyResponseDto.create(family.toObject(), subscription._id, app.appName),
     };
   }
 
@@ -41,7 +46,7 @@ export class FamilyService {
     filter: TFindFamiliesQuery,
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
     const families = await FamilyRepository.find(filter);
-    // *OpenApi spec: even if array is empty res.status is 200
+
     if (!families || families.length === 0) {
       throw new NotFoundException('No families found');
     }

@@ -6,11 +6,19 @@ import {
   emptyObjectSchema,
   emailSchema,
 } from './lib/common-schema-validation';
+import { Encryption } from '@/utils/encryption.utils';
 
-const onboarding = z.discriminatedUnion('label', [
-  z.object({ label: z.literal('link'), url: z.string().url() }),
-  z.object({ label: z.literal('credentials'), email: emailSchema, password: z.string().min(1) }),
-  z.object({ label: z.literal('email') }),
+const onboarding = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('link'), url: z.string().url() }),
+  z.object({
+    type: z.literal('credentials'),
+    email: emailSchema,
+    password: z
+      .string()
+      .min(1)
+      .transform(async (value) => await Encryption.encryptText(value, 10)),
+  }),
+  z.object({ type: z.literal('email') }),
 ]);
 
 export type TOnboarding = z.infer<typeof onboarding>;

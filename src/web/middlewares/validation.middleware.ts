@@ -4,8 +4,12 @@ import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
 export function validateRequest(schema: z.ZodObject<any, any>) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse({ body: req.body, params: req.params, query: req.query });
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const result = await schema.safeParseAsync({
+      body: req.body,
+      params: req.params,
+      query: req.query,
+    });
 
     const errors: string[] = [];
     if (!result.success) {

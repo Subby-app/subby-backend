@@ -3,9 +3,9 @@ import autopopulate from 'mongoose-autopopulate';
 import { IFamily } from '../interfaces/IFamily';
 import { TOnboarding } from '@/web/validators/family.validation';
 
-export const OnboardingSChema = new Schema<TOnboarding>(
+export const OnboardingSchema = new Schema<TOnboarding>(
   {
-    label: {
+    type: {
       type: String,
       required: true,
     },
@@ -20,7 +20,6 @@ export const OnboardingSChema = new Schema<TOnboarding>(
   },
 );
 
-// when to use Schema<IFamily>
 const FamilySchema = new Schema(
   {
     owner: {
@@ -35,18 +34,17 @@ const FamilySchema = new Schema(
     },
     appId: {
       type: Schema.Types.ObjectId,
-      ref: 'User', //!ref App
+      ref: 'Application',
       required: true,
     },
     planId: {
       type: Schema.Types.ObjectId,
-      ref: 'User', //!ref Plan
+      ref: 'Plan',
       required: true,
     },
     maxSubscribers: {
       type: Number,
-      // required: true,
-      default: 6, //! plan.maxSubs
+      required: true,
     },
     slotsAvailable: {
       type: Number,
@@ -61,7 +59,7 @@ const FamilySchema = new Schema(
       required: true,
     },
     onboarding: {
-      type: OnboardingSChema,
+      type: OnboardingSchema,
       required: true,
     },
     isFull: {
@@ -73,16 +71,6 @@ const FamilySchema = new Schema(
     timestamps: true,
   },
 );
-
-// FamilySchema.post('save', async function (doc, next) {
-//   await doc.populate('owner subscribers');
-//   next();
-// });
-
-// FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
-//   this.populate('owner', 'subscribers');
-//   next();
-// });
 
 FamilySchema.plugin(autopopulate);
 export const Family = model<IFamily>('Family', FamilySchema);

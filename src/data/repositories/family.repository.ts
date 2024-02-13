@@ -7,11 +7,12 @@ import { Family } from '../models/index';
 import BaseRepository from './base.repository';
 
 export class FamilyRepository extends BaseRepository {
-  static async create(familyData: TCreateFamilyBody, ownerId: string) {
+  static async create(familyData: TCreateFamilyBody, ownerId: string, maxSubscribers: number) {
     try {
       const family = new Family({
         ...familyData,
         owner: ownerId,
+        maxSubscribers,
       });
       await family.save();
 
