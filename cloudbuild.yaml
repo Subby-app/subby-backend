@@ -1,11 +1,11 @@
 steps: 
   # Docker Build
-  - name: gcr.io/cloud-builder/docker
-    args: docker build -t gcr.io/enhanced-watch-413121/subby-backend-image:latest .
+  - name: 'gcr.io/cloud-builder/docker'
+    args: ['build', '-t', 'gcr.io/enhanced-watch-413121/subby-backend-image:latest', '.']
 
   # Docker push to Google Artifact Registry
-  - name: gcr.io/cloud-builder/docker
-    args: docker push gcr.io/enhanced-watch-413121/subby-backend-image:latest
+  - name: 'gcr.io/cloud-builder/docker'
+    args: ['push', 'gcr.io/enhanced-watch-413121/subby-backend-image:latest']
 
 # Store images in Google Artifact Registry
 images:
