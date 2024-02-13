@@ -3,7 +3,7 @@ name: Build and Deploy to GCP
 on:
   push:
     branches:
-      - main
+      - dev-revamp
 
 jobs:
   build-and-deploy:
