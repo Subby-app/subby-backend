@@ -7,6 +7,12 @@ export const incomingRequestSchema = (
   query: z.AnyZodObject,
 ) => z.object({ body, params, query });
 
+export const priceSchema = z
+  .number()
+  .positive({ message: 'Price must be a positive number' })
+  .transform((value) => Math.round(value * 100) / 100)
+  .refine((value) => !isNaN(value), { message: 'Price must be a valid number' });
+
 export const emailSchema = z.string().email().trim().toLowerCase().max(255);
 
 export const nameSchema = z
@@ -16,6 +22,8 @@ export const nameSchema = z
   .min(1)
   .max(255)
   .refine((value) => value !== 'null', { message: "name cannot be 'null'" });
+
+export const numberSchema = z.number().int().positive().min(0);
 
 export const objectIdSchema = z
   .string()
