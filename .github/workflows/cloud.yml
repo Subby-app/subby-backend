@@ -23,9 +23,6 @@ jobs:
     - name: Build Docker Image
       run: docker build -t $IMAGE_NAME:latest .
 
-    - name: Run git_update.sh script
-      run: bash ./scripts/git_update.sh -v major
-
     - name: Configure Docker Client
       run: |-
         gcloud auth configure-docker --quiet
