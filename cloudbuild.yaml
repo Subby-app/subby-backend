@@ -21,7 +21,7 @@ jobs:
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: enhanced-watch-413121
-        service_account_key: 3452a4982035f4a21e47eb30a7ca7689c5739173
+        service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         export_default_credentials: true
 
 
