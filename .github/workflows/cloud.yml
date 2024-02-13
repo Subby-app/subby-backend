@@ -1,5 +1,5 @@
 ---
-name: Build and Push Python Image to Google Cloud Platform
+name: Build and Push Node Image to Google Cloud Platform
 on:
   push:
     branches: [ dev-revamp ]
@@ -14,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: google-github-actions/setup-gcloud@master
+    - uses: google-github-actions/setup-gcloud@v1
       with:
         service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         project_id: ${{ env.PROJECT_ID }}
