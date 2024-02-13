@@ -1,12 +1,47 @@
-steps: 
-  # Docker Build
-  - name: 'gcr.io/cloud-builder/docker'
-    args: ['build', '-t', 'gcr.io/enhanced-watch-413121/subby-server/subby-server-image:$(SHORT_SHA)', '.']
+name: Build and Deploy to GCP
 
-  # Docker push to Google Artifact Registry
-  - name: 'gcr.io/cloud-builder/docker'
-    args: ['push', 'gcr.io/enhanced-watch-413121/subby-server/subby-server-image:$(SHORT_SHA)']
+on:
+  push:
+    branches:
+      - main
 
-# Store images in Google Artifact Registry
-images:
-  - gcr.io/enhanced-watch-413121/subby-server/subby-server-image:$(SHORT_SHA)
+env:
+  PROJECT_ID: enhanced-watch-413121
+  GCE_INSTANCE: ${{ secrets.GCE_INSTANCE }}
+  GCE_INSTANCE_ZONE:  ${{ secrets.GCE_ZONE }}
+
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.3
+      with:
+        project_id: enhanced-watch-413121
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+
+    - name: Build Docker Image
+      run: |
+        docker build -t gcr.io/enhanced-watch-413121/subby-backend-image:latest .
+
+    - name: Push Docker Image to GCR
+      run: |
+        docker push gcr.io/enhanced-watch-413121/subby-backend-image:latest
+
+    - name: Deploy to GCE
+      run: |
+        gcloud compute instances create-with-container $GCE_INSTANCE  \
+          --image-family=cos-stable \
+          --image-project=cos-cloud \
+          --boot-disk-size=2GB \
+          --boot-disk-type=pd-standard \
+          --container-image=gcr.io/enhanced-watch-413121/subby-backend-image:latest \
+          --container-privileged \
+          --zone $GCE_ZONE
