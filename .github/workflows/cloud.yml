@@ -29,6 +29,8 @@ jobs:
 
     - name: Push Docker Image to GCR
       run: |
+      gcloud auth login
+      
        gcloud projects add-iam-policy-binding enhanced-watch-413121 \
         --member="serviceAccount:compute@developer.gserviceaccount.com" \
         --role="roles/artifactregistry.reader" \
