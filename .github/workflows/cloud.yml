@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROJECT_ID: enhanced-watch-413121
-      GCE_INSTANCE: your-instance-name 
+      GCE_INSTANCE: your-instance-name
 
     steps:
     - name: Checkout Repository
@@ -27,19 +27,23 @@ jobs:
       run: |
         docker build -t gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest .
 
+    - name: Authenticate with gcloud
+      run: gcloud auth activate-service-account --key-file=${{ secrets.SERVICE_ACCOUNT_KEY }}
+
+    - name: Set IAM Policy Binding
+      run: |
+        gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
+          --member="serviceAccount:compute@developer.gserviceaccount.com" \
+          --role="roles/artifactregistry.reader" \
+          --role="roles/artifactregistry.writer"
+
     - name: Push Docker Image to GCR
       run: |
-       gcloud auth login
-
-       gcloud projects add-iam-policy-binding enhanced-watch-413121 \
-        --member="serviceAccount:compute@developer.gserviceaccount.com" \
-        --role="roles/artifactregistry.reader" \
-        --role="roles/artifactregistry.writer"
         docker push gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest
 
     - name: Deploy to GCE
       run: |
-        gcloud compute instances create-with-container ${{ env.GCE_INSTANCE }}  \
+        gcloud compute instances create-with-container ${{ env.GCE_INSTANCE }} \
           --image-family=cos-stable \
           --image-project=cos-cloud \
           --boot-disk-size=2GB \
