@@ -33,9 +33,6 @@ jobs:
         --member="serviceAccount:compute@developer.gserviceaccount.com" \
         --role="roles/artifactregistry.reader" \
         --role="roles/artifactregistry.writer"
-
-docker push gcr.io/enhanced-watch-413121/subby-backend-image:latest
-
         docker push gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest
 
     - name: Deploy to GCE
