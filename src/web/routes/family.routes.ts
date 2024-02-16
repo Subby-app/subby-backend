@@ -1,53 +1,23 @@
 import { Router } from 'express';
-import { authenticated, validation } from '../middlewares';
-import * as familyController from '../controllers/family.controller';
-import * as validate from '../validators/family.validation';
+import { FamilyController } from '../controllers/family.controller';
+import { authenticated, validateRequest } from '../middlewares/index';
+import {
+  createFamily,
+  findFamilies,
+  updateFamily,
+  deleteFamily,
+} from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
 
-familyRouter.get('/', validation(validate.find, 'query'), authenticated, familyController.findMany);
+familyRouter.get('/', validateRequest(findFamilies), FamilyController.getAll);
 
-familyRouter.get('/owner', authenticated, familyController.familyOwner);
+familyRouter.get('/owner', authenticated, FamilyController.getOwner);
 
-familyRouter.get('/overview', authenticated, familyController.familyOverview);
+familyRouter.get('/:id', FamilyController.getById);
 
-familyRouter.get('/subscriptions', authenticated, familyController.subscriptions);
+familyRouter.post('/', validateRequest(createFamily), authenticated, FamilyController.create);
 
-familyRouter.get(
-  '/:familyId',
-  validation(validate.familyId, 'params'),
-  validation(validate.find, 'query'),
-  authenticated,
-  familyController.findOne,
-);
+familyRouter.patch('/:id', validateRequest(updateFamily), authenticated, FamilyController.update);
 
-familyRouter.post('/', validation(validate.create, 'body'), authenticated, familyController.create);
-
-familyRouter.post(
-  '/:familyId/subscribers',
-  validation(validate.familyId, 'params'),
-  authenticated,
-  familyController.joinFamily,
-);
-
-familyRouter.post(
-  '/:familyId/subscribers/:subscriberId',
-  validation(validate.familySubscribers, 'params'),
-  authenticated,
-  familyController.inviteSubscriber,
-);
-
-familyRouter.patch(
-  '/:familyId/subscribers/:subscriberId',
-  validation(validate.familySubscribers, 'params'),
-  validation(validate.patchSubscriber, 'query'),
-  authenticated,
-  familyController.updateSubscriber,
-);
-
-familyRouter.delete(
-  '/:familyId/subscribers',
-  validation(validate.familyId, 'params'),
-  authenticated,
-  familyController.removeSubscriber,
-);
+familyRouter.delete('/:id', validateRequest(deleteFamily), authenticated, FamilyController.delete);

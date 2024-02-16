@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
-import { IUser } from '../interfaces/user.interface';
+// import bcrypt from 'bcrypt';
+import { IUser } from '../interfaces/IUser';
+import { UserRole } from '../../utils/helpers/user.helper';
 
 const UserSchema = new Schema(
   {
@@ -8,6 +9,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      index: true,
       trim: true,
     },
     firstName: {
@@ -35,7 +37,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      required: true,
+      enum: UserRole,
+      default: UserRole.USER,
     },
     verified: {
       type: Boolean,
@@ -53,27 +56,16 @@ const UserSchema = new Schema(
       type: [{ hash: String, used: Boolean }],
       select: false,
     },
-    families: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
     maxFamilies: {
       type: Number,
       default: 0,
     },
-    subscriptions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Family',
-      },
-    ],
     accountNumber: {
       type: String,
     },
     wallet: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Wallet',
     },
     earnings: {
       type: Number,
@@ -85,17 +77,17 @@ const UserSchema = new Schema(
   },
 );
 
-UserSchema.pre<IUser>('save', async function (next) {
-  if (!this.isModified('password')) {
-    return next();
-  }
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
-  next();
-});
+// UserSchema.pre<IUser>('save', async function (next) {
+//   if (!this.isModified('password')) {
+//     return next();
+//   }
+//   const hash = await bcrypt.hash(this.password, 10);
+//   this.password = hash;
+//   next();
+// });
 
-UserSchema.methods.isValidPassword = async function (password: string): Promise<Error | boolean> {
-  return await bcrypt.compare(password, this.password);
-};
+// UserSchema.methods.isValidPassword = async function (password: string): Promise<Error | boolean> {
+//   return await bcrypt.compare(password, this.password);
+// };
 
-export const UserModel = model<IUser>('User', UserSchema);
+export const User = model<IUser>('User', UserSchema);

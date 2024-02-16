@@ -1,0 +1,44 @@
+name: Build and Deploy to GCP
+
+on:
+  push:
+    branches:
+      - dev-revamp
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: enhanced-watch-413121
+      GCE_INSTANCE: your-instance-name
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ env.PROJECT_ID }}
+        service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
+        export_default_credentials: true
+
+    - name: Build Docker Image
+      run: docker build -t gcr.io/enhanced-watch-413121/subby-backend-image:latest .
+
+
+    - name: Push Docker Image to GCR
+      run: |
+        gcloud auth configure-docker 
+        docker push gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest
+
+    - name: Deploy to GCE
+      run: |
+        gcloud compute instances create-with-container ${{ env.GCE_INSTANCE }} \
+          --image-family=cos-stable \
+          --image-project=cos-cloud \
+          --boot-disk-size=2GB \
+          --boot-disk-type=pd-standard \
+          --container-image=gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest \
+          --container-privileged \
+          --zone=us-east1-c

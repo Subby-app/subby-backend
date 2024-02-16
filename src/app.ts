@@ -3,7 +3,9 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import bodyParser from 'body-parser';
 import { errorMiddleware, handleInvalidRoutes } from './web/middlewares';
+import logger from './utils/logger.utils';
 
 class App {
   private express: Application;
@@ -38,7 +40,7 @@ class App {
 
   public listen() {
     this.express.listen(this.port, () =>
-      console.log(
+      logger.info(
         `server running in "${process.env.NODE_ENV}" and listening on port "${this.port}"`,
       ),
     );

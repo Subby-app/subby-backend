@@ -1,6 +1,5 @@
-import { errorMiddleware } from './error.middleware';
-import { handleInvalidRoutes } from './invalid-route.middleware';
-import { authenticated } from './auth.middleware';
-import { validation } from './validation.middleware';
-
-export { errorMiddleware, handleInvalidRoutes, authenticated, validation };
+export * from './auth.middleware';
+export * from './error.middleware';
+export * from './invalid-route.middleware';
+export * from './resource-not-found';
+export * from './validation.middleware';

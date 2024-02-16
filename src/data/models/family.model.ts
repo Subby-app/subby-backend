@@ -1,5 +1,24 @@
 import { Schema, model } from 'mongoose';
-import { IFamily } from '../interfaces/family.interface';
+import autopopulate from 'mongoose-autopopulate';
+import { IFamily } from '../interfaces/IFamily';
+import { TOnboarding } from '@/web/validators/family.validation';
+
+export const OnboardingSchema = new Schema<TOnboarding>(
+  {
+    type: {
+      type: String,
+      required: true,
+    },
+    url: String,
+    email: String,
+    password: String,
+  },
+  {
+    _id: false,
+    id: false,
+    timestamps: false,
+  },
+);
 
 const FamilySchema = new Schema(
   {
@@ -7,62 +26,51 @@ const FamilySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+      // autopopulate: { select: 'firstName lastName' },
     },
     name: {
       type: String,
       required: true,
     },
-    subscribers: {
-      type: [
-        {
-          subscriber: { type: Schema.Types.ObjectId, ref: 'User' },
-          joinedAt: Date,
-          joinMethod: String,
-          isActive: Boolean,
-          revokeAccess: Boolean,
-        },
-      ],
+    appId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Application',
+      required: true,
     },
-    label: {
-      type: String,
+    planId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Plan',
       required: true,
     },
     maxSubscribers: {
       type: Number,
       required: true,
     },
-    spotsAvailable: {
+    slotsAvailable: {
       type: Number,
+      required: true,
+    },
+    subscriptionStart: {
+      type: Date,
+      required: true,
+    },
+    renewal: {
+      type: String,
+      required: true,
+    },
+    onboarding: {
+      type: OnboardingSchema,
       required: true,
     },
     isFull: {
       type: Boolean,
       default: false,
-      required: true,
     },
-    membershipPrice: {
-      type: Number,
-      required: true,
-    },
-    subscribeLinks: [
-      {
-        type: String,
-      },
-    ],
   },
   {
     timestamps: true,
   },
 );
 
-FamilySchema.post('save', async function (doc, next) {
-  await doc.populate('owner subscribers');
-  next();
-});
-
-FamilySchema.pre(['find', 'findOne', 'findOneAndUpdate'], function (next) {
-  this.populate('owner', 'subscribers');
-  next();
-});
-
-export const FamilyModel = model<IFamily>('Family', FamilySchema);
+FamilySchema.plugin(autopopulate);
+export const Family = model<IFamily>('Family', FamilySchema);
