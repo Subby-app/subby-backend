@@ -2,33 +2,33 @@
  * @enum {string}
  * @readonly
  */
-export enum TransanctionType {
+export enum TransactionType {
   DEBIT = 'debit',
   CREDIT = 'credit',
 }
 
-export const TransanctionTypes: string[] = Object.values(TransanctionType);
+export const TransactionTypes: string[] = Object.values(TransactionType);
 
 /**
  * @enum {string}
  * @readonly
  */
-export enum TransanctionStatus {
+export enum TransactionStatus {
   ABANDONED = 'abandoned',
   FAILED = 'failed',
   PENDING = 'pending',
   SUCCESS = 'successful',
 }
 
-export const TransanctionStatuses: string[] = Object.values(TransanctionStatus);
+export const TransactionStatuses: string[] = Object.values(TransactionStatus);
 
 /**
  * @enum {string}
  * @readonly
  */
-export enum TransanctionCurrency {
-  NARIA = 'NGN',
+export enum TransactionCurrency {
+  NAIRA = 'NGN',
   DOLLAR = 'USD',
 }
 
-export const TransanctionCurrencies: string[] = Object.values(TransanctionCurrency);
+export const TransactionCurrencies: string[] = Object.values(TransactionCurrency);

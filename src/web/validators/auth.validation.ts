@@ -1,28 +1,76 @@
-import Joi from 'joi';
+import { z } from 'zod';
+import {
+  emailSchema,
+  nameSchema,
+  phoneNumberSchema,
+  passwordSchema,
+  usernameSchema,
+  otpSchema,
+  emptyObjectSchema,
+  incomingRequestSchema,
+} from './lib/common-schema-validation';
 
-const email = Joi.string().email().lowercase();
-const password = Joi.string().min(6);
-const otp = Joi.string().min(6);
-
-export const signup = Joi.object({
-  email: email.required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  password: password.required(),
-  username: Joi.string().required(),
-  phoneNumber: Joi.string().regex(/^\d+$/).length(13).required(),
+const signupUserBody = z.object({
+  email: emailSchema,
+  firstName: nameSchema,
+  lastName: nameSchema,
+  password: passwordSchema,
+  username: usernameSchema,
+  phoneNumber: phoneNumberSchema,
 });
 
-export const login = Joi.object({
-  email: email.required(),
-  password: password.required(),
+export const signupUser = incomingRequestSchema(
+  signupUserBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TSignupUserBody = z.infer<typeof signupUserBody>;
+
+const loginUserBody = z.object({
+  email: emailSchema,
+  password: passwordSchema,
 });
 
-export const verifyOtp = Joi.object({
-  otp: otp.required(),
+export const loginUser = incomingRequestSchema(loginUserBody, emptyObjectSchema, emptyObjectSchema);
+
+export type TLoginUserBody = z.infer<typeof loginUserBody>;
+
+const validateOtpBody = z.object({
+  otp: otpSchema,
 });
 
-export const resetPassword = Joi.object({
-  newPassword: password.required(),
-  otp: otp.required(),
+export const validateOtp = incomingRequestSchema(
+  validateOtpBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TValidateOtpBody = z.infer<typeof validateOtpBody>;
+
+// email should come from req.user
+const verifyEmailBody = z.object({
+  email: emailSchema,
+  otp: otpSchema,
 });
+
+export const verifyEmail = incomingRequestSchema(
+  verifyEmailBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TVerifyEmailBody = z.infer<typeof verifyEmailBody>;
+
+const resetPasswordBody = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+});
+
+export const resetPassword = incomingRequestSchema(
+  resetPasswordBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TResetPasswordBody = z.infer<typeof resetPasswordBody>;

@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken, Token } from '@/utils/token.util';
-import { UserModel } from '../../data/models/user.model';
-import { HttpException, HttpStatus } from '@/utils/exceptions/index';
+import { User } from '../../data/models/user.model';
+import {
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '@/utils/exceptions/index';
 import jwt from 'jsonwebtoken';
 
 /**
@@ -12,7 +17,7 @@ export async function authenticated(
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> {
-  const authError = new HttpException(HttpStatus.UNAUTHORIZED, 'you are not authorized');
+  const authError = new UnauthorizedException({ message: 'You are not authorized' });
   try {
     const bearer = req.headers.authorization;
 
@@ -28,10 +33,10 @@ export async function authenticated(
       return next(authError);
     }
 
-    const user = await UserModel.findById(payload.id).exec();
+    const user = await User.findById(payload.id).exec();
 
     if (!user) {
-      return next(new HttpException(HttpStatus.NOT_FOUND, 'user not found'));
+      return next(new NotFoundException({ message: 'user not found' }));
     }
 
     req.user = user;

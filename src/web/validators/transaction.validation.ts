@@ -1,40 +1,54 @@
-import Joi from 'joi';
-
+import { z } from 'zod';
 import {
-  TransanctionCurrencies,
-  TransanctionStatuses,
-  TransanctionTypes,
+  TransactionCurrencies,
+  TransactionStatuses,
+  TransactionTypes,
 } from '../../utils/helpers/transaction.helpers';
+import {
+  emptyObjectSchema,
+  incomingRequestSchema,
+  objectIdSchema,
+} from './lib/common-schema-validation';
 
-const transactionTypes = Joi.string()
-  .valid(...TransanctionTypes)
-  .lowercase()
-  .label('Transaction type');
+const transactionTypes = z
+  .string()
+  .toLowerCase()
+  .refine((value) => TransactionTypes.includes(value));
 
-const transactionStatus = Joi.string()
-  .valid(...TransanctionStatuses)
-  .lowercase()
-  .label('Transaction status');
+const transactionStatus = z
+  .string()
+  .toLowerCase()
+  .refine((value) => TransactionStatuses.includes(value));
 
-const methodObjects = Joi.string().allow(null).default(null).lowercase().label('Method');
+const methodObjects = z.string().toLowerCase().nullable().default(null);
 
-const transanctionCurrencies = Joi.string()
-  .valid(...TransanctionCurrencies)
-  .label('Transaction currency');
+const transactionCurrencies = z
+  .string()
+  .toLowerCase()
+  .refine((value) => TransactionCurrencies.includes(value));
 
-const transactionMethod = Joi.object({
-  bank: methodObjects.label('Bank'),
-  channel: methodObjects.label('Channel'),
-  cardType: methodObjects.label('Card type'),
-}).label('Method');
-
-export const createTransactionValidation = Joi.object({
-  userId: Joi.string().required().label('User ID'),
-  type: transactionTypes.required(),
-  status: transactionStatus.required(),
-  amount: Joi.number().required().label('Amount'),
-  method: transactionMethod.label('Transaction method'),
-  tax: Joi.number().default(0).label('Tax'),
-  currency: transanctionCurrencies.default('NGN'),
-  recipent: Joi.string().allow(null).default(null).label('Recipient'),
+const transactionMethod = z.object({
+  bank: methodObjects,
+  channel: methodObjects,
+  cardType: methodObjects,
 });
+
+const createTransactionBody = z.object({
+  userId: objectIdSchema,
+  type: transactionTypes,
+  status: transactionStatus,
+  amount: z.number(),
+  method: transactionMethod,
+  tax: z.number().default(0),
+  currency: transactionCurrencies.default('NGN'),
+  recipient: z.string().nullish().default(null),
+});
+
+export const createTransaction = incomingRequestSchema(
+  createTransactionBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+// has nested z.object 'transactionMethod'
+export type TCreateTransactionBody = z.infer<typeof createTransactionBody>;

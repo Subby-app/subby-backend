@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 
 export interface Token extends EncodedData {
   expiresIn: number;
@@ -11,7 +11,7 @@ export interface TokenData {
 }
 
 export interface EncodedData extends Object {
-  id?: Schema.Types.ObjectId;
+  id?: Types.ObjectId;
 }
 
 /**

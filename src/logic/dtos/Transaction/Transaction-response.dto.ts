@@ -1,25 +1,28 @@
-import { createObjectId } from 'data/database/mongoose.util';
 import {
-  TransanctionType,
-  TransanctionStatus,
-  TransanctionCurrency,
+  TransactionType,
+  TransactionStatus,
+  TransactionCurrency,
 } from '../../../utils/helpers/transaction.helpers';
 import { ObjectId } from 'mongoose';
 
+interface TransactionMethod {
+  channel: string | null;
+  bank: string | null;
+  cardType: string | null;
+}
+
 export class TransactionResponseDto {
-  _id: typeof createObjectId;
+  _id: ObjectId;
   userId: ObjectId;
-  type: TransanctionType;
-  status: TransanctionStatus;
+  type: TransactionType;
+  status: TransactionStatus;
   amount: number;
-  method: {
-    channel: string | null;
-    bank: string | null;
-    cardType: string | null;
-  };
+  method: TransactionMethod;
   tax: number;
-  currency: TransanctionCurrency;
-  recipent: string | null;
+  currency: TransactionCurrency;
+  recipient: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 
   constructor({
     _id,
@@ -30,7 +33,7 @@ export class TransactionResponseDto {
     method,
     tax,
     currency,
-    recipent,
+    recipient: recipient,
   }: TransactionResponseDto) {
     this._id = _id;
     this.userId = userId;
@@ -40,23 +43,13 @@ export class TransactionResponseDto {
     this.method = method;
     this.tax = tax;
     this.currency = currency;
-    this.recipent = recipent;
+    this.recipient = recipient;
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
   }
 
-  static from(transaction: any): TransactionResponseDto {
-    const { _id, userId, type, status, amount, method, tax, currency, recipent } = transaction;
-
-    return new TransactionResponseDto({
-      _id,
-      userId,
-      type,
-      status,
-      amount,
-      method,
-      tax,
-      currency,
-      recipent,
-    });
+  static from(transaction: Partial<TransactionResponseDto>): TransactionResponseDto {
+    return new TransactionResponseDto(transaction as TransactionResponseDto);
   }
 
   static fromMany(transactions: TransactionResponseDto[]): TransactionResponseDto[] {

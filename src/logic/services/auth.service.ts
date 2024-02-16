@@ -1,121 +1,63 @@
-import { HttpException, HttpStatus } from '@/utils/exceptions';
-import { UserService } from './user.service';
+import { NotFoundException, UnauthorizedException } from '../../utils/exceptions/index';
 import * as token from '@/utils/token.util';
-import { generateOtp } from '@/utils/otp.util';
-import { IUser } from '../../data/interfaces/user.interface';
+import { ConflictException } from '@/utils/exceptions/conflict.exception';
+import { UserResponseDto } from '../../logic/dtos/User/User-response.dto';
+import { UserRepository, WalletRepository } from '../../data/repositories/index';
+import { UserService } from './user.service';
+import { Encryption } from '@/utils/encryption.utils';
+import { TCreateUserBody } from '@/web/validators/user.validation';
 
 export class AuthService {
-  private UserService = new UserService();
+  static async signup(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
+    return UserService.create(userEntity);
+  }
 
-  public async register(
-    email: string,
-    firstName: string,
-    lastName: string,
-    password: string,
-    username: string,
-    phoneNumber: string,
-  ) {
-    return await this.UserService.register(
-      email,
-      firstName,
-      lastName,
-      password,
-      username,
-      phoneNumber,
+  static async verify(email: string): Promise<{ message: string; data: any }> {
+    const user = await UserRepository.findEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('No user with this email found');
+    }
+
+    if (user.verified) throw new ConflictException({ message: 'You are already verified' });
+
+    const [verifiedUser, wallet] = await Promise.all([
+      UserRepository.update({ _id: user._id }, { verified: true }),
+      WalletRepository.create({ userId: user._id }),
+    ]);
+
+    if (!verifiedUser || !wallet) {
+      throw new NotFoundException({ message: 'Verification or wallet creation failed' });
+    }
+
+    verifiedUser.wallet = wallet._id;
+    await verifiedUser.save();
+
+    return {
+      message: 'Verified Successful',
+      data: {
+        accessToken: token.createToken({ id: user._id }),
+        user: UserResponseDto.from(verifiedUser),
+      },
+    };
+  }
+
+  static async login(email: string, password: string): Promise<{ message: string; data: any }> {
+    const user = await UserService.authFind(
+      { email },
+      { sensitive: true, sensitiveFields: '+password' },
     );
-  }
 
-  public async login(email: string, password: string) {
-    const user = await this.UserService.getFullUser({ email });
-    if (!(await user.isValidPassword(password))) {
-      throw new HttpException(HttpStatus.BAD_REQUEST, 'invalid email or password');
-    }
+    const isMatch = Encryption.compare(user.password, password);
+
+    if (!isMatch) throw new UnauthorizedException({ message: 'Invalid email or password' });
+
     return {
-      accessToken: token.createToken({ id: user._id }),
-      user: this.serializeUser(user),
+      message: 'Successful login',
+      data: {
+        accessToken: token.createToken({ id: user._id }),
+        user: UserResponseDto.login(user),
+      },
     };
-  }
-
-  public serializeUser(user: IUser) {
-    return {
-      _id: user._id,
-      email: user.email,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phoneNumber: user.phoneNumber,
-      verified: user.verified,
-      families: user.families,
-      subscriptions: user.subscriptions,
-      wallet: user.wallet,
-    };
-  }
-
-  public async sendOtp(email: string) {
-    const user = await this.UserService.getFullUser({ email });
-
-    const otp = generateOtp();
-    const futureDate = new Date();
-    futureDate.setMinutes(futureDate.getMinutes() + 5);
-    const expiration = futureDate.getTime().toString();
-
-    user.otp = otp;
-    user.otpExpiration = expiration;
-    await user.save();
-    // *send to user's email
-    return { otpSent: true, email: user.email };
-  }
-
-  public async verifyOtp(email: string, otp: string) {
-    const user = await this.UserService.getFullUser({ email });
-    if (user.otp == '') throw new HttpException(HttpStatus.BAD_REQUEST, 'user has no otp');
-
-    if (otp !== user.otp || parseInt(user.otpExpiration) < new Date().getTime()) {
-      throw new HttpException(HttpStatus.FORBIDDEN, 'otp expired or invalid');
-    }
-    user.otp = '';
-    user.otpExpiration = '';
-    await user.save();
-    return { validOtp: true };
-  }
-
-  public async verifyAccount(email: string) {
-    const user = await this.UserService.findOne({ email });
-    if (user.verified) throw new HttpException(HttpStatus.BAD_REQUEST, 'user is already verified');
-
-    return await this.sendOtp(email);
-  }
-
-  public async verifyEmail(email: string, otp: string) {
-    const user = await this.UserService.findOne({ email });
-
-    const { validOtp } = await this.verifyOtp(email, otp);
-    if (validOtp) {
-      user.verified = true;
-      await user.save();
-    }
-    return { accountVerified: true, email };
-  }
-
-  public async resetPasswordRequest(email: string) {
-    const user = await this.UserService.findOne({ email });
-    return await this.sendOtp(user.email);
-  }
-
-  public async resetPassword(email: string, newPassword: string, otp: string) {
-    const user = await this.UserService.getFullUser({ email });
-
-    if (await user.isValidPassword(newPassword)) {
-      throw new HttpException(
-        HttpStatus.FORBIDDEN,
-        'old password cannot be new password, use a different password',
-      );
-    }
-    await this.verifyOtp(email, otp);
-    user.password = newPassword;
-    await user.save();
-    return { passwordReset: true };
   }
 }
-
-// export { AuthService };
