@@ -24,7 +24,7 @@ jobs:
         export_default_credentials: true
 
     - name: Authenticate with gcloud
-      run: gcloud config set account ucheprince26@gmai.com
+      run: gcloud auth activate-service-account serviceAccount:compute@developer.gserviceaccount.com
 
     - name: Set IAM Policy Binding
       run: |
