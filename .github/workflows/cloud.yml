@@ -23,6 +23,9 @@ jobs:
         service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }}
         export_default_credentials: true
 
+    - name: Authenticate with gcloud
+      run: gcloud config set account ucheprince26@gmai.com
+
     - name: Set IAM Policy Binding
       run: |
         gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
