@@ -29,6 +29,7 @@ jobs:
 
     - name: Push Docker Image to GCR
       run: |
+        gcloud auth configure-docker 
         docker push gcr.io/${{ env.PROJECT_ID }}/subby-backend-image:latest
 
     - name: Deploy to GCE
