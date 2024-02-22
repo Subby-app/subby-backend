@@ -6,6 +6,7 @@ const FamilySchema = new Schema(
     appName: {
       type: String,
       required: true,
+      index: true,
     },
   },
   {
