@@ -11,6 +11,6 @@ userRouter.get('/', authenticated, UserController.getAll);
 
 userRouter.get('/:id', authenticated, UserController.getById);
 
-userRouter.patch('/:id', authenticated, validateRequest(updateUser), UserController.update);
+userRouter.patch('/', authenticated, validateRequest(updateUser), UserController.update);
 
-userRouter.delete('/:id', authenticated, UserController.delete);
+userRouter.delete('/', authenticated, UserController.delete);

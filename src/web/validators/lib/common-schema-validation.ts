@@ -54,6 +54,11 @@ export const phoneNumberSchema = z
   .trim()
   .regex(/^(\+?234|0)(70|[89][01])\d{8}$/);
 
+export const accountNumberSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{10}$/);
+
 export const usernameSchema = z
   .string()
   .trim()

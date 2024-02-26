@@ -1,4 +1,5 @@
 import { Document, Types } from 'mongoose';
+import { TUpdateUserBody } from '@/web/validators/user.validation';
 
 export interface IUser extends Document {
   email: string;
@@ -20,6 +21,9 @@ export interface IUser extends Document {
   wallet: Types.ObjectId;
   earnings: number;
 }
+type TUpdateUserDoc = Pick<Partial<IUser>, 'verified'>;
+
+export type TUpdateUser = TUpdateUserBody | TUpdateUserDoc;
 
 export type TUserFilter = Pick<Partial<IUser>, '_id' | 'email' | 'username' | 'phoneNumber'>;
 
@@ -29,5 +33,3 @@ export type TFilterOptions = {
   sensitive: boolean;
   sensitiveFields: TSensitiveFields | [TSensitiveFields];
 };
-
-export type TUpdateUserEntity = Pick<Partial<IUser>, 'firstName' | 'verified' | 'lastName'>;

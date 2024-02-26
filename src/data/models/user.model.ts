@@ -35,6 +35,9 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
+    dob: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: UserRole,
