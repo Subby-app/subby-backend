@@ -8,6 +8,11 @@ import {
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
 
+// family/:id
+const id = objectIdSchema;
+// ...subscriber/::userId
+const userId = objectIdSchema;
+
 const onboarding = z.discriminatedUnion('type', [
   z.object({ type: z.literal('link'), url: z.string().url() }),
   z.object({
@@ -68,7 +73,7 @@ const updateFamilyBody = z.object({
 });
 
 const updateFamilyParams = z.object({
-  id: objectIdSchema,
+  id,
 });
 
 export const updateFamily = incomingRequestSchema(
@@ -82,7 +87,7 @@ export type TUpdateFamilyBody = z.infer<typeof updateFamilyBody>;
 export type TUpdateFamilyParams = z.infer<typeof updateFamilyParams>;
 
 const deleteFamilyParams = z.object({
-  id: objectIdSchema,
+  id,
 });
 
 export const deleteFamily = incomingRequestSchema(
@@ -92,3 +97,36 @@ export const deleteFamily = incomingRequestSchema(
 );
 
 export type TDeleteFamilyParams = z.infer<typeof deleteFamilyParams>;
+
+const joinMethod = z.union([z.literal('join'), z.literal('invite')]);
+
+export type TJoinMethod = z.infer<typeof joinMethod>;
+
+const createFamilySubscribersParam = z.object({
+  id,
+});
+
+const createFamilySubscribersQuery = z.object({
+  joinMethod,
+});
+
+export const createFamilySubscriber = incomingRequestSchema(
+  emptyObjectSchema,
+  createFamilySubscribersParam,
+  createFamilySubscribersQuery,
+);
+
+const updateFamilySubscribersParam = z.object({
+  id,
+  userId,
+});
+
+const updateFamilySubscribersQuery = z.object({
+  revokeAccess: z.coerce.boolean(), //TODO note: Boolean("false" | "true" | 1) -> true; Boolean(0) -> false
+});
+
+export const updateFamilySubscriber = incomingRequestSchema(
+  emptyObjectSchema,
+  updateFamilySubscribersParam,
+  updateFamilySubscribersQuery,
+);

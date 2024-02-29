@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { ISubscriber } from '../../data/interfaces/ISubscriber';
 
-const SubscriptionSchema = new Schema(
+const SubscriberSchema = new Schema(
   {
     familyId: {
       type: Schema.Types.ObjectId,
@@ -31,4 +31,4 @@ const SubscriptionSchema = new Schema(
   },
 );
 
-export const Subscription = model<ISubscriber>('Subscription', SubscriptionSchema);
+export const Subscriber = model<ISubscriber>('Subscriber', SubscriberSchema);

@@ -9,7 +9,6 @@ export class SubscriptionRepository extends BaseRepository {
       await subscription.save();
 
       return subscription;
-      return subscription;
     } catch (error) {
       this.handleRepositoryError(error);
     }

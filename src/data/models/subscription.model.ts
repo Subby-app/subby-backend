@@ -6,12 +6,12 @@ const SubscriptionSchema = new Schema(
   {
     appId: {
       type: Schema.Types.ObjectId,
-      ref: 'User', // !ref App
+      ref: 'Application',
       required: true,
     },
     planId: {
       type: Schema.Types.ObjectId,
-      ref: 'User', //! ref Plan
+      ref: 'Plan',
       required: true,
     },
     slotsAvailable: {
@@ -25,7 +25,6 @@ const SubscriptionSchema = new Schema(
     onboarding: {
       type: OnboardingSchema,
       required: true,
-      _id: false,
     },
     userId: {
       type: Schema.Types.ObjectId,

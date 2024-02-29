@@ -58,6 +58,7 @@ const UserSchema = new Schema(
     recoveryCodes: {
       type: [{ hash: String, used: Boolean }],
       select: false,
+      _id: false,
     },
     maxFamilies: {
       type: Number,
