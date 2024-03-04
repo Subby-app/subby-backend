@@ -26,8 +26,8 @@ const FamilySchema = new Schema(
       required: true,
     },
 
-    onBoarding: {
-      type: Number,
+    onBoardingType: {
+      type: String,
       required: true,
     },
   },

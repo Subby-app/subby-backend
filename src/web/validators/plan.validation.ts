@@ -14,7 +14,7 @@ const createPlanBodySchema = z.object({
   name: nameSchema,
   price: priceSchema,
   accountSlots: numberSchema,
-  onBoarding: numberSchema,
+  onBoardingType: nameSchema,
 });
 export const createPlanSchema = incomingRequestSchema(
   createPlanBodySchema,
@@ -28,6 +28,7 @@ const findPlanQuerySchema = z.object({
   applicationId: objectIdSchema.optional(),
   name: nameSchema.optional(),
   price: priceSchema.optional(),
+  onBoardingType: nameSchema.optional(),
 });
 
 export const findPlanSchema = incomingRequestSchema(
@@ -42,7 +43,7 @@ const updatePlanBodySchema = z.object({
   name: nameSchema.optional(),
   price: priceSchema.optional(),
   accountSlots: numberSchema.optional(),
-  onBoarding: numberSchema.optional(),
+  onBoarding: nameSchema.optional(),
 });
 
 const updatePlanParamsSchema = z.object({

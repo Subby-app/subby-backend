@@ -5,7 +5,7 @@ export type TPlanCreate = {
   name: string;
   price: string;
   accountSlots: number;
-  onBoarding: string;
+  onBoardingType: string;
 };
 type TPlanDoc = Omit<TPlanCreate, 'applicationId'>;
 
