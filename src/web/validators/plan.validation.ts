@@ -7,14 +7,16 @@ import {
   objectIdSchema,
   priceSchema,
 } from './lib/common-schema-validation';
+import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
 
+const onBoardingTypeSchema = z.enum(PlanOnBoardingTypes);
 //Create Plan Body
 const createPlanBodySchema = z.object({
   applicationId: objectIdSchema,
   name: nameSchema,
   price: priceSchema,
   accountSlots: numberSchema,
-  onBoardingType: nameSchema,
+  onBoardingType: onBoardingTypeSchema,
 });
 export const createPlanSchema = incomingRequestSchema(
   createPlanBodySchema,
@@ -28,7 +30,7 @@ const findPlanQuerySchema = z.object({
   applicationId: objectIdSchema.optional(),
   name: nameSchema.optional(),
   price: priceSchema.optional(),
-  onBoardingType: nameSchema.optional(),
+  onBoardingType: onBoardingTypeSchema.optional(),
 });
 
 export const findPlanSchema = incomingRequestSchema(

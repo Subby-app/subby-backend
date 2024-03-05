@@ -19,7 +19,8 @@ export class ApplicationRepository extends BaseRepository {
   }
 
   static async find(filter: TFindApplicationQuery) {
-    return Application.find(filter);
+    const dbFilter = this.mapFilterObject(filter);
+    return Application.find(dbFilter).sort({ appName: 1 });
   }
 
   static async findById(id: string) {
