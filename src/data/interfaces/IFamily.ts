@@ -13,5 +13,5 @@ export interface IFamily extends TFamilyDoc, Document {
 
 export type TFamilyFilter = Pick<
   Partial<IFamily>,
-  'appId' | 'owner' | 'planId' | 'isFull' | 'renewal' | 'name'
+  'appId' | 'owner' | 'planId' | 'isFull' | 'tenure' | 'name'
 >;

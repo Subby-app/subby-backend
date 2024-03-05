@@ -6,9 +6,10 @@ import {
   passwordSchema,
   phoneNumberSchema,
   usernameSchema,
-  objectIdSchema,
   incomingRequestSchema,
+  accountNumberSchema,
 } from './lib/common-schema-validation';
+import { UserRepository } from '@/data/repositories';
 
 const createUserBody = z.object({
   email: emailSchema,
@@ -28,22 +29,30 @@ export const createUser = incomingRequestSchema(
 export type TCreateUserBody = z.infer<typeof createUserBody>;
 
 const updateUserBody = z.object({
-  firstName: nameSchema,
-  lastName: nameSchema,
-  username: usernameSchema,
-});
-
-// no need for id param if req.user is used
-const updateUserParams = z.object({
-  id: objectIdSchema,
+  firstName: nameSchema.optional(),
+  lastName: nameSchema.optional(),
+  username: usernameSchema.optional().refine(
+    async (value) => {
+      if (await UserRepository.findOne({ username: value })) return false;
+      return true;
+    },
+    { message: 'this username is taken' },
+  ),
+  phoneNumber: phoneNumberSchema.optional().refine(
+    async (value) => {
+      if (await UserRepository.findOne({ phoneNumber: value })) return false;
+      return true;
+    },
+    { message: 'this phone number is taken' },
+  ),
+  dob: z.coerce.date().optional(),
+  accountNumber: accountNumberSchema.optional(),
 });
 
 export const updateUser = z.object({
   body: updateUserBody,
-  params: updateUserParams,
+  params: emptyObjectSchema,
   query: emptyObjectSchema,
 });
 
 export type TUpdateUserBody = z.infer<typeof updateUserBody>;
-
-export type TUpdateUserParams = z.infer<typeof updateUserParams>;

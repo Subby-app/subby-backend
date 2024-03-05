@@ -35,6 +35,9 @@ const UserSchema = new Schema(
       required: true,
       unique: true,
     },
+    dob: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: UserRole,
@@ -55,6 +58,7 @@ const UserSchema = new Schema(
     recoveryCodes: {
       type: [{ hash: String, used: Boolean }],
       select: false,
+      _id: false,
     },
     maxFamilies: {
       type: Number,

@@ -9,9 +9,18 @@ export const OnboardingSchema = new Schema<TOnboarding>(
       type: String,
       required: true,
     },
-    url: String,
-    email: String,
-    password: String,
+    url: {
+      type: String,
+      select: false,
+    },
+    email: {
+      type: String,
+      select: false,
+    },
+    password: {
+      type: String,
+      select: false,
+    },
   },
   {
     _id: false,
@@ -46,7 +55,7 @@ const FamilySchema = new Schema(
       type: Number,
       required: true,
     },
-    slotsAvailable: {
+    noOfAccounts: {
       type: Number,
       required: true,
     },
@@ -54,7 +63,11 @@ const FamilySchema = new Schema(
       type: Date,
       required: true,
     },
-    renewal: {
+    subscriptionEnd: {
+      type: Date,
+      required: true,
+    },
+    tenure: {
       type: String,
       required: true,
     },
@@ -64,7 +77,7 @@ const FamilySchema = new Schema(
     },
     isFull: {
       type: Boolean,
-      default: false,
+      required: true,
     },
   },
   {

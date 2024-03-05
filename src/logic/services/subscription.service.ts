@@ -5,25 +5,24 @@ import { NotFoundException, ServerException } from '@/utils/exceptions';
 export class SubscriptionService {
   static async create(entity: TSubscriptionCreate) {
     const subscription = await SubscriptionRepository.create(entity);
-    if (!subscription)
-      throw new ServerException({ message: `failed to create subscription for ${entity.userId}` });
+    if (!subscription) throw new ServerException({ message: 'failed to create subscription' });
 
     return subscription;
   }
 
-  static async getAll(filter: TSubscriptionFilter) {
+  static async findAll(filter: TSubscriptionFilter) {
     const subscriptions = await SubscriptionRepository.find(filter);
     return subscriptions;
   }
 
-  static async getById(subscriptionId: string) {
+  static async findById(subscriptionId: string) {
     const subscription = await SubscriptionRepository.findById(subscriptionId);
     if (!subscription) throw new NotFoundException('subscription not found');
 
     return subscription;
   }
 
-  static async getOne(filter: TSubscriptionFilter) {
+  static async findOne(filter: TSubscriptionFilter) {
     const subscription = await SubscriptionRepository.findOne(filter);
     if (!subscription) throw new NotFoundException('subscription not found');
 

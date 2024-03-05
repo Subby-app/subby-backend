@@ -1,7 +1,7 @@
 import { NotFoundException } from '../../utils/exceptions/index';
 import { UserRepository } from '../../data/repositories/user.repository';
 import { UserResponseDto } from '../../logic/dtos/User';
-import { TCreateUserBody } from '@/web/validators/user.validation';
+import { TCreateUserBody, TUpdateUserBody } from '@/web/validators/user.validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
 
@@ -52,13 +52,8 @@ export class UserService {
 
   static async update(
     userId: string,
-    updateUserDto: any,
+    updateUserDto: TUpdateUserBody,
   ): Promise<{ message: string; data: UserResponseDto }> {
-    const user = await UserRepository.findById(userId);
-    if (!user) {
-      throw new NotFoundException('No user found');
-    }
-
     const updatedUser = await UserRepository.update(userId, updateUserDto);
 
     if (!updatedUser) {
@@ -71,8 +66,8 @@ export class UserService {
     };
   }
 
-  static async delete(UserId: string): Promise<{ message: string; data?: UserResponseDto }> {
-    const user = await UserRepository.delete(UserId);
+  static async delete(userId: string): Promise<{ message: string; data?: UserResponseDto }> {
+    const user = await UserRepository.delete(userId);
     if (!user) {
       throw new NotFoundException('No user found');
     }
