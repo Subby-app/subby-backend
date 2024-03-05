@@ -7,6 +7,7 @@ import {
   emailSchema,
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
+import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
 
 // family/:id
 const id = objectIdSchema;
@@ -14,31 +15,31 @@ const id = objectIdSchema;
 const userId = objectIdSchema;
 
 const onboarding = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('link'), url: z.string().url() }),
+  z.object({ type: z.literal(PlanOnBoardingTypes[0]), url: z.string().url() }),
   z.object({
-    type: z.literal('credentials'),
+    type: z.literal(PlanOnBoardingTypes[1]),
     email: emailSchema,
     password: z
       .string()
       .min(1)
       .transform(async (value) => await Encryption.encryptText(value, 10)),
   }),
-  z.object({ type: z.literal('email') }),
+  z.object({ type: z.literal(PlanOnBoardingTypes[2]) }),
 ]);
 
 export type TOnboarding = z.infer<typeof onboarding>;
 
-const renewal = z.union([z.literal('monthly'), z.literal('quarterly'), z.literal('yearly')]);
+const tenure = z.enum(['daily', 'weekly', 'monthly', 'quarterly', 'biannually', 'annually']);
 
-export type TRenewal = z.infer<typeof renewal>;
+export type TTenure = z.infer<typeof tenure>;
 
 const createFamilyBody = z.object({
   name: nameSchema,
   appId: objectIdSchema,
   planId: objectIdSchema,
-  slotsAvailable: z.number(),
-  subscriptionStart: z.coerce.date(), // test when undefined
-  renewal,
+  noOfAccounts: z.number().positive(),
+  subscriptionStart: z.coerce.date(),
+  tenure,
   onboarding,
 });
 
@@ -56,7 +57,7 @@ const findFamiliesQuery = z.object({
   planId: objectIdSchema.optional(),
   owner: objectIdSchema.optional(),
   isFull: z.coerce.boolean().optional(),
-  renewal: renewal.optional(),
+  tenure: tenure.optional(),
 });
 
 export const findFamilies = incomingRequestSchema(
@@ -102,18 +103,14 @@ const joinMethod = z.union([z.literal('join'), z.literal('invite')]);
 
 export type TJoinMethod = z.infer<typeof joinMethod>;
 
-const createFamilySubscribersParam = z.object({
+const joinFamilyParam = z.object({
   id,
 });
 
-const createFamilySubscribersQuery = z.object({
-  joinMethod,
-});
-
-export const createFamilySubscriber = incomingRequestSchema(
+export const joinFamily = incomingRequestSchema(
   emptyObjectSchema,
-  createFamilySubscribersParam,
-  createFamilySubscribersQuery,
+  joinFamilyParam,
+  emptyObjectSchema,
 );
 
 const updateFamilySubscribersParam = z.object({

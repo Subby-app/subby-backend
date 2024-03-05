@@ -8,13 +8,13 @@ import { FamilyResponseDto } from '../../logic/dtos/Family';
 import {
   TCreateFamilyBody,
   TFindFamiliesQuery,
-  TJoinMethod,
   TUpdateFamilyBody,
 } from '@/web/validators/family.validation';
 import { SubscriptionService } from './subscription.service';
 import { ApplicationRepository } from '@/data/repositories/application.repository';
 import { PlanRepository } from '@/data/repositories/plan.repository';
-import { SubscriberRepository } from '@/data/repositories/subscriber.repository';
+import { calcEndDate } from '@/utils/end-date.util';
+import { SubscriptionRepository } from '@/data/repositories';
 
 export class FamilyService {
   static async create(
@@ -26,69 +26,61 @@ export class FamilyService {
 
     const plan = await PlanRepository.findById(familyData.planId);
     if (!plan) throw new NotFoundException('Plan not found');
-    // ! possible transactions {3}
-    const family = await FamilyRepository.create(familyData, ownerId, plan.accountSlots);
+
+    if (familyData.noOfAccounts > plan.accountSlots)
+      throw new ForbiddenException({
+        message: "the number of accounts is larger than the plan's capacity",
+      });
+
+    const isFull = familyData.noOfAccounts === plan.accountSlots;
+    const subscriptionEnd = calcEndDate(familyData.subscriptionStart, familyData.tenure);
+    // ! transaction
+    const family = await FamilyRepository.create(
+      familyData,
+      ownerId,
+      plan.accountSlots,
+      isFull,
+      subscriptionEnd,
+    );
 
     if (!family) {
-      throw new NotFoundException('Failed to create family');
+      throw new ServerException({ message: 'Failed to create family' });
     }
 
     const subscription = await SubscriptionService.create({
-      appId: familyData.appId,
-      planId: familyData.planId,
-      onboarding: familyData.onboarding,
-      slotsAvailable: familyData.slotsAvailable,
-      renewal: familyData.renewal,
       userId: ownerId,
+      familyId: family._id,
     });
 
     return {
       message: 'Family Created',
-      data: FamilyResponseDto.create(family.toObject(), subscription._id, app.appName),
+      data: FamilyResponseDto.create(family.toObject(), subscription._id, app.appName, plan.name),
     };
   }
 
-  static async createSubscriber(familyId: string, userId: string, joinMethod: string) {
+  static async joinFamily(familyId: string, userId: string) {
     const family = await FamilyRepository.findById(familyId);
     if (!family) throw new NotFoundException('No family found');
     else if (family.isFull) throw new ForbiddenException({ message: 'this family is full' });
     else if (family.owner.equals(userId))
       throw new ForbiddenException({ message: 'family owner cannot be a subscriber' });
 
-    if (await SubscriberRepository.findOne({ familyId, userId }))
+    if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
 
-    const subscriber = await SubscriberRepository.create({
-      familyId,
-      userId,
-      joinMethod: joinMethod as TJoinMethod,
-    });
-    if (!subscriber)
-      throw new ServerException({
-        'failed to create a subscriber': `familyId: ${familyId}, userId: ${userId}`,
-        message: 'failed to create a subscriber',
-      });
+    // ! transaction
+    const subscription = await SubscriptionService.create({ userId, familyId });
 
-    const slots = --family.slotsAvailable;
-    const maxed = slots === 0;
-    family.slotsAvailable = slots;
+    const accounts = ++family.noOfAccounts;
+    const maxed = accounts === family.maxSubscribers;
+    family.noOfAccounts = accounts;
     family.isFull = maxed;
 
-    const updatedFamily = await (
-      await family.save()
-    ).populate({
-      path: 'appId',
-      select: 'appName',
-    });
-
-    const user = await subscriber.populate({
-      path: 'userId',
-      select: 'username',
-    });
+    await family.save();
 
     return {
-      message: 'subscriber added to family',
-      data: { subscriber: user, family: updatedFamily },
+      message: 'user added to family',
+      data: subscription,
     };
   }
 
@@ -115,21 +107,22 @@ export class FamilyService {
 
     return {
       message: 'Family fetched',
-      data: FamilyResponseDto.from(family.toObject()),
+      data: family,
     };
   }
 
   static async getFamilyOwner(
-    reqUser: string,
+    userId: string,
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
-    const family = await FamilyRepository.find({ owner: reqUser });
-    if (!family) {
+    const families = await FamilyRepository.findOwner({ owner: userId });
+
+    if (!families) {
       throw new NotFoundException('No family found');
     }
 
     return {
       message: 'Family fetched',
-      data: FamilyResponseDto.fromMany(family),
+      data: families,
     };
   }
 
@@ -173,8 +166,6 @@ export class FamilyService {
     };
   }
 
-  static async updateSubscriber() {}
-
   static async delete(
     familyId: string,
     reqUser: string,
@@ -192,6 +183,4 @@ export class FamilyService {
       message: 'Family deleted',
     };
   }
-
-  static async deleteSubscriber() {}
 }

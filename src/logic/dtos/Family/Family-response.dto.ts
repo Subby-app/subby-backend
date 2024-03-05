@@ -7,7 +7,7 @@ export class FamilyResponseDto {
       owner: family.owner,
       name: family.name,
       maxSubscribers: family.maxSubscribers,
-      slotsAvailable: family.slotsAvailable,
+      slotsAvailable: family.noOfAccounts,
       isFull: family.isFull,
     };
   }
@@ -16,17 +16,18 @@ export class FamilyResponseDto {
     return families.map((family) => FamilyResponseDto.from(family));
   }
 
-  static create(family: IFamily, subscriptionId: string, appName: string) {
+  static create(family: IFamily, subscriptionId: string, appName: string, planName: string) {
     return {
       id: family._id,
       name: family.name,
       appName,
+      planName,
       subscriptionId,
       maxUsers: family.maxSubscribers,
-      slotsAvailable: family.slotsAvailable,
-      completed: 'transactionIds[]',
-      pending: 'transactionIds[]',
-      revoked: 'transactionIds[]',
+      slotsAvailable: family.noOfAccounts,
+      completed: null,
+      pending: null,
+      revoked: null,
     };
   }
 }

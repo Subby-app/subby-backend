@@ -19,13 +19,8 @@ export class FamilyController {
     res.status(HttpStatus.OK).json(result);
   }
 
-  static async createSubscriber(req: Request, res: Response) {
-    const joinMethod = req.query.joinMethod;
-    const { message, data } = await FamilyService.createSubscriber(
-      req.params.id,
-      req.user?._id,
-      joinMethod as string,
-    );
+  static async joinFamily(req: Request, res: Response) {
+    const { message, data } = await FamilyService.joinFamily(req.params.id, req.user?._id);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
@@ -50,8 +45,6 @@ export class FamilyController {
 
   static async getSubscriptions() {}
 
-  static async getSubscribers() {}
-
   static async update(req: Request, res: Response) {
     const familyId = req.params.id;
     const reqUser = req.user?._id;
@@ -62,8 +55,6 @@ export class FamilyController {
     res.status(HttpStatus.OK).json(result);
   }
 
-  static async updateSubscriber() {}
-
   static async delete(req: Request, res: Response) {
     const familyId = req.params.id;
     const reqUser = req.user?._id;
@@ -73,6 +64,4 @@ export class FamilyController {
 
     res.status(HttpStatus.OK).json(result);
   }
-
-  static async deleteSubscriber() {}
 }

@@ -7,12 +7,20 @@ import { Family } from '../models/index';
 import BaseRepository from './base.repository';
 
 export class FamilyRepository extends BaseRepository {
-  static async create(familyData: TCreateFamilyBody, ownerId: string, maxSubscribers: number) {
+  static async create(
+    familyData: TCreateFamilyBody,
+    ownerId: string,
+    maxSubscribers: number,
+    isFull: boolean,
+    subscriptionEnd: Date,
+  ) {
     try {
       const family = new Family({
         ...familyData,
         owner: ownerId,
         maxSubscribers,
+        isFull,
+        subscriptionEnd,
       });
       await family.save();
 
@@ -27,11 +35,15 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async findById(id: string) {
-    return Family.findById(id);
+    return Family.findById(id).populate('appId');
   }
 
   static async findOne(filter: TFindFamiliesQuery) {
     return Family.findOne(filter);
+  }
+
+  static async findOwner(filter: { owner: string }) {
+    return Family.find(filter).populate('appId').populate('planId').exec();
   }
 
   static async update(id: string, newData: TUpdateFamilyBody) {
