@@ -1,5 +1,8 @@
 import mongoose, { Error as MongooseError } from 'mongoose';
 import { ConflictException, ValidationException } from '../../utils/exceptions/index';
+import { TFindPlanQuery } from '@/web/validators/plan.validation';
+import { TFindApplicationQuery } from '@/web/validators/application.validation';
+import { TFindFamiliesQuery } from '@/web/validators/family.validation';
 
 interface ValidationError {
   message: string;
@@ -66,6 +69,37 @@ class BaseRepository {
     }
 
     throw err;
+  }
+
+  static mapFilterObject(filters: TFindApplicationQuery | TFindFamiliesQuery | TFindPlanQuery) {
+    const dbFilter: any = {};
+    // Handle TFindApplicationQuery
+    if ('appName' in filters) {
+      const { appName } = filters as TFindApplicationQuery;
+
+      if (appName) {
+        dbFilter.appName = new RegExp(appName);
+      }
+    }
+
+    // Handle TFindPlanQuery
+    if ('applicationId' in filters || 'name' in filters || 'onBoardingType' in filters) {
+      const { applicationId, name, onBoardingType } = filters as TFindPlanQuery;
+
+      if (applicationId) {
+        dbFilter.applicationId = new mongoose.Types.ObjectId(applicationId);
+      }
+
+      if (name) {
+        dbFilter.name = new RegExp(name);
+      }
+
+      if (onBoardingType) {
+        dbFilter.onBoardingType = new RegExp(onBoardingType);
+      }
+    }
+
+    return dbFilter;
   }
 }
 

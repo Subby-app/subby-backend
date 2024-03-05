@@ -1,10 +1,10 @@
 import { Router } from 'express';
+import { ApplicationController } from '../controllers/application.controller';
 import { authenticated, validateRequest } from '../middlewares';
 import {
   createApplicationSchema,
   updateApplicationSchema,
 } from '../validators/application.validation';
-import { ApplicationController } from '../controllers/application.controller';
 
 export const applicationRouter = Router();
 

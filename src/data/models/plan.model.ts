@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import autopopulate from 'mongoose-autopopulate';
 import { IPlan } from '../interfaces/IPlan';
+import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
 
 const FamilySchema = new Schema(
   {
@@ -13,7 +14,6 @@ const FamilySchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
 
     price: {
@@ -26,8 +26,9 @@ const FamilySchema = new Schema(
       required: true,
     },
 
-    onBoarding: {
-      type: Number,
+    onBoardingType: {
+      type: String,
+      enum: PlanOnBoardingTypes,
       required: true,
     },
   },

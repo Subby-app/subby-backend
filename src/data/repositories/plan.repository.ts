@@ -19,7 +19,12 @@ export class PlanRepository extends BaseRepository {
   }
 
   static async find(filter: TFindPlanQuery) {
-    return Plan.find(filter);
+    const dbFilter = this.mapFilterObject(filter);
+    return Plan.find(dbFilter).sort({ name: 1 });
+  }
+
+  static async findApplication(applicationId: string) {
+    return Plan.find({ applicationId });
   }
 
   static async findById(id: string) {

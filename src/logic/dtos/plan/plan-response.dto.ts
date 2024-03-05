@@ -8,7 +8,7 @@ export class PlanResponseDto {
       name: plan.name,
       price: plan.price,
       accountSlots: plan.accountSlots,
-      onBoarding: plan.onBoarding,
+      onBoardingType: plan.onBoardingType,
     };
   }
 
