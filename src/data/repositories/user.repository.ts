@@ -1,7 +1,7 @@
 import { User } from '../models';
 import BaseRepository from './base.repository';
 import { TCreateUserBody } from '@/web/validators/user.validation';
-import { TFilterOptions, TUpdateUserEntity, TUserFilter } from '../interfaces/IUser';
+import { TFilterOptions, TUserFilter, TUpdateUser } from '../interfaces/IUser';
 
 export class UserRepository extends BaseRepository {
   static async create(entity: TCreateUserBody) {
@@ -23,7 +23,7 @@ export class UserRepository extends BaseRepository {
     return User.findById(id);
   }
 
-  static async findOne(filter: any) {
+  static async findOne(filter: TUserFilter) {
     return User.findOne(filter);
   }
 
@@ -37,7 +37,7 @@ export class UserRepository extends BaseRepository {
     return await query;
   }
 
-  static async update(id: any, entity: TUpdateUserEntity) {
+  static async update(id: string, entity: TUpdateUser) {
     try {
       return User.findByIdAndUpdate(id, entity, { new: true });
     } catch (error) {

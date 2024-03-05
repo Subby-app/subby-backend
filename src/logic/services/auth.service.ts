@@ -22,7 +22,7 @@ export class AuthService {
     if (user.verified) throw new ConflictException({ message: 'You are already verified' });
 
     const [verifiedUser, wallet] = await Promise.all([
-      UserRepository.update({ _id: user._id }, { verified: true }),
+      UserRepository.update(user._id, { verified: true }),
       WalletRepository.create({ userId: user._id }),
     ]);
 
