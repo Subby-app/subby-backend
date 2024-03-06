@@ -10,6 +10,7 @@ import {
 import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
 
 const onBoardingTypeSchema = z.enum(PlanOnBoardingTypes);
+
 //Create Plan Body
 const createPlanBodySchema = z.object({
   applicationId: objectIdSchema,
