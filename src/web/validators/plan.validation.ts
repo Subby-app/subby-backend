@@ -19,6 +19,7 @@ const createPlanBodySchema = z.object({
   accountSlots: numberSchema,
   onBoardingType: onBoardingTypeSchema,
 });
+
 export const createPlanSchema = incomingRequestSchema(
   createPlanBodySchema,
   emptyObjectSchema,
