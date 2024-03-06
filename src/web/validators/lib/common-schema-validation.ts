@@ -70,3 +70,5 @@ export const usernameSchema = z
 export const emptyObjectSchema = z.object({}).strict();
 
 export const otpSchema = z.string().min(+process.env.OTP_SIZE!);
+
+export const booleanSchema = z.enum(['true', 'false']).transform((value) => value === 'true');

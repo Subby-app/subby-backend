@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { FamilyService } from '../../logic/services/family.service';
 import { BaseHttpResponse } from '../../utils/base-Http-response.utils';
 import { HttpStatus } from '../../utils/exceptions/http-status.enum';
+import { TFindFamilyQuery } from '../validators/family.validation';
 
 export class FamilyController {
   static async create(req: Request, res: Response) {
@@ -28,8 +29,9 @@ export class FamilyController {
 
   static async getById(req: Request, res: Response) {
     const familyId = req.params.id;
+    const query = req.query as TFindFamilyQuery;
 
-    const { message, data } = await FamilyService.getById(familyId);
+    const { message, data } = await FamilyService.getById(familyId, query);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);

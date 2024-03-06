@@ -8,6 +8,7 @@ import { FamilyResponseDto } from '../../logic/dtos/Family';
 import {
   TCreateFamilyBody,
   TFindFamiliesQuery,
+  TFindFamilyQuery,
   TUpdateFamilyBody,
 } from '@/web/validators/family.validation';
 import { SubscriptionService } from './subscription.service';
@@ -15,6 +16,7 @@ import { ApplicationRepository } from '@/data/repositories/application.repositor
 import { PlanRepository } from '@/data/repositories/plan.repository';
 import { calcEndDate } from '@/utils/end-date.util';
 import { SubscriptionRepository } from '@/data/repositories';
+import { ISubscription } from '@/data/interfaces/ISubscription';
 
 export class FamilyService {
   static async create(
@@ -99,15 +101,22 @@ export class FamilyService {
     };
   }
 
-  static async getById(familyId: string): Promise<{ message: string; data: FamilyResponseDto }> {
+  static async getById(
+    familyId: string,
+    query: TFindFamilyQuery,
+  ): Promise<{ message: string; data: FamilyResponseDto }> {
     const family = await FamilyRepository.findById(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
     }
 
+    let subscriptions: ISubscription[] = [];
+    if (query.subscriptions)
+      subscriptions = await SubscriptionService.findAll({ familyId: family._id });
+
     return {
       message: 'Family fetched',
-      data: family,
+      data: { family, subscriptions },
     };
   }
 

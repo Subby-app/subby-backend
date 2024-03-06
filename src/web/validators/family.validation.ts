@@ -5,14 +5,13 @@ import {
   incomingRequestSchema,
   emptyObjectSchema,
   emailSchema,
+  booleanSchema,
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
 
 // family/:id
 const id = objectIdSchema;
-// ...subscriber/::userId
-const userId = objectIdSchema;
 
 const onboarding = z.discriminatedUnion('type', [
   z.object({ type: z.literal(PlanOnBoardingTypes[0]), url: z.string().url() }),
@@ -60,13 +59,29 @@ const findFamiliesQuery = z.object({
   tenure: tenure.optional(),
 });
 
+export type TFindFamiliesQuery = z.infer<typeof findFamiliesQuery>;
+
 export const findFamilies = incomingRequestSchema(
   emptyObjectSchema,
   emptyObjectSchema,
   findFamiliesQuery,
 );
 
-export type TFindFamiliesQuery = z.infer<typeof findFamiliesQuery>;
+const findFamilyParams = z.object({
+  id,
+});
+
+const findFamilyQuery = z.object({
+  subscriptions: booleanSchema.optional(),
+});
+
+export type TFindFamilyQuery = z.infer<typeof findFamilyQuery>;
+
+export const findFamily = incomingRequestSchema(
+  emptyObjectSchema,
+  findFamilyParams,
+  findFamilyQuery,
+);
 
 const updateFamilyBody = z.object({
   name: nameSchema,
@@ -115,11 +130,11 @@ export const joinFamily = incomingRequestSchema(
 
 const updateFamilySubscribersParam = z.object({
   id,
-  userId,
+  userId: id,
 });
 
 const updateFamilySubscribersQuery = z.object({
-  revokeAccess: z.coerce.boolean(), //TODO note: Boolean("false" | "true" | 1) -> true; Boolean(0) -> false
+  revokeAccess: booleanSchema.optional(),
 });
 
 export const updateFamilySubscriber = incomingRequestSchema(

@@ -7,6 +7,7 @@ import {
   updateFamily,
   deleteFamily,
   joinFamily,
+  findFamily,
 } from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
@@ -19,7 +20,7 @@ familyRouter.get('/owner', authenticated, FamilyController.getOwner);
 
 familyRouter.get('/subscriptions', authenticated, FamilyController.getSubscriptions);
 
-familyRouter.get('/:id', FamilyController.getById);
+familyRouter.get('/:id', validateRequest(findFamily), FamilyController.getById);
 
 familyRouter.post('/', validateRequest(createFamily), authenticated, FamilyController.create);
 
