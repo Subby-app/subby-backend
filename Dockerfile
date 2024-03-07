@@ -6,6 +6,6 @@ COPY package-lock.json .
 RUN npm install
 COPY . .
 
-EXPOSE 4574
+EXPOSE 8080
 
 ENTRYPOINT ["npm", "start"]
