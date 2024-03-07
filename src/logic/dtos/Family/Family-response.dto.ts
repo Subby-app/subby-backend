@@ -14,6 +14,8 @@ export class FamilyResponseDto {
       subscriptionStart: family.subscriptionStart,
       subscriptionEnd: family.subscriptionEnd,
       isFull: family.isFull,
+      createdAt: family.createdAt,
+      updatedAt: family.updatedAt,
     };
   }
 

@@ -12,6 +12,8 @@ export interface ISubscription extends TSubscriptionDoc, Document {
   userId: Types.ObjectId;
   familyId: Types.ObjectId;
   transactionId: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TSubscriptionFilter = Pick<Partial<TSubscriptionCreate>, 'userId' | 'familyId'>;

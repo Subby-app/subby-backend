@@ -20,6 +20,8 @@ export interface IUser extends Document {
   accountNumber: string;
   wallet: Types.ObjectId;
   earnings: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 type TUpdateUserDoc = Pick<Partial<IUser>, 'verified'>;
 

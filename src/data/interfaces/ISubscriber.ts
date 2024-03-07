@@ -13,6 +13,8 @@ export interface ISubscriber extends TSubscriberDoc, Document {
   familyId: Types.ObjectId;
   isActive: boolean;
   revokeAccess: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TSubscriberFilter = Partial<Pick<TSubscriber, 'userId' | 'familyId' | 'joinMethod'>>;
