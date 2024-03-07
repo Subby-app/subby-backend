@@ -7,13 +7,13 @@ services:
       context: .
     container_name: Subby-server
     environment:
-      - PORT=4574
+      - PORT=8500
       - URL=http://localhost
       - DATABASE_URL_LOCAL=mongodb://subby:27017
       - DB_NAME=Subby
       - API_VERSION=v1
     ports:
-      - '4574:4574'
+      - '8500:8500'
     depends_on:
       - api_mongo
 
