@@ -29,12 +29,12 @@ export class FamilyService {
     const plan = await PlanRepository.findById(familyData.planId);
     if (!plan) throw new NotFoundException('Plan not found');
 
-    if (familyData.noOfAccounts > plan.accountSlots)
+    if (familyData.activeSubscribers > plan.accountSlots)
       throw new ForbiddenException({
         message: "the number of accounts is larger than the plan's capacity",
       });
 
-    const isFull = familyData.noOfAccounts === plan.accountSlots;
+    const isFull = familyData.activeSubscribers === plan.accountSlots;
     const subscriptionEnd = calcEndDate(familyData.subscriptionStart, familyData.tenure);
     // ! transaction
     const family = await FamilyRepository.create(
@@ -73,9 +73,9 @@ export class FamilyService {
     // ! transaction
     const subscription = await SubscriptionService.create({ userId, familyId });
 
-    const accounts = ++family.noOfAccounts;
+    const accounts = ++family.activeSubscribers;
     const maxed = accounts === family.maxSubscribers;
-    family.noOfAccounts = accounts;
+    family.activeSubscribers = accounts;
     family.isFull = maxed;
 
     await family.save();
@@ -110,13 +110,14 @@ export class FamilyService {
       throw new NotFoundException('No family found');
     }
 
-    let subscriptions: ISubscription[] = [];
+    let subscriptions: ISubscription[] | undefined;
     if (query.subscriptions)
       subscriptions = await SubscriptionService.findAll({ familyId: family._id });
+    else subscriptions = undefined;
 
     return {
       message: 'Family fetched',
-      data: { family, subscriptions },
+      data: { family: FamilyResponseDto.from(family), subscriptions },
     };
   }
 
@@ -131,7 +132,7 @@ export class FamilyService {
 
     return {
       message: 'Family fetched',
-      data: families,
+      data: FamilyResponseDto.fromMany(families),
     };
   }
 

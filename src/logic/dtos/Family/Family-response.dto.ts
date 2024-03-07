@@ -1,18 +1,23 @@
 import { IFamily } from '@/data/interfaces/IFamily';
 
 export class FamilyResponseDto {
-  static from(family: IFamily): FamilyResponseDto {
+  static from(family: IFamily) {
     return {
-      _id: family._id,
+      id: family._id,
       owner: family.owner,
       name: family.name,
+      app: family.appId,
+      plan: family.planId,
+      onboarding: family.onboarding,
       maxSubscribers: family.maxSubscribers,
-      slotsAvailable: family.noOfAccounts,
+      activeSubscribers: family.activeSubscribers,
+      subscriptionStart: family.subscriptionStart,
+      subscriptionEnd: family.subscriptionEnd,
       isFull: family.isFull,
     };
   }
 
-  static fromMany(families: IFamily[]): FamilyResponseDto[] {
+  static fromMany(families: IFamily[]) {
     return families.map((family) => FamilyResponseDto.from(family));
   }
 
@@ -23,8 +28,10 @@ export class FamilyResponseDto {
       appName,
       planName,
       subscriptionId,
-      maxUsers: family.maxSubscribers,
-      slotsAvailable: family.noOfAccounts,
+      maxSubscribers: family.maxSubscribers,
+      activeSubscribers: family.activeSubscribers,
+      subscriptionStart: family.subscriptionStart,
+      subscriptionEnd: family.subscriptionEnd,
       completed: null,
       pending: null,
       revoked: null,

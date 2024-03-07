@@ -55,7 +55,7 @@ const FamilySchema = new Schema(
       type: Number,
       required: true,
     },
-    noOfAccounts: {
+    activeSubscribers: {
       type: Number,
       required: true,
     },

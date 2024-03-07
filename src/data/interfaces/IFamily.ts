@@ -8,7 +8,10 @@ export interface IFamily extends TFamilyDoc, Document {
   appId: Types.ObjectId;
   planId: Types.ObjectId;
   maxSubscribers: number;
+  subscriptionEnd: Date;
   isFull: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TFamilyFilter = Pick<

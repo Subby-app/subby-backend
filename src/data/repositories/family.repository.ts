@@ -35,7 +35,7 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async findById(id: string) {
-    return Family.findById(id).populate('appId');
+    return Family.findById(id).populate('appId').populate('planId').exec();
   }
 
   static async findOne(filter: TFindFamiliesQuery) {

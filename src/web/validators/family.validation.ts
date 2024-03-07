@@ -36,7 +36,7 @@ const createFamilyBody = z.object({
   name: nameSchema,
   appId: objectIdSchema,
   planId: objectIdSchema,
-  noOfAccounts: z.number().positive(),
+  activeSubscribers: z.number().positive(),
   subscriptionStart: z.coerce.date(),
   tenure,
   onboarding,
