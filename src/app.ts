@@ -3,7 +3,6 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import bodyParser from 'body-parser';
 import { errorMiddleware, handleInvalidRoutes } from './web/middlewares';
 import logger from './utils/logger.utils';
 

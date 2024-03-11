@@ -1,5 +1,5 @@
 build:
-	docker -t purch1/subby-server .
+	docker build -t purch1/subby-server .
 
 push:
 	docker push purch1/subby-server
