@@ -4,7 +4,7 @@ import { authRouter } from './auth.routes';
 import { applicationRouter } from './application.routes';
 import { userRouter } from './user.routes';
 import { familyRouter } from './family.routes';
-import { imageRouter } from './image.routes';
+import { imageRouter } from './image-upload.routes';
 import { transactionRouter } from './transaction.routes';
 import { walletRouter } from './wallet.routes';
 import { planRouter } from './plan.routes';
