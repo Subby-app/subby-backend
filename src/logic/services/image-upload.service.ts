@@ -18,7 +18,7 @@ export class ImageUploadService {
 
         await new Promise<void>((resolve, reject) => {
           writeStream.on('finish', () => {
-            const imageUrl = `https://storage.googleapis.com/${bucketName}/${file.originalname}`;
+            const imageUrl = `https://subby-images.com/${bucketName}/${file.originalname}`;
             uploadedUrls.push(imageUrl);
             resolve();
           });
@@ -35,4 +35,6 @@ export class ImageUploadService {
       data: uploadedUrls,
     };
   }
+
+  static async getAllImages() {}
 }
