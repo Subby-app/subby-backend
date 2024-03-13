@@ -45,7 +45,12 @@ export class FamilyController {
     res.status(HttpStatus.OK).json(result);
   }
 
-  static async getSubscriptions() {}
+  static async getSubscribedFamilies(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getSubscribedFamilies(req.user?._id);
+    const result = BaseHttpResponse.success(message, data);
+
+    res.status(HttpStatus.OK).json(result);
+  }
 
   static async update(req: Request, res: Response) {
     const familyId = req.params.id;

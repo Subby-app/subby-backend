@@ -17,6 +17,7 @@ import { PlanRepository } from '@/data/repositories/plan.repository';
 import { calcEndDate } from '@/utils/end-date.util';
 import { SubscriptionRepository } from '@/data/repositories';
 import { ISubscription } from '@/data/interfaces/ISubscription';
+import { SubscriberService } from './subscriber.service';
 
 export class FamilyService {
   static async create(
@@ -36,7 +37,7 @@ export class FamilyService {
 
     const isFull = familyData.activeSubscribers === plan.accountSlots;
     const subscriptionEnd = calcEndDate(familyData.subscriptionStart, familyData.tenure);
-    // ! transaction
+
     const family = await FamilyRepository.create(
       familyData,
       ownerId,
@@ -70,8 +71,9 @@ export class FamilyService {
     if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
 
-    // ! transaction
     const subscription = await SubscriptionService.create({ userId, familyId });
+
+    await SubscriberService.create(familyId, userId, 'join'); // TODO get joinMethod from req query
 
     const accounts = ++family.activeSubscribers;
     const maxed = accounts === family.maxSubscribers;
@@ -148,6 +150,14 @@ export class FamilyService {
     return {
       message: 'Family fetched',
       data: FamilyResponseDto.fromMany([family]),
+    };
+  }
+
+  static async getSubscribedFamilies(userId: string) {
+    const subscribedFamilies = await SubscriberService.findSubscribedFamilies(userId);
+    return {
+      message: 'all subscribed families',
+      data: FamilyResponseDto.subscribedFamilies(subscribedFamilies),
     };
   }
 

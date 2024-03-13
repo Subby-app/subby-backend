@@ -18,7 +18,7 @@ familyRouter.get('/', validateRequest(findFamilies), FamilyController.getAll);
 
 familyRouter.get('/owner', authenticated, FamilyController.getOwner);
 
-familyRouter.get('/subscriptions', authenticated, FamilyController.getSubscriptions);
+familyRouter.get('/subscriptions', authenticated, FamilyController.getSubscribedFamilies);
 
 familyRouter.get('/:id', validateRequest(findFamily), FamilyController.getById);
 

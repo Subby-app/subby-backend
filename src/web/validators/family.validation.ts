@@ -122,6 +122,10 @@ const joinFamilyParam = z.object({
   id,
 });
 
+// const joinFamilyQuery = z.object({
+//   joinMethod,
+// });
+
 export const joinFamily = incomingRequestSchema(
   emptyObjectSchema,
   joinFamilyParam,
