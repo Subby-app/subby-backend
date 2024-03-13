@@ -1,4 +1,5 @@
 import { IFamily } from '@/data/interfaces/IFamily';
+import { ISubscriber } from '@/data/interfaces/ISubscriber';
 
 export class FamilyResponseDto {
   static from(family: IFamily) {
@@ -38,5 +39,20 @@ export class FamilyResponseDto {
       pending: null,
       revoked: null,
     };
+  }
+
+  static subscribedFamily(subscriber: ISubscriber) {
+    return {
+      id: subscriber._id,
+      family: subscriber.familyId,
+      isActive: subscriber.isActive,
+      revokeAccess: subscriber.revokeAccess,
+      joinedAt: subscriber.createdAt,
+      joinMethod: subscriber.joinMethod,
+    };
+  }
+
+  static subscribedFamilies(subscribedFamilies: ISubscriber[]) {
+    return subscribedFamilies.map((subscriber) => FamilyResponseDto.subscribedFamily(subscriber));
   }
 }
