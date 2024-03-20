@@ -35,6 +35,4 @@ export class ImageUploadService {
       data: uploadedUrls,
     };
   }
-
-  static async getAllImages() {}
 }
