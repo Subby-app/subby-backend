@@ -83,8 +83,8 @@ class BaseRepository {
     }
 
     // Handle TFindPlanQuery
-    if ('applicationId' in filters || 'name' in filters || 'onBoardingType' in filters) {
-      const { applicationId, name, onBoardingType } = filters as TFindPlanQuery;
+    if ('applicationId' in filters || 'name' in filters) {
+      const { applicationId, name } = filters as TFindPlanQuery;
 
       if (applicationId) {
         dbFilter.applicationId = new mongoose.Types.ObjectId(applicationId);
@@ -92,10 +92,6 @@ class BaseRepository {
 
       if (name) {
         dbFilter.name = new RegExp(name);
-      }
-
-      if (onBoardingType) {
-        dbFilter.onBoardingType = new RegExp(onBoardingType);
       }
     }
 

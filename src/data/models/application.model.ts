@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IApplication } from '../interfaces/IApplication';
+import { ApplicationOnBoardingTypes } from '@/utils/helpers/application.helper';
 
 const FamilySchema = new Schema(
   {
@@ -7,6 +8,12 @@ const FamilySchema = new Schema(
       type: String,
       required: true,
       index: true,
+    },
+
+    onBoardingType: {
+      type: String,
+      enum: ApplicationOnBoardingTypes,
+      required: true,
     },
   },
   {

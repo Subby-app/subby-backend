@@ -7,7 +7,6 @@ export class CreatePlanRequestDto {
       applicationId: plan.applicationId,
       name: plan.name,
       accountSlots: plan.accountSlots,
-      onBoardingType: plan.onBoardingType,
     };
   }
 }

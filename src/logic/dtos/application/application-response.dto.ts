@@ -5,6 +5,7 @@ export class ApplicationResponseDto {
     return {
       _id: application._id,
       appName: application.appName,
+      onBoardingType: application.onBoardingType,
     };
   }
 

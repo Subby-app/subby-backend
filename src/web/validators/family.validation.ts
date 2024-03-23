@@ -8,22 +8,22 @@ import {
   booleanSchema,
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
-import { PlanOnBoardingTypes } from '@/utils/helpers/plan.helper';
+import { ApplicationOnBoardingTypes } from '@/utils/helpers/application.helper';
 
 // family/:id
 const id = objectIdSchema;
 
 const onboarding = z.discriminatedUnion('type', [
-  z.object({ type: z.literal(PlanOnBoardingTypes[0]), url: z.string().url() }),
+  z.object({ type: z.literal(ApplicationOnBoardingTypes[0]), url: z.string().url() }),
   z.object({
-    type: z.literal(PlanOnBoardingTypes[1]),
+    type: z.literal(ApplicationOnBoardingTypes[1]),
     email: emailSchema,
     password: z
       .string()
       .min(1)
       .transform(async (value) => await Encryption.encryptText(value, 10)),
   }),
-  z.object({ type: z.literal(PlanOnBoardingTypes[2]) }),
+  z.object({ type: z.literal(ApplicationOnBoardingTypes[2]) }),
 ]);
 
 export type TOnboarding = z.infer<typeof onboarding>;
