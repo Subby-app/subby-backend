@@ -4,7 +4,7 @@ export class ApplicationResponseDto {
   static from(application: IApplication): ApplicationResponseDto {
     return {
       _id: application._id,
-      appName: application.appName,
+      applicationName: application.applicationName,
       onBoardingType: application.onBoardingType,
     };
   }

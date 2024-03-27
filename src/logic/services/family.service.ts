@@ -57,7 +57,12 @@ export class FamilyService {
 
     return {
       message: 'Family Created',
-      data: FamilyResponseDto.create(family.toObject(), subscription._id, app.appName, plan.name),
+      data: FamilyResponseDto.create(
+        family.toObject(),
+        subscription._id,
+        app.applicationName,
+        plan.name,
+      ),
     };
   }
 

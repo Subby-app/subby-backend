@@ -74,11 +74,11 @@ class BaseRepository {
   static mapFilterObject(filters: TFindApplicationQuery | TFindFamiliesQuery | TFindPlanQuery) {
     const dbFilter: any = {};
     // Handle TFindApplicationQuery
-    if ('appName' in filters) {
-      const { appName } = filters as TFindApplicationQuery;
+    if ('applicationName' in filters) {
+      const { applicationName } = filters as TFindApplicationQuery;
 
-      if (appName) {
-        dbFilter.appName = new RegExp(appName);
+      if (applicationName) {
+        dbFilter.applicationName = new RegExp(applicationName);
       }
     }
 

@@ -24,11 +24,16 @@ export class FamilyResponseDto {
     return families.map((family) => FamilyResponseDto.from(family));
   }
 
-  static create(family: IFamily, subscriptionId: string, appName: string, planName: string) {
+  static create(
+    family: IFamily,
+    subscriptionId: string,
+    applicationName: string,
+    planName: string,
+  ) {
     return {
       id: family._id,
       name: family.name,
-      appName,
+      applicationName,
       planName,
       subscriptionId,
       maxSubscribers: family.maxSubscribers,

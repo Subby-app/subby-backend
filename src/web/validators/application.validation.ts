@@ -11,7 +11,7 @@ const onBoardingTypeSchema = z.enum(ApplicationOnBoardingTypes);
 
 //Create Application Body
 const createApplicationBodySchema = z.object({
-  appName: nameSchema,
+  applicationName: nameSchema,
   onBoardingType: onBoardingTypeSchema,
 });
 export const createApplicationSchema = incomingRequestSchema(
@@ -23,7 +23,7 @@ export type TCreateApplicationBody = z.infer<typeof createApplicationBodySchema>
 
 //Find Application by Query
 const findapplicationsQuerySchema = z.object({
-  appName: nameSchema.optional(),
+  applicationName: nameSchema.optional(),
   onBoardingType: onBoardingTypeSchema.optional(),
 });
 export const findApplicationsSchema = incomingRequestSchema(
@@ -35,7 +35,7 @@ export type TFindApplicationQuery = z.infer<typeof findapplicationsQuerySchema>;
 
 //Update Application via Params
 const updateApplicationBodySchema = z.object({
-  appName: nameSchema.optional(),
+  applicationName: nameSchema.optional(),
   onBoardingType: onBoardingTypeSchema.optional(),
 });
 const updateApplicationParamsSchema = z.object({
