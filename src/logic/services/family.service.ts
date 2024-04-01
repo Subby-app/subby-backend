@@ -98,7 +98,7 @@ export class FamilyService {
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
     const families = await FamilyRepository.find(filter);
 
-    if (!families || families.length === 0) {
+    if (!families.length) {
       throw new NotFoundException('No families found');
     }
 
@@ -133,8 +133,8 @@ export class FamilyService {
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
     const families = await FamilyRepository.findOwner({ owner: userId });
 
-    if (!families) {
-      throw new NotFoundException('No family found');
+    if (!families.length) {
+      throw new NotFoundException('you do not own any family');
     }
 
     return {
@@ -160,6 +160,9 @@ export class FamilyService {
 
   static async getSubscribedFamilies(userId: string) {
     const subscribedFamilies = await SubscriberService.findSubscribedFamilies(userId);
+    if (!subscribedFamilies.length)
+      throw new NotFoundException('you are not subscribed to any family');
+
     return {
       message: 'all subscribed families',
       data: FamilyResponseDto.subscribedFamilies(subscribedFamilies),
