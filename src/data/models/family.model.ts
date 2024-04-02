@@ -59,6 +59,10 @@ const FamilySchema = new Schema(
       type: Number,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
     subscriptionStart: {
       type: Date,
       required: true,

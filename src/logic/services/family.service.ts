@@ -41,6 +41,7 @@ export class FamilyService {
     const family = await FamilyRepository.create(
       familyData,
       ownerId,
+      +plan.price,
       plan.accountSlots,
       isFull,
       subscriptionEnd,
