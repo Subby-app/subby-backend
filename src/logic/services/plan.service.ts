@@ -19,9 +19,9 @@ export class PlanService {
   static async getAll(filter: TFindPlanQuery): Promise<{ message: string; data: PlanResponseDto }> {
     const plan = await PlanRepository.find(filter);
 
-    if (!plan || plan.length === 0) {
-      throw new NotFoundException('No plan found');
-    }
+    // if (!plan || plan.length === 0) {
+    //   throw new NotFoundException('No plan found');
+    // }
 
     return {
       message: 'Plan fetched',

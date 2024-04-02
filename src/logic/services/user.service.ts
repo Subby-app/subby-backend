@@ -8,9 +8,9 @@ import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
 export class UserService {
   static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
     const users = await UserRepository.find();
-    if (!users || users.length === 0) {
-      throw new NotFoundException('No user found');
-    }
+    // if (!users || users.length === 0) {
+    //   throw new NotFoundException('No user found');
+    // }
 
     return {
       message: 'Users fetched',

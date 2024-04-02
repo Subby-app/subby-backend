@@ -22,9 +22,9 @@ export class ApplicationService {
   ): Promise<{ message: string; data: ApplicationResponseDto }> {
     const application = await ApplicationRepository.find(filter);
 
-    if (!application || application.length === 0) {
-      throw new NotFoundException('No application found');
-    }
+    // if (!application || application.length === 0) {
+    //   throw new NotFoundException('No application found');
+    // }
     return {
       message: 'Application fetched',
       data: ApplicationResponseDto.fromMany(application),

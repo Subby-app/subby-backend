@@ -25,8 +25,8 @@ export class TransactionService {
 
   static async getAll(): Promise<{ message: string; data: TransactionResponseDto[] }> {
     const transactions = await Transaction.find();
-    if (transactions.length === 0)
-      throw new HttpException(HttpStatus.NOT_FOUND, 'No transaction found');
+    // if (transactions.length === 0)
+    //   throw new HttpException(HttpStatus.NOT_FOUND, 'No transaction found');
 
     return {
       message: 'successful login',

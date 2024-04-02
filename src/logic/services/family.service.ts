@@ -99,9 +99,9 @@ export class FamilyService {
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
     const families = await FamilyRepository.find(filter);
 
-    if (!families.length) {
-      throw new NotFoundException('No families found');
-    }
+    // if (!families.length) {
+    //   throw new NotFoundException('No families found');
+    // }
 
     return {
       message: 'Families fetched',
@@ -134,9 +134,9 @@ export class FamilyService {
   ): Promise<{ message: string; data: FamilyResponseDto[] }> {
     const families = await FamilyRepository.findOwner({ owner: userId });
 
-    if (!families.length) {
-      throw new NotFoundException('you do not own any family');
-    }
+    // if (!families.length) {
+    //   throw new NotFoundException('you do not own any family');
+    // }
 
     return {
       message: 'Family fetched',
@@ -161,8 +161,8 @@ export class FamilyService {
 
   static async getSubscribedFamilies(userId: string) {
     const subscribedFamilies = await SubscriberService.findSubscribedFamilies(userId);
-    if (!subscribedFamilies.length)
-      throw new NotFoundException('you are not subscribed to any family');
+    // if (!subscribedFamilies.length)
+    //   throw new NotFoundException('you are not subscribed to any family');
 
     return {
       message: 'all subscribed families',
