@@ -4,6 +4,10 @@ import { IPlan } from '../interfaces/IPlan';
 
 const FamilySchema = new Schema(
   {
+    applicationIcon: {
+      type: String,
+    },
+
     applicationId: {
       type: Schema.Types.ObjectId,
       ref: 'Application',

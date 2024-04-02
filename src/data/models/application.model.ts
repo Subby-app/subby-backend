@@ -4,6 +4,10 @@ import { ApplicationOnBoardingTypes } from '@/utils/helpers/application.helper';
 
 const FamilySchema = new Schema(
   {
+    applicationIcon: {
+      type: String,
+    },
+
     applicationName: {
       type: String,
       required: true,
