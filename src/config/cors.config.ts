@@ -9,4 +9,5 @@ const whitelist = [
 
 export const corsOptions: CorsOptions = {
   origin: whitelist,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
 };
