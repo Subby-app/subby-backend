@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import { CorsOptions } from 'cors';
 
-const stagingOrigin = [
-  'https://subby-frontend-alpha-vercel.app',
-  `http://localhost:${process.env.PORT}`,
+const whitelist = [
+  'https://subby-frontend-alpha.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
 ];
-const prodOrigin = ['https://subby-frontend-alpha-vercel.app'];
 
 export const corsOptions: CorsOptions = {
-  origin: process.env.NODE_ENV === 'production' ? prodOrigin : stagingOrigin,
+  origin: whitelist,
 };
