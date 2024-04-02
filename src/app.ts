@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { errorMiddleware, handleInvalidRoutes } from './web/middlewares';
 import logger from './utils/logger.utils';
+import { corsOptions } from '@/config/cors.config';
 
 class App {
   private express: Application;
@@ -21,7 +22,7 @@ class App {
 
   private initializeMiddlewares() {
     this.express.use(helmet());
-    this.express.use(cors());
+    this.express.use(cors(corsOptions));
     this.express.use(morgan('dev'));
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: false }));
