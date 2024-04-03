@@ -41,7 +41,6 @@ export class FamilyService {
     const family = await FamilyRepository.create(
       familyData,
       ownerId,
-      +plan.price,
       plan.accountSlots,
       isFull,
       subscriptionEnd,
@@ -63,6 +62,7 @@ export class FamilyService {
         subscription._id,
         app.applicationName,
         plan.name,
+        +plan.price,
       ),
     };
   }
@@ -82,7 +82,7 @@ export class FamilyService {
     await SubscriberService.create(familyId, userId, 'join'); // TODO get joinMethod from req query
 
     const accounts = ++family.activeSubscribers;
-    const maxed = accounts === family.maxSubscribers;
+    const maxed = accounts === family.maxSubscribers; //TODO find plan, use plan.accountSlots to calc maxed
     family.activeSubscribers = accounts;
     family.isFull = maxed;
 
