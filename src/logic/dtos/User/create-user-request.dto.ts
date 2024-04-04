@@ -8,7 +8,6 @@ export class CreateUserRequestDto {
   role: string;
   verified: boolean;
   otp: string;
-  token: string;
   otpExpiration: string;
   recoveryCodes: { hash: string; used: boolean }[];
   families: string[];
@@ -28,7 +27,6 @@ export class CreateUserRequestDto {
     this.role = user.role;
     this.verified = user.verified;
     this.otp = user.otp;
-    this.token = user.token;
     this.otpExpiration = user.otpExpiration;
     this.recoveryCodes = user.recoveryCodes;
     this.families = user.families;
@@ -50,7 +48,6 @@ export class CreateUserRequestDto {
       role: user.role,
       verified: user.verified,
       otp: user.otp,
-      token: user.token,
       otpExpiration: user.otpExpiration,
       recoveryCodes: user.recoveryCodes,
       families: user.families,

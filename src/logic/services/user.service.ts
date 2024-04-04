@@ -7,7 +7,7 @@ import { Encryption } from '@/utils/encryption.utils';
 import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
 import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
 import { sendSignupEmail } from './mail.service';
-import { createConfirmationToken } from '@/utils/token.util';
+import { generateOtp } from '@/utils/otp.util';
 
 export class UserService {
   static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
@@ -30,21 +30,16 @@ export class UserService {
       throw new NotFoundException('Failed to create user');
     }
 
-    // Generate confirmation token using email
-    const confirmationTokenData = { email: userEntity.email };
-    const confirmationToken = createConfirmationToken(confirmationTokenData);
+    // Generate veritfication token
+    const verificationToken = generateOtp();
 
-    // Save the token to the user document
-    user.token = confirmationToken.token;
+    user.otp = verificationToken;
     await user.save();
 
-    // Construct verification link
-    const verificationLink = `${process.env.baseurl}/auth/verify/${userEntity.email}/${confirmationToken.token}`;
-
-    const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationLink);
+    const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationToken);
     await sendSignupEmail(userEntity.email, userOtpSubject, sendVerificationEmail);
     return {
-      message: 'Verification Email Sent to your mail',
+      message: 'Verification OTP sent to your Mail',
       data: UserResponseDto.signup(user.toObject()),
     };
   }

@@ -12,18 +12,18 @@ export class AuthService {
     return UserService.create(userEntity);
   }
 
-  static async verify(email: string, token: string): Promise<{ message: string }> {
-    const user = await UserRepository.findOne({ email }); // Find user by email
+  static async verify(email: string, otp: string): Promise<{ message: string }> {
+    const user = await UserRepository.findEmail(email);
+    console.log(user);
 
     if (!user) {
       throw new NotFoundException('No user found');
     }
 
-    if (token !== user.token) {
+    if (user.otp !== otp) {
       throw new ConflictException({ message: 'Invalid token' });
     }
 
-    // Update user's verification status
     user.verified = true;
     await user.save();
 

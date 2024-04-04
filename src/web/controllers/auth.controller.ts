@@ -13,10 +13,10 @@ export class AuthController {
   };
 
   static verify = async (req: Request, res: Response) => {
-    const email = req.params.email;
-    const token = req.params.token;
+    // const email = req.user?.email!;
+    const { email, otp } = req.body;
 
-    const { message } = await AuthService.verify(email, token);
+    const { message } = await AuthService.verify(email, otp);
     const result = BaseHttpResponse.success(message);
 
     res.status(HttpStatus.OK).json(result);
