@@ -11,6 +11,7 @@ export interface IUser extends Document {
   role: string;
   verified: boolean;
   otp: string;
+  token: string;
   otpExpiration: string;
   recoveryCodes: {
     hash: string;

@@ -4,6 +4,9 @@ import { UserResponseDto } from '../../logic/dtos/User';
 import { TCreateUserBody, TUpdateUserBody } from '@/web/validators/user.validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
+import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
+import { sendSignupEmail } from './mail.service';
+import { createToken } from '@/utils/token.util';
 
 export class UserService {
   static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
@@ -26,6 +29,20 @@ export class UserService {
       throw new NotFoundException('Failed to create user');
     }
 
+    // Generate confirmation token using email
+    const confirmationTokenData = { email: userEntity.email }; 
+    const confirmationToken = createToken(confirmationTokenData);
+
+    // Save the token to the user document
+    user.token = confirmationToken.token;
+    await user.save();
+
+    // Construct verification link
+    const verificationLink = `
+    http://localhost:8000/api/v1/auth/verify/${userEntity.email}/${confirmationToken.token}`;
+
+    const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationLink);
+    await sendSignupEmail(userEntity.email, userOtpSubject, sendVerificationEmail);
     return {
       message: 'User Created',
       data: UserResponseDto.signup(user.toObject()),

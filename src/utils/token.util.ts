@@ -49,4 +49,19 @@ const verifyToken = async (token: string): Promise<jwt.VerifyErrors | Token> => 
   });
 };
 
-export { createToken, verifyToken };
+/**
+ * Creates a confirmation token with a specific duration.
+ * Default duration is set to 5 minutes.
+ *
+ * @param data - Data to sign ({@link EncodedData}).
+ * @param duration - Token's duration in seconds, default duration 5 minutes.
+ * @returns Signed token and token's expiry in seconds.
+ */
+const createConfirmationToken = (data: EncodedData, duration?: number): TokenData => {
+  const defaultDuration = 60 * 5; // 5 minutes
+  const expiresIn = duration || defaultDuration;
+
+  return createToken(data, expiresIn);
+};
+
+export { createToken, verifyToken, createConfirmationToken };

@@ -11,7 +11,7 @@ export const authRouter = Router();
 
 authRouter.post('/signup', validateRequest(signupUser), AuthController.signup);
 
-authRouter.post('/verify', authenticated, AuthController.verify);
+authRouter.get('/verify/:email/:token', AuthController.verify);
 
 authRouter.post('/login', validateRequest(loginUser), AuthController.login);
 
