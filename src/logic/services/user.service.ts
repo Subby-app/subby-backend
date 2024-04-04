@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NotFoundException } from '../../utils/exceptions/index';
 import { UserRepository } from '../../data/repositories/user.repository';
 import { UserResponseDto } from '../../logic/dtos/User';
@@ -6,7 +7,7 @@ import { Encryption } from '@/utils/encryption.utils';
 import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
 import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
 import { sendSignupEmail } from './mail.service';
-import { createToken } from '@/utils/token.util';
+import { createConfirmationToken } from '@/utils/token.util';
 
 export class UserService {
   static async getAll(): Promise<{ message: string; data: UserResponseDto[] }> {
@@ -31,15 +32,14 @@ export class UserService {
 
     // Generate confirmation token using email
     const confirmationTokenData = { email: userEntity.email };
-    const confirmationToken = createToken(confirmationTokenData);
+    const confirmationToken = createConfirmationToken(confirmationTokenData);
 
     // Save the token to the user document
     user.token = confirmationToken.token;
     await user.save();
 
     // Construct verification link
-    const verificationLink = `
-    http://localhost:8000/api/v1/auth/verify/${userEntity.email}/${confirmationToken.token}`;
+    const verificationLink = `${process.env.baseurl}/auth/verify/${userEntity.email}/${confirmationToken.token}`;
 
     const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationLink);
     await sendSignupEmail(userEntity.email, userOtpSubject, sendVerificationEmail);

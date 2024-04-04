@@ -61,7 +61,11 @@ const createConfirmationToken = (data: EncodedData, duration?: number): TokenDat
   const defaultDuration = 60 * 5; // 5 minutes
   const expiresIn = duration || defaultDuration;
 
-  return createToken(data, expiresIn);
+  const token = jwt.sign(data, process.env.JWT_SECRET as jwt.Secret, {
+    expiresIn,
+  });
+
+  return { expiresIn, token };
 };
 
 export { createToken, verifyToken, createConfirmationToken };
