@@ -6,8 +6,8 @@ export async function sendSignupEmail(email: string, subject: string, message: s
     const transporter = await createTransporter();
     const mailOptions = generateSignupEmailContent(email, subject, message);
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Message sent: %s', info.messageId);
+    await transporter.sendMail(mailOptions);
+    logger.info('Verification Email Sent to your mail');
   } catch (error) {
     logger.error({ message: error });
   }

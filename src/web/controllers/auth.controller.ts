@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { AuthService } from '../../logic/services/auth.service';
 import { HttpStatus } from '@/utils/exceptions';
 import { BaseHttpResponse } from '@/utils/base-Http-response.utils';
-import { TokenExpiredError } from 'jsonwebtoken';
 
 export class AuthController {
   static signup = async (req: Request, res: Response) => {

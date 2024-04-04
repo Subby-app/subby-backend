@@ -30,7 +30,7 @@ export class UserService {
     }
 
     // Generate confirmation token using email
-    const confirmationTokenData = { email: userEntity.email }; 
+    const confirmationTokenData = { email: userEntity.email };
     const confirmationToken = createToken(confirmationTokenData);
 
     // Save the token to the user document
@@ -44,7 +44,7 @@ export class UserService {
     const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationLink);
     await sendSignupEmail(userEntity.email, userOtpSubject, sendVerificationEmail);
     return {
-      message: 'User Created',
+      message: 'Verification Email Sent to your mail',
       data: UserResponseDto.signup(user.toObject()),
     };
   }
