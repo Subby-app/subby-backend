@@ -8,7 +8,6 @@ export interface IFamily extends TFamilyDoc, Document {
   appId: Types.ObjectId;
   planId: Types.ObjectId;
   maxSubscribers: number;
-  price: number;
   subscriptionEnd: Date;
   isFull: boolean;
   createdAt: Date;

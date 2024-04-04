@@ -10,7 +10,6 @@ export class FamilyRepository extends BaseRepository {
   static async create(
     familyData: TCreateFamilyBody,
     ownerId: string,
-    price: number,
     maxSubscribers: number,
     isFull: boolean,
     subscriptionEnd: Date,
@@ -19,7 +18,6 @@ export class FamilyRepository extends BaseRepository {
       const family = new Family({
         ...familyData,
         owner: ownerId,
-        price,
         maxSubscribers,
         isFull,
         subscriptionEnd,
@@ -33,7 +31,7 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async find(filter: TFindFamiliesQuery) {
-    return Family.find(filter);
+    return Family.find(filter).populate('planId').exec();
   }
 
   static async findById(id: string) {
