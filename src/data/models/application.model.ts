@@ -14,6 +14,10 @@ const FamilySchema = new Schema(
       index: true,
     },
 
+    description: {
+      type: String,
+      required: true,
+    },
     onBoardingType: {
       type: String,
       enum: ApplicationOnBoardingTypes,

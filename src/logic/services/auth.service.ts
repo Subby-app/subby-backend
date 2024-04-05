@@ -14,7 +14,6 @@ export class AuthService {
 
   static async verify(email: string, otp: string): Promise<{ message: string }> {
     const user = await UserRepository.findEmail(email);
-    console.log(user);
 
     if (!user) {
       throw new NotFoundException('No user found');
