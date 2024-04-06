@@ -36,4 +36,11 @@ export class AuthController {
     res.status(HttpStatus.OK).json(result);
   };
 
+  static changePassword = async (req: Request, res: Response) => {
+    const { email, currentPassword, newPassword } = req.body;
+    const { message } = await AuthService.changePassword(email, currentPassword, newPassword);
+    const result = BaseHttpResponse.success(message);
+
+    res.status(HttpStatus.OK).json(result);
+  };
 }

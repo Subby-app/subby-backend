@@ -79,4 +79,24 @@ export class AuthService {
     };
   }
 
+  static async changePassword(email: string, currentPassword: string, newPassword: string) {
+    const user = await UserRepository.findEmail(email);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
+
+    const isMatch = await Encryption.compare(user.password, currentPassword);
+    if (!isMatch) {
+      throw new UnauthorizedException({ message: 'Password incorrect' });
+    }
+
+    const hashNewPassword = await Encryption.encryptText(newPassword);
+    user.password = hashNewPassword;
+    await user.save();
+
+    return {
+      message: 'Password changed successfully',
+    };
+  }
+
 }
