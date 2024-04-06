@@ -1,3 +1,4 @@
+import { TFindSubFamiliesQuery } from '@/web/validators/family.validation';
 import { TSubscriber, TSubscriberFilter } from '../interfaces/ISubscriber';
 import { Subscriber } from '../models/subscriber.model';
 import BaseRepository from './base.repository';
@@ -17,13 +18,22 @@ export class SubscriberRepository extends BaseRepository {
     return subscribers;
   }
 
-  static async findSubscribedFamilies(userId: string) {
-    const subscribed = await Subscriber.find({ userId }).populate({
-      path: 'familyId',
-      select: '-owner -appId -updatedAt -__v',
-      populate: { path: 'planId' },
-    });
-    return subscribed;
+  static async findSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
+    const { page, limit, sort, sortField, ...search } = filter;
+    const _filter = { ...search, userId };
+    const subscribedFamilies = await Subscriber.find(_filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ [sortField]: sort })
+      .populate({
+        path: 'familyId',
+        select: '-owner -appId -updatedAt -__v',
+        populate: { path: 'planId' },
+      });
+
+    const totalSubscribedFamilies = await Subscriber.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalSubscribedFamilies);
+    return { paginationDetails, subscribedFamilies };
   }
 
   static async findOne(filter: TSubscriberFilter) {

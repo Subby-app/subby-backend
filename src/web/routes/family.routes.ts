@@ -8,6 +8,7 @@ import {
   deleteFamily,
   joinFamily,
   findFamily,
+  findSubFamilies,
 } from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
@@ -21,11 +22,16 @@ familyRouter.get(
   FamilyController.getFamiliesToJoin,
 );
 
-familyRouter.get('/owner', authenticated, FamilyController.getOwner);
+familyRouter.get('/owner', validateRequest(findFamilies), authenticated, FamilyController.getOwner);
 
 familyRouter.get('/overview', authenticated, FamilyController.getOverview);
 
-familyRouter.get('/subscriptions', authenticated, FamilyController.getSubscribedFamilies);
+familyRouter.get(
+  '/subscriptions',
+  validateRequest(findSubFamilies),
+  authenticated,
+  FamilyController.getSubscribedFamilies,
+);
 
 familyRouter.get('/:id', validateRequest(findFamily), FamilyController.getById);
 

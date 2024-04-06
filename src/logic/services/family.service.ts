@@ -21,10 +21,7 @@ import { SubscriberService } from './subscriber.service';
 import { createObjectId } from '@/data/lib/createId';
 
 export class FamilyService {
-  static async create(
-    ownerId: string,
-    familyData: TCreateFamilyBody,
-  ): Promise<{ message: string; data: any }> {
+  static async create(ownerId: string, familyData: TCreateFamilyBody) {
     const app = await ApplicationRepository.findById(familyData.appId);
     if (!app) throw new NotFoundException('Application not found');
 
@@ -116,10 +113,13 @@ export class FamilyService {
   }
 
   static async getFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
-    const families = await FamilyRepository.findFamiliesToJoin(filter, userId);
+    const { paginationDetails, families } = await FamilyRepository.findFamiliesToJoin(
+      filter,
+      userId,
+    );
     return {
       message: 'available families to join',
-      data: FamilyResponseDto.fromMany(families),
+      data: FamilyResponseDto.paginateFamilies(paginationDetails, families),
     };
   }
 
@@ -158,10 +158,8 @@ export class FamilyService {
     };
   }
 
-  static async getFamilyOwner(
-    userId: string,
-  ): Promise<{ message: string; data: FamilyResponseDto[] }> {
-    const families = await FamilyRepository.findOwner({ owner: userId });
+  static async getFamilyOwner(filter: TFindFamiliesQuery, userId: string) {
+    const { paginationDetails, families } = await FamilyRepository.findOwner(filter, userId);
 
     // if (!families.length) {
     //   throw new NotFoundException('you do not own any family');
@@ -169,13 +167,11 @@ export class FamilyService {
 
     return {
       message: 'Family fetched',
-      data: FamilyResponseDto.fromMany(families),
+      data: FamilyResponseDto.paginateFamilies(paginationDetails, families),
     };
   }
 
-  static async getSubscribers(
-    familyId: string,
-  ): Promise<{ message: string; data: FamilyResponseDto[] }> {
+  static async getSubscribers(familyId: string) {
     const family = await FamilyRepository.findById(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
@@ -188,22 +184,19 @@ export class FamilyService {
     };
   }
 
-  static async getSubscribedFamilies(userId: string) {
-    const subscribedFamilies = await SubscriberService.findSubscribedFamilies(userId);
+  static async getSubscribedFamilies(filter: TFindFamiliesQuery, userId: string) {
+    const { paginationDetails, subscribedFamilies } =
+      await SubscriberService.findSubscribedFamilies(filter, userId);
     // if (!subscribedFamilies.length)
     //   throw new NotFoundException('you are not subscribed to any family');
 
     return {
       message: 'all subscribed families',
-      data: FamilyResponseDto.subscribedFamilies(subscribedFamilies),
+      data: FamilyResponseDto.paginateSubscribers(paginationDetails, subscribedFamilies),
     };
   }
 
-  static async update(
-    familyId: string,
-    newData: TUpdateFamilyBody,
-    reqUser: string,
-  ): Promise<{ message: string; data: FamilyResponseDto }> {
+  static async update(familyId: string, newData: TUpdateFamilyBody, reqUser: string) {
     const family = await FamilyRepository.findById(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
@@ -224,10 +217,7 @@ export class FamilyService {
     };
   }
 
-  static async delete(
-    familyId: string,
-    reqUser: string,
-  ): Promise<{ message: string; data?: FamilyResponseDto }> {
+  static async delete(familyId: string, reqUser: string) {
     const family = await FamilyRepository.findById(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
@@ -239,6 +229,7 @@ export class FamilyService {
 
     return {
       message: 'Family deleted',
+      data: {},
     };
   }
 }

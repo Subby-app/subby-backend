@@ -14,7 +14,8 @@ export class FamilyController {
   }
 
   static async getAll(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getAll(req.query);
+    const filter = req.query as unknown as TFindFamiliesQuery;
+    const { message, data } = await FamilyService.getAll(filter);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
@@ -22,7 +23,7 @@ export class FamilyController {
 
   static async getFamiliesToJoin(req: Request, res: Response) {
     const { message, data } = await FamilyService.getFamiliesToJoin(
-      req.query as TFindFamiliesQuery,
+      req.query as unknown as TFindFamiliesQuery,
       req.user?._id,
     );
     const result = BaseHttpResponse.success(message, data);
@@ -56,14 +57,16 @@ export class FamilyController {
 
   static async getOwner(req: Request, res: Response) {
     const reqUser = req.user?._id;
-    const { message, data } = await FamilyService.getFamilyOwner(reqUser);
+    const filter = req.query as unknown as TFindFamiliesQuery;
+    const { message, data } = await FamilyService.getFamilyOwner(filter, reqUser);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
   }
 
   static async getSubscribedFamilies(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getSubscribedFamilies(req.user?._id);
+    const filter = req.query as unknown as TFindFamiliesQuery;
+    const { message, data } = await FamilyService.getSubscribedFamilies(filter, req.user?._id);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
