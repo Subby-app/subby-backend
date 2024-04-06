@@ -30,9 +30,19 @@ export class FamilyService {
     const plan = await PlanRepository.findById(familyData.planId);
     if (!plan) throw new NotFoundException('Plan not found');
 
+    if (plan.applicationId.toString() !== app._id.toString())
+      throw new ForbiddenException({
+        message: 'the selected plan does not belong to this application',
+      });
+
     if (familyData.activeSubscribers > plan.accountSlots)
       throw new ForbiddenException({
         message: "the number of accounts is larger than the plan's capacity",
+      });
+
+    if (familyData.onboarding.type !== app.onBoardingType)
+      throw new ForbiddenException({
+        message: "the family's onboarding type does not match the applications onboarding type",
       });
 
     const isFull = familyData.activeSubscribers === plan.accountSlots;
@@ -64,6 +74,14 @@ export class FamilyService {
         plan.name,
         +plan.price,
       ),
+    };
+  }
+
+  static async getOverview(ownerId: string) {
+    const overview = await FamilyRepository.getOverview(ownerId);
+    return {
+      message: 'family owner overview',
+      data: FamilyResponseDto.overview(overview),
     };
   }
 

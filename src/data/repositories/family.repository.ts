@@ -5,6 +5,7 @@ import {
 } from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
+import { TOverview } from '../interfaces/IFamily';
 
 export class FamilyRepository extends BaseRepository {
   static async create(
@@ -28,6 +29,16 @@ export class FamilyRepository extends BaseRepository {
     } catch (error) {
       this.handleRepositoryError(error);
     }
+  }
+
+  static async getOverview(ownerId: string): Promise<TOverview> {
+    const familiesCreated = await Family.countDocuments({ owner: ownerId });
+    let totalActiveSubs = 0;
+    (await Family.find({ owner: ownerId }).exec()).forEach(
+      (family) => (totalActiveSubs += family.activeSubscribers),
+    );
+
+    return { familiesCreated, totalActiveSubs };
   }
 
   static async find(filter: TFindFamiliesQuery) {

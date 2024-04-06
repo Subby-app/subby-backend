@@ -20,6 +20,13 @@ export class FamilyController {
     res.status(HttpStatus.OK).json(result);
   }
 
+  static async getOverview(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getOverview(req.user?._id);
+    const result = BaseHttpResponse.success(message, data);
+
+    res.status(HttpStatus.OK).json(result);
+  }
+
   static async joinFamily(req: Request, res: Response) {
     const { message, data } = await FamilyService.joinFamily(req.params.id, req.user?._id);
     const result = BaseHttpResponse.success(message, data);

@@ -1,4 +1,4 @@
-import { IFamily } from '@/data/interfaces/IFamily';
+import { IFamily, TOverview } from '@/data/interfaces/IFamily';
 import { ISubscriber } from '@/data/interfaces/ISubscriber';
 
 export class FamilyResponseDto {
@@ -61,5 +61,12 @@ export class FamilyResponseDto {
 
   static subscribedFamilies(subscribedFamilies: ISubscriber[]) {
     return subscribedFamilies.map((subscriber) => FamilyResponseDto.subscribedFamily(subscriber));
+  }
+
+  static overview(overview: TOverview) {
+    return {
+      totalFamiliesCreated: overview.familiesCreated,
+      totalActiveSubscribers: overview.totalActiveSubs,
+    };
   }
 }

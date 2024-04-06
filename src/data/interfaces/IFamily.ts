@@ -18,3 +18,8 @@ export type TFamilyFilter = Pick<
   Partial<IFamily>,
   'appId' | 'owner' | 'planId' | 'isFull' | 'tenure' | 'name'
 >;
+
+export type TOverview = {
+  familiesCreated: number;
+  totalActiveSubs: number;
+};
