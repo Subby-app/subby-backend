@@ -99,4 +99,22 @@ export class AuthService {
     };
   }
 
+  static async forgotPassword(email: string) {
+    const user = await UserRepository.findEmail(email);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
+
+    const { otp: verificationToken, expirationTime } = generateOtp();
+    user.otp = verificationToken;
+    user.otpExpiration = expirationTime;
+    await user.save();
+
+    const sendPasswordResetEmail = verificationMessage(user.firstName, verificationToken);
+    await sendSignupEmail(user.email, userOtpSubject, sendPasswordResetEmail);
+
+    return {
+      message: 'Password reset OTP sent to your Mail',
+    };
+  }
 }
