@@ -54,8 +54,8 @@ const findFamiliesQuery = z.object({
   name: nameSchema.optional(),
   appId: objectIdSchema.optional(),
   planId: objectIdSchema.optional(),
-  owner: objectIdSchema.optional(),
-  isFull: z.coerce.boolean().optional(),
+  // owner: objectIdSchema.optional(),
+  // isFull: booleanSchema.optional(),
   tenure: tenure.optional(),
 });
 

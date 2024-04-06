@@ -18,6 +18,7 @@ import { calcEndDate } from '@/utils/end-date.util';
 import { SubscriptionRepository } from '@/data/repositories';
 import { ISubscription } from '@/data/interfaces/ISubscription';
 import { SubscriberService } from './subscriber.service';
+import { createObjectId } from '@/data/lib/createId';
 
 export class FamilyService {
   static async create(
@@ -86,7 +87,8 @@ export class FamilyService {
   }
 
   static async joinFamily(familyId: string, userId: string) {
-    const family = await FamilyRepository.findById(familyId);
+    const family = await FamilyRepository.findByIdWithSubs(familyId);
+
     if (!family) throw new NotFoundException('No family found');
     else if (family.isFull) throw new ForbiddenException({ message: 'this family is full' });
     else if (family.owner.equals(userId))
@@ -103,12 +105,21 @@ export class FamilyService {
     const maxed = accounts === family.maxSubscribers; //TODO find plan, use plan.accountSlots to calc maxed
     family.activeSubscribers = accounts;
     family.isFull = maxed;
+    family.subscribers.push(createObjectId(userId));
 
     await family.save();
 
     return {
       message: 'user added to family',
       data: subscription,
+    };
+  }
+
+  static async getFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
+    const families = await FamilyRepository.findFamiliesToJoin(filter, userId);
+    return {
+      message: 'available families to join',
+      data: FamilyResponseDto.fromMany(families),
     };
   }
 

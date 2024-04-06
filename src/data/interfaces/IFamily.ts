@@ -7,6 +7,7 @@ export interface IFamily extends TFamilyDoc, Document {
   owner: Types.ObjectId;
   appId: Types.ObjectId;
   planId: Types.ObjectId;
+  subscribers: Types.ObjectId[];
   maxSubscribers: number;
   subscriptionEnd: Date;
   isFull: boolean;

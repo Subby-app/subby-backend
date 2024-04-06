@@ -45,8 +45,23 @@ export class FamilyRepository extends BaseRepository {
     return Family.find(filter).populate('planId').exec();
   }
 
+  static async findFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
+    const families = await Family.find({
+      ...filter,
+      owner: { $ne: userId },
+      subscribers: { $nin: [userId] },
+    })
+      .populate('appId')
+      .populate('planId');
+    return families;
+  }
+
   static async findById(id: string) {
     return Family.findById(id).populate('appId').populate('planId').exec();
+  }
+
+  static async findByIdWithSubs(id: string) {
+    return Family.findById(id).select('+subscribers').populate('appId').populate('planId').exec();
   }
 
   static async findOne(filter: TFindFamiliesQuery) {

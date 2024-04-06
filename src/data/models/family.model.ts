@@ -59,6 +59,14 @@ const FamilySchema = new Schema(
       type: Number,
       required: true,
     },
+    subscribers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        select: false,
+        default: [],
+      },
+    ],
     subscriptionStart: {
       type: Date,
       required: true,

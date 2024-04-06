@@ -14,7 +14,12 @@ export const familyRouter = Router();
 
 const subscribers = 'subscribers';
 
-familyRouter.get('/', validateRequest(findFamilies), FamilyController.getAll);
+familyRouter.get(
+  '/',
+  validateRequest(findFamilies),
+  authenticated,
+  FamilyController.getFamiliesToJoin,
+);
 
 familyRouter.get('/owner', authenticated, FamilyController.getOwner);
 
