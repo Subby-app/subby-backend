@@ -117,4 +117,24 @@ export class AuthService {
       message: 'Password reset OTP sent to your Mail',
     };
   }
+
+  static async resetPassword(email: string, otp: string, newPassword: string) {
+    const user = await UserRepository.findEmail(email);
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
+
+    if (parseInt(user.otpExpiration) < Date.now() || user.otp !== otp) {
+      throw new ConflictException({ message: 'Invalid or expired OTP' });
+    }
+
+    const hashNewPassword = await Encryption.encryptText(newPassword);
+
+    user.password = hashNewPassword;
+    await user.save();
+
+    return {
+      message: 'Password Reset successfully',
+    };
+  }
 }

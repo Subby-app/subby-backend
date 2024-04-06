@@ -52,4 +52,11 @@ export class AuthController {
     res.status(HttpStatus.OK).json(result);
   };
 
+  static resetPassword = async (req: Request, res: Response) => {
+    const { email, otp, newPassword } = req.body;
+    const { message } = await AuthService.resetPassword(email, otp, newPassword);
+    const result = BaseHttpResponse.success(message);
+
+    res.status(HttpStatus.OK).json(result);
+  };
 }
