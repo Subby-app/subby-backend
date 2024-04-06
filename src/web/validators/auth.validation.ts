@@ -62,9 +62,44 @@ export const verifyEmail = incomingRequestSchema(
 
 export type TVerifyEmailBody = z.infer<typeof verifyEmailBody>;
 
+const sendOTPBody = z.object({
+  email: emailSchema,
+});
+
+export const sendOTP = incomingRequestSchema(sendOTPBody, emptyObjectSchema, emptyObjectSchema);
+
+export type TsendOTPBody = z.infer<typeof sendOTPBody>;
+
+const changePasswordBody = z.object({
+  email: emailSchema,
+  currentPassword: passwordSchema,
+  newPassword: passwordSchema,
+});
+
+export const changePassword = incomingRequestSchema(
+  changePasswordBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TchangePasswordBody = z.infer<typeof changePasswordBody>;
+
+const forgotPasswordBody = z.object({
+  email: emailSchema,
+});
+
+export const forgotPassword = incomingRequestSchema(
+  forgotPasswordBody,
+  emptyObjectSchema,
+  emptyObjectSchema,
+);
+
+export type TforgotPasswordBody = z.infer<typeof forgotPasswordBody>;
+
 const resetPasswordBody = z.object({
   email: emailSchema,
-  password: passwordSchema,
+  newPassword: passwordSchema,
+  otp: nameSchema,
 });
 
 export const resetPassword = incomingRequestSchema(
@@ -73,4 +108,4 @@ export const resetPassword = incomingRequestSchema(
   emptyObjectSchema,
 );
 
-export type TResetPasswordBody = z.infer<typeof resetPasswordBody>;
+export type TresetPasswordBody = z.infer<typeof resetPasswordBody>;

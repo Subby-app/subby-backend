@@ -6,6 +6,9 @@ import { UserRepository } from '../../data/repositories/index';
 import { UserService } from './user.service';
 import { Encryption } from '@/utils/encryption.utils';
 import { TCreateUserBody } from '@/web/validators/user.validation';
+import { generateOtp } from '@/utils/otp.util';
+import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
+import { sendSignupEmail } from './mail.service';
 
 export class AuthService {
   static async signup(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
@@ -19,10 +22,15 @@ export class AuthService {
       throw new NotFoundException('No user found');
     }
 
-    if (user.otp !== otp) {
-      throw new ConflictException({ message: 'Invalid token' });
+    if (user.verified) {
+      throw new ConflictException({ message: 'User already verified' });
     }
 
+    if (parseInt(user.otpExpiration) < Date.now() || user.otp !== otp) {
+      throw new ConflictException({ message: 'Invalid or expired OTP' });
+    }
+
+    user.otp = '';
     user.verified = true;
     await user.save();
 
@@ -31,35 +39,27 @@ export class AuthService {
     };
   }
 
-  // static async verify(email: string): Promise<{ message: string; data: any }> {
-  //   const user = await UserRepository.findEmail(email);
+  static async sendOTP(email: string): Promise<{ message: string }> {
+    const user = await UserRepository.findEmail(email);
 
-  //   if (!user) {
-  //     throw new NotFoundException('No user with this email found');
-  //   }
+    if (!user) {
+      throw new NotFoundException('No user found');
+    }
 
-  //   if (user.verified) throw new ConflictException({ message: 'You are already verified' });
+    // Generate veritfication token
+    const { otp: verificationToken, expirationTime } = generateOtp();
 
-  //   const [verifiedUser, wallet] = await Promise.all([
-  //     UserRepository.update(user._id, { verified: true }),
-  //     WalletRepository.create({ userId: user._id }),
-  //   ]);
+    user.otp = verificationToken;
+    user.otpExpiration = expirationTime;
+    await user.save();
 
-  //   if (!verifiedUser || !wallet) {
-  //     throw new NotFoundException({ message: 'Verification or wallet creation failed' });
-  //   }
+    const sendVerificationEmail = verificationMessage(user.firstName, verificationToken);
+    await sendSignupEmail(user.email, userOtpSubject, sendVerificationEmail);
 
-  //   verifiedUser.wallet = wallet._id;
-  //   await verifiedUser.save();
-
-  //   return {
-  //     message: 'Verified Successful',
-  //     data: {
-  //       accessToken: token.createToken({ id: user._id }),
-  //       user: UserResponseDto.from(verifiedUser),
-  //     },
-  //   };
-  // }
+    return {
+      message: 'Verification OTP sent to your Mail',
+    };
+  }
 
   static async login(email: string, password: string): Promise<{ message: string; data: any }> {
     const user = await UserService.authFind(
@@ -68,7 +68,6 @@ export class AuthService {
     );
 
     const isMatch = Encryption.compare(user.password, password);
-
     if (!isMatch) throw new UnauthorizedException({ message: 'Invalid email or password' });
 
     return {
@@ -79,4 +78,5 @@ export class AuthService {
       },
     };
   }
+
 }

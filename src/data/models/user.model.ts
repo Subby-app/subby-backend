@@ -49,11 +49,12 @@ const UserSchema = new Schema(
     },
     otp: {
       type: String,
-      select: false,
+      default: null,
+      // select: false,
     },
     otpExpiration: {
       type: String,
-      select: false,
+      // select: false,
     },
     recoveryCodes: {
       type: [{ hash: String, used: Boolean }],

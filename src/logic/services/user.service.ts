@@ -30,10 +30,11 @@ export class UserService {
       throw new NotFoundException('Failed to create user');
     }
 
-    // Generate veritfication token
-    const verificationToken = generateOtp();
+    // Generate veritf  ication token
+    const { otp: verificationToken, expirationTime } = generateOtp();
 
     user.otp = verificationToken;
+    user.otpExpiration = expirationTime;
     await user.save();
 
     const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationToken);

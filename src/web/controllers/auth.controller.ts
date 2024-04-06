@@ -13,10 +13,16 @@ export class AuthController {
   };
 
   static verify = async (req: Request, res: Response) => {
-    // const email = req.user?.email!;
     const { email, otp } = req.body;
-
     const { message } = await AuthService.verify(email, otp);
+    const result = BaseHttpResponse.success(message);
+
+    res.status(HttpStatus.OK).json(result);
+  };
+
+  static sendOTP = async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const { message } = await AuthService.sendOTP(email);
     const result = BaseHttpResponse.success(message);
 
     res.status(HttpStatus.OK).json(result);
@@ -29,4 +35,5 @@ export class AuthController {
 
     res.status(HttpStatus.OK).json(result);
   };
+
 }
