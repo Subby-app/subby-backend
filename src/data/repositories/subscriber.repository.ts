@@ -20,7 +20,8 @@ export class SubscriberRepository extends BaseRepository {
   static async findSubscribedFamilies(userId: string) {
     const subscribed = await Subscriber.find({ userId }).populate({
       path: 'familyId',
-      select: '-owner -appId -planId -createdAt -updatedAt -__v',
+      select: '-owner -appId -updatedAt -__v',
+      populate: { path: 'planId' },
     });
     return subscribed;
   }
