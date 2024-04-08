@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-// import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt'/;
 import { IUser } from '../interfaces/IUser';
 import { UserRole } from '../../utils/helpers/user.helper';
 
