@@ -1,6 +1,6 @@
 import { SubscriberRepository } from '@/data/repositories/subscriber.repository';
 import { ForbiddenException } from '@/utils/exceptions';
-import { TJoinMethod } from '@/web/validators/family.validation';
+import { TFindSubFamiliesQuery, TJoinMethod } from '@/web/validators/family.validation';
 
 export class SubscriberService {
   static async create(familyId: string, userId: string, joinMethod: TJoinMethod) {
@@ -10,7 +10,7 @@ export class SubscriberService {
     return await SubscriberRepository.create({ familyId, userId, joinMethod });
   }
 
-  static async findSubscribedFamilies(userId: string) {
-    return await SubscriberRepository.findSubscribedFamilies(userId);
+  static async findSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
+    return await SubscriberRepository.findSubscribedFamilies(filter, userId);
   }
 }

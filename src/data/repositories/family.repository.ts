@@ -5,6 +5,7 @@ import {
 } from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
+import { TOverview } from '../interfaces/IFamily';
 
 export class FamilyRepository extends BaseRepository {
   static async create(
@@ -30,20 +31,65 @@ export class FamilyRepository extends BaseRepository {
     }
   }
 
+  static async getOverview(ownerId: string): Promise<TOverview> {
+    const familiesCreated = await Family.countDocuments({ owner: ownerId });
+    let totalActiveSubs = 0;
+    (await Family.find({ owner: ownerId }).exec()).forEach(
+      (family) => (totalActiveSubs += family.activeSubscribers),
+    );
+
+    return { familiesCreated, totalActiveSubs };
+  }
+
   static async find(filter: TFindFamiliesQuery) {
     return Family.find(filter).populate('planId').exec();
+  }
+
+  static async findFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
+    const { page, limit, sort, sortField, ...search } = filter;
+    const _filter = {
+      ...search,
+      owner: { $ne: userId },
+      subscribers: { $nin: [userId] },
+    };
+
+    const families = await Family.find(_filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ [sortField]: sort })
+      .populate('appId')
+      .populate('planId');
+
+    const totalFamilies = await Family.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
+    return { paginationDetails, families };
   }
 
   static async findById(id: string) {
     return Family.findById(id).populate('appId').populate('planId').exec();
   }
 
+  static async findByIdWithSubs(id: string) {
+    return Family.findById(id).select('+subscribers').populate('appId').populate('planId').exec();
+  }
+
   static async findOne(filter: TFindFamiliesQuery) {
     return Family.findOne(filter);
   }
 
-  static async findOwner(filter: { owner: string }) {
-    return Family.find(filter).populate('appId').populate('planId').exec();
+  static async findOwner(filter: TFindFamiliesQuery, userId: string) {
+    const { page, limit, sort, sortField, ...search } = filter;
+    const _filter = { ...search, owner: userId };
+    const families = await Family.find(_filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ [sortField]: sort })
+      .populate('appId')
+      .populate('planId');
+
+    const totalFamilies = await Family.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
+    return { paginationDetails, families };
   }
 
   static async update(id: string, newData: TUpdateFamilyBody) {

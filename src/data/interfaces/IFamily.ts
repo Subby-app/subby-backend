@@ -7,6 +7,7 @@ export interface IFamily extends TFamilyDoc, Document {
   owner: Types.ObjectId;
   appId: Types.ObjectId;
   planId: Types.ObjectId;
+  subscribers: Types.ObjectId[];
   maxSubscribers: number;
   subscriptionEnd: Date;
   isFull: boolean;
@@ -18,3 +19,8 @@ export type TFamilyFilter = Pick<
   Partial<IFamily>,
   'appId' | 'owner' | 'planId' | 'isFull' | 'tenure' | 'name'
 >;
+
+export type TOverview = {
+  familiesCreated: number;
+  totalActiveSubs: number;
+};

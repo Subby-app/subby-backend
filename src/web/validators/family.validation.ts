@@ -6,6 +6,7 @@ import {
   emptyObjectSchema,
   emailSchema,
   booleanSchema,
+  paginationSchema,
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { ApplicationOnBoardingTypes } from '@/utils/helpers/application.helper';
@@ -50,21 +51,37 @@ export const createFamily = incomingRequestSchema(
 
 export type TCreateFamilyBody = z.infer<typeof createFamilyBody>;
 
-const findFamiliesQuery = z.object({
-  name: nameSchema.optional(),
-  appId: objectIdSchema.optional(),
-  planId: objectIdSchema.optional(),
-  owner: objectIdSchema.optional(),
-  isFull: z.coerce.boolean().optional(),
-  tenure: tenure.optional(),
-});
+const findFamiliesQuery = z
+  .object({
+    name: nameSchema.optional(),
+    appId: objectIdSchema.optional(),
+    planId: objectIdSchema.optional(),
+    // owner: objectIdSchema.optional(),
+    // isFull: booleanSchema.optional(),
+    tenure: tenure.optional(),
+  })
+  .merge(paginationSchema);
+
+const findSubFamiliesQuery = z
+  .object({
+    // familyId: objectIdSchema.optional(), //TODO query based on family.planId or .appId?
+    joinMethod: z.enum(['join', 'invite']).optional(), // TODO no duplication
+  })
+  .merge(paginationSchema);
 
 export type TFindFamiliesQuery = z.infer<typeof findFamiliesQuery>;
+export type TFindSubFamiliesQuery = z.infer<typeof findSubFamiliesQuery>;
 
 export const findFamilies = incomingRequestSchema(
   emptyObjectSchema,
   emptyObjectSchema,
   findFamiliesQuery,
+);
+
+export const findSubFamilies = incomingRequestSchema(
+  emptyObjectSchema,
+  emptyObjectSchema,
+  findSubFamiliesQuery,
 );
 
 const findFamilyParams = z.object({

@@ -9,6 +9,14 @@ interface ValidationError {
   path: string;
 }
 
+export type TPaginate = {
+  totalResourceFound: number;
+  currentPage: number;
+  prevPage: number | null;
+  nextPage: number | null;
+  lastPage: number;
+};
+
 class BaseRepository {
   static DUPLICATE_ERROR_KEY = 'E11000';
 
@@ -96,6 +104,16 @@ class BaseRepository {
     }
 
     return dbFilter;
+  }
+
+  static calcPaginationDetails(page: number, limit: number, totalResourceFound: number): TPaginate {
+    const hasNextPage = limit * page < totalResourceFound;
+    const hasPrevPage = page > 1;
+    const nextPage = hasNextPage ? page + 1 : null;
+    const prevPage = hasPrevPage ? page - 1 : null;
+    const lastPage = Math.ceil(totalResourceFound / limit);
+
+    return { totalResourceFound, currentPage: page, prevPage, nextPage, lastPage };
   }
 }
 

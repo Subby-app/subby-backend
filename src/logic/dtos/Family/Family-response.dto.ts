@@ -1,5 +1,6 @@
-import { IFamily } from '@/data/interfaces/IFamily';
+import { IFamily, TOverview } from '@/data/interfaces/IFamily';
 import { ISubscriber } from '@/data/interfaces/ISubscriber';
+import { TPaginate } from '@/data/repositories';
 
 export class FamilyResponseDto {
   static from(family: IFamily) {
@@ -61,5 +62,34 @@ export class FamilyResponseDto {
 
   static subscribedFamilies(subscribedFamilies: ISubscriber[]) {
     return subscribedFamilies.map((subscriber) => FamilyResponseDto.subscribedFamily(subscriber));
+  }
+
+  static overview(overview: TOverview) {
+    return {
+      totalFamiliesCreated: overview.familiesCreated,
+      totalActiveSubscribers: overview.totalActiveSubs,
+    };
+  }
+
+  static paginateFamilies(paginationDetails: TPaginate, families: IFamily[]) {
+    return {
+      totalFamiliesFound: paginationDetails.totalResourceFound,
+      currentPage: paginationDetails.currentPage,
+      prevPage: paginationDetails.prevPage,
+      nextPage: paginationDetails.nextPage,
+      lastPage: paginationDetails.lastPage,
+      families: this.fromMany(families),
+    };
+  }
+
+  static paginateSubscribers(paginationDetails: TPaginate, subscribedFamilies: ISubscriber[]) {
+    return {
+      totalFamiliesFound: paginationDetails.totalResourceFound,
+      currentPage: paginationDetails.currentPage,
+      prevPage: paginationDetails.prevPage,
+      nextPage: paginationDetails.nextPage,
+      lastPage: paginationDetails.lastPage,
+      families: this.subscribedFamilies(subscribedFamilies),
+    };
   }
 }

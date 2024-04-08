@@ -72,3 +72,12 @@ export const emptyObjectSchema = z.object({}).strict();
 export const otpSchema = z.string().min(+process.env.OTP_SIZE!);
 
 export const booleanSchema = z.enum(['true', 'false']).transform((value) => value === 'true');
+
+export const paginationSchema = z.object({
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(5),
+  sort: z.enum(['asc', 'desc']).default('asc'),
+  sortField: z.enum(['name', 'createdAt']).default('createdAt'),
+});
+
+export type TPaginate = z.infer<typeof paginationSchema>;
