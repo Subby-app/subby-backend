@@ -99,7 +99,7 @@ export type TforgotPasswordBody = z.infer<typeof forgotPasswordBody>;
 const resetPasswordBody = z.object({
   email: emailSchema,
   newPassword: passwordSchema,
-  otp: nameSchema,
+  otp: otpSchema,
 });
 
 export const resetPassword = incomingRequestSchema(

@@ -9,6 +9,7 @@ import { TCreateUserBody } from '@/web/validators/user.validation';
 import { generateOtp } from '@/utils/otp.util';
 import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
 import { sendSignupEmail } from './mail.service';
+import { familyRouter } from '@/web/routes/family.routes';
 
 export class AuthService {
   static async signup(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
@@ -67,7 +68,7 @@ export class AuthService {
       { sensitive: true, sensitiveFields: '+password' },
     );
 
-    const isMatch = Encryption.compare(user.password, password);
+    const isMatch = await Encryption.compare(user.password, password);
     if (!isMatch) throw new UnauthorizedException({ message: 'Invalid email or password' });
 
     return {
@@ -128,9 +129,14 @@ export class AuthService {
       throw new ConflictException({ message: 'Invalid or expired OTP' });
     }
 
-    const hashNewPassword = await Encryption.encryptText(newPassword);
+    const isMatch = await Encryption.compare(user.password, newPassword);
+    if (isMatch) {
+      throw new ConflictException({ message: 'Password is similar to old password' });
+    }
 
-    user.password = hashNewPassword;
+    const newHashedPassword = await Encryption.encryptText(newPassword);
+
+    user.password = newHashedPassword;
     await user.save();
 
     return {
