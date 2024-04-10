@@ -9,7 +9,6 @@ import { TCreateUserBody } from '@/web/validators/user.validation';
 import { generateOtp } from '@/utils/otp.util';
 import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
 import { sendSignupEmail } from './mail.service';
-import { familyRouter } from '@/web/routes/family.routes';
 
 export class AuthService {
   static async signup(userEntity: TCreateUserBody): Promise<{ message: string; data: any }> {
@@ -42,7 +41,6 @@ export class AuthService {
 
   static async sendOTP(email: string): Promise<{ message: string }> {
     const user = await UserRepository.findEmail(email);
-
     if (!user) {
       throw new NotFoundException('No user found');
     }
@@ -86,18 +84,21 @@ export class AuthService {
       throw new NotFoundException('No user found');
     }
 
-    const isMatch = await Encryption.compare(user.password, currentPassword);
-    if (!isMatch) {
-      throw new UnauthorizedException({ message: 'Password incorrect' });
+    const isCurrentPasswordCorrect = await Encryption.compare(user.password, currentPassword);
+    if (!isCurrentPasswordCorrect) {
+      throw new ConflictException({ message: 'Password incorrect' });
     }
 
-    const hashNewPassword = await Encryption.encryptText(newPassword);
-    user.password = hashNewPassword;
+    const isNewPasswordSimilar = await Encryption.compare(user.password, newPassword);
+    if (isNewPasswordSimilar) {
+      throw new ConflictException({ message: 'Password is similar to old password' });
+    }
+
+    const hashedNewPassword = await Encryption.encryptText(newPassword);
+    user.password = hashedNewPassword;
     await user.save();
 
-    return {
-      message: 'Password changed successfully',
-    };
+    return { message: 'Password changed successfully' };
   }
 
   static async forgotPassword(email: string) {
@@ -129,8 +130,8 @@ export class AuthService {
       throw new ConflictException({ message: 'Invalid or expired OTP' });
     }
 
-    const isMatch = await Encryption.compare(user.password, newPassword);
-    if (isMatch) {
+    const isNewPasswordSimilar = await Encryption.compare(user.password, newPassword);
+    if (isNewPasswordSimilar) {
       throw new ConflictException({ message: 'Password is similar to old password' });
     }
 

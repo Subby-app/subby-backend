@@ -28,7 +28,9 @@ export class UserRepository extends BaseRepository {
   }
 
   static async findEmail(email: string) {
-    return User.findOne({ email }).select(['+password', 'otp', 'verified', 'otpExpiration']).exec();
+    return User.findOne({ email })
+      .select(['email', '+password', 'otp', 'verified', 'otpExpiration'])
+      .exec();
   }
 
   static async authFind(filter: TUserFilter, options?: TFilterOptions) {

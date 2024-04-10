@@ -42,7 +42,7 @@ export const verificationMessage = function (firstName: string, otp: any) {
                                                         <table border="0" cellpadding="0" cellspacing="0" align="center">
                                                             <tbody>
                                                                 <tr>
-                                                                    <td style="background-color: #fd582d; padding: 12px 35px; border-radius: 10px;" align="center" class="ctaButton"> <a href="#" style="color:#fff;font-family:Poppins,Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;font-style:normal;letter-spacing:1px;line-height:20px;text-transform:uppercase;text-decoration:none;display:block" target="_blank" class="text">${otp}</a>
+                                                                    <td style="background-color: #fd582d; padding: 12px 35px; border-radius: 10px;" align="center" class="ctaButton"> <a href="#" style="color:#fff;font-family:Poppins,Helvetica,Arial,sans-serif;font-size:20px;font-weight:600;font-style:normal;letter-spacing:1px;line-height:20px;text-transform:none;text-decoration:none;display:block" target="_blank" class="text">${otp}</a>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
