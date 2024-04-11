@@ -5,7 +5,8 @@ export class CreatePlanRequestDto {
     return {
       _id: plan._id,
       applicationId: plan.applicationId,
-      name: plan.name,
+      planName: plan.planName,
+      planIcon: plan.planIcon,
       accountSlots: plan.accountSlots,
     };
   }

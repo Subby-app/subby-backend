@@ -2,7 +2,8 @@ import { Document, Types } from 'mongoose';
 
 export type TPlanCreate = {
   applicationId: string;
-  name: string;
+  planName: string;
+  planIcon: string;
   price: string;
   accountSlots: number;
 };

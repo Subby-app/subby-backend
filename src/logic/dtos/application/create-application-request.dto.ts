@@ -5,6 +5,8 @@ export class CreateApplicationRequestDto {
     return {
       _id: application._id,
       applicationName: application.applicationName,
+      applicationIcon: application.applicationIcon,
+      description: application.description,
       onBoardingType: application.onBoardingType,
     };
   }

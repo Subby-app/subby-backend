@@ -1,38 +1,49 @@
 import { Storage } from '@google-cloud/storage';
-import { bucketName, storageConfig } from '../../config/cloud-storage.config';
+import { bucketName, storageConfig } from '@/config/cloud-storage.config';
+import logger from '@/utils/logger.utils';
+
+const storage = new Storage(storageConfig);
 
 export class ImageUploadService {
-  static storage = new Storage(storageConfig);
-
   static async uploadImages(
     files: Express.Multer.File[],
   ): Promise<{ message: string; data: string[] }> {
-    const uploadedUrls: string[] = [];
+    try {
+      const uploadedUrls = await Promise.all(
+        files.map(async (file) => {
+          const destFileName = `${file.originalname}_${Date.now()}`;
+          const destination = `images/${destFileName}`;
 
-    const bucket = this.storage.bucket(bucketName);
+          // Save the file buffer to the specified destination in the bucket
+          try {
+            await storage
+              .bucket(bucketName)
+              .file(destination)
+              .save(file.buffer, {
+                metadata: {
+                  contentType: file.mimetype,
+                  // Set ACL to public-read for images
+                },
+              });
 
-    await Promise.all(
-      files.map(async (file) => {
-        const write = bucket.file(file.originalname);
-        const writeStream = write.createWriteStream();
+            return `https://storage.googleapis.com/${bucketName}/${destination}`;
+          } catch (error) {
+            logger.error('Error uploading file:', error);
+            return null;
+          }
+        }),
+      );
 
-        await new Promise<void>((resolve, reject) => {
-          writeStream.on('finish', () => {
-            const imageUrl = `https://subby-images.com/${bucketName}/${file.originalname}`;
-            uploadedUrls.push(imageUrl);
-            resolve();
-          });
-          writeStream.on('error', (err) => {
-            reject(err);
-          });
-          writeStream.end(file.buffer);
-        });
-      }),
-    );
+      // Filter out null values (failed uploads) from the uploadedUrls array
+      const successfulUploads = uploadedUrls.filter((url) => url !== null) as string[];
 
-    return {
-      message: 'Image upload successful',
-      data: uploadedUrls,
-    };
+      return {
+        message: 'Files uploaded successfully',
+        data: successfulUploads,
+      };
+    } catch (error) {
+      logger.error('Error uploading files:', error);
+      throw new Error('Failed to upload files');
+    }
   }
 }

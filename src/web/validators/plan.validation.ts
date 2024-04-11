@@ -11,7 +11,7 @@ import {
 //Create Plan Body
 const createPlanBodySchema = z.object({
   applicationId: objectIdSchema,
-  name: nameSchema,
+  planName: nameSchema,
   price: priceSchema,
   accountSlots: numberSchema,
 });
@@ -26,7 +26,7 @@ export type TcreatePlanBody = z.infer<typeof createPlanBodySchema>;
 //Find Application by query
 const findPlanQuerySchema = z.object({
   applicationId: objectIdSchema.optional(),
-  name: nameSchema.optional(),
+  planName: nameSchema.optional(),
   price: priceSchema.optional(),
 });
 
@@ -39,7 +39,7 @@ export type TFindPlanQuery = z.infer<typeof findPlanQuerySchema>;
 
 //Update Plan via params
 const updatePlanBodySchema = z.object({
-  name: nameSchema.optional(),
+  planName: nameSchema.optional(),
   price: priceSchema.optional(),
   accountSlots: numberSchema.optional(),
 });

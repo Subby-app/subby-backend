@@ -91,15 +91,15 @@ class BaseRepository {
     }
 
     // Handle TFindPlanQuery
-    if ('applicationId' in filters || 'name' in filters) {
-      const { applicationId, name } = filters as TFindPlanQuery;
+    if ('applicationId' in filters || 'planName' in filters) {
+      const { applicationId, planName } = filters as TFindPlanQuery;
 
       if (applicationId) {
         dbFilter.applicationId = new mongoose.Types.ObjectId(applicationId);
       }
 
-      if (name) {
-        dbFilter.name = new RegExp(name);
+      if (planName) {
+        dbFilter.planName = new RegExp(planName);
       }
     }
 

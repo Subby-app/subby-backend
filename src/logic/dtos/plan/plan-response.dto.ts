@@ -5,7 +5,7 @@ export class PlanResponseDto {
     return {
       _id: plan._id,
       applicationId: plan.applicationId,
-      name: plan.name,
+      planName: plan.planName,
       price: plan.price,
       accountSlots: plan.accountSlots,
     };

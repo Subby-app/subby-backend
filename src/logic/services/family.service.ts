@@ -69,7 +69,7 @@ export class FamilyService {
         family.toObject(),
         subscription._id,
         app.applicationName,
-        plan.name,
+        plan.planName,
         +plan.price,
       ),
     };

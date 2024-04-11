@@ -15,6 +15,12 @@ export const priceSchema = z
 
 export const emailSchema = z.string().email().trim().toLowerCase().max(255);
 
+export const descriptionSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .refine((value) => value !== 'null', { message: "description cannot be 'null'" });
+
 export const nameSchema = z
   .string()
   .trim()
@@ -70,6 +76,8 @@ export const usernameSchema = z
 export const emptyObjectSchema = z.object({}).strict();
 
 export const otpSchema = z.string().min(+process.env.OTP_SIZE!);
+
+export const urlSchema = z.string().url();
 
 export const booleanSchema = z.enum(['true', 'false']).transform((value) => value === 'true');
 
