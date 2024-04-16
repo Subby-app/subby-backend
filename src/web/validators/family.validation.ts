@@ -7,6 +7,7 @@ import {
   emailSchema,
   booleanSchema,
   paginationSchema,
+  positiveIntSchema,
 } from './lib/common-schema-validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { ApplicationOnBoardingTypes } from '@/utils/helpers/application.helper';
@@ -37,7 +38,8 @@ const createFamilyBody = z.object({
   name: nameSchema,
   appId: objectIdSchema,
   planId: objectIdSchema,
-  activeSubscribers: z.number().positive(),
+  activeSubscribers: positiveIntSchema,
+  availableSlots: positiveIntSchema,
   subscriptionStart: z.coerce.date(),
   tenure,
   onboarding,
@@ -101,8 +103,9 @@ export const findFamily = incomingRequestSchema(
 );
 
 const updateFamilyBody = z.object({
-  name: nameSchema,
+  name: nameSchema.optional(),
   newOnboarding: onboarding.optional(),
+  availableSlots: positiveIntSchema.optional(),
 });
 
 const updateFamilyParams = z.object({

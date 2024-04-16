@@ -31,6 +31,8 @@ export const nameSchema = z
 
 export const numberSchema = z.number().int().positive().min(0);
 
+export const positiveIntSchema = z.number().int().positive();
+
 export const objectIdSchema = z
   .string()
   .trim()

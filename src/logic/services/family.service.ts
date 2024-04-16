@@ -35,7 +35,11 @@ export class FamilyService {
 
     if (familyData.activeSubscribers > plan.accountSlots)
       throw new ForbiddenException({
-        message: "the number of accounts is larger than the plan's capacity",
+        message: "the number of active accounts is larger than the plan's capacity",
+      });
+    else if (familyData.availableSlots > plan.accountSlots)
+      throw new ForbiddenException({
+        message: "the number of available slots is larger than the plan's capacity",
       });
 
     if (familyData.onboarding.type !== app.onBoardingType)
@@ -94,20 +98,20 @@ export class FamilyService {
     if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
 
-    const subscription = await SubscriptionService.create({ userId, familyId });
-
-    await SubscriberService.create(familyId, userId, 'join'); // TODO get joinMethod from req query
-
-    const accounts = ++family.activeSubscribers;
-    const maxed = accounts === family.maxSubscribers; //TODO find plan, use plan.accountSlots to calc maxed
-    family.activeSubscribers = accounts;
+    const activeSubs = ++family.activeSubscribers;
+    const slots = family.availableSlots === 0 ? 0 : --family.availableSlots;
+    const maxed = activeSubs === family.maxSubscribers;
+    family.activeSubscribers = activeSubs;
+    family.availableSlots = slots;
     family.isFull = maxed;
     family.subscribers.push(createObjectId(userId));
 
     await family.save();
+    const subscription = await SubscriptionService.create({ userId, familyId });
+    await SubscriberService.create(familyId, userId, 'join'); // TODO get joinMethod from req query
 
     return {
-      message: 'user added to family',
+      message: 'user has been added to the family',
       data: subscription,
     };
   }
@@ -204,6 +208,14 @@ export class FamilyService {
 
     if (!family.owner.equals(reqUser))
       throw new ForbiddenException({ message: "you are not the family's owner" });
+
+    if (
+      newData.availableSlots &&
+      newData.availableSlots > family.maxSubscribers - family.activeSubscribers
+    )
+      throw new ForbiddenException({
+        message: "the available slots provided exceeds the available family's capacity",
+      });
 
     const updatedFamily = await FamilyRepository.update(familyId, newData);
 

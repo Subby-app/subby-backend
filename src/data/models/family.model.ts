@@ -59,6 +59,10 @@ const FamilySchema = new Schema(
       type: Number,
       required: true,
     },
+    availableSlots: {
+      type: Number,
+      required: true,
+    },
     subscribers: [
       {
         type: Schema.Types.ObjectId,

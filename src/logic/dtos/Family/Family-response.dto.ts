@@ -13,6 +13,7 @@ export class FamilyResponseDto {
       onboarding: family.onboarding,
       maxSubscribers: family.maxSubscribers,
       activeSubscribers: family.activeSubscribers,
+      availableSlots: family.availableSlots,
       subscriptionStart: family.subscriptionStart,
       subscriptionEnd: family.subscriptionEnd,
       tenure: family.tenure,
