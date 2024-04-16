@@ -107,11 +107,12 @@ class BaseRepository {
   }
 
   static calcPaginationDetails(page: number, limit: number, totalResourceFound: number): TPaginate {
+    const lastPage = Math.ceil(totalResourceFound / limit);
+    if (page > lastPage) page = lastPage;
     const hasNextPage = limit * page < totalResourceFound;
     const hasPrevPage = page > 1;
     const nextPage = hasNextPage ? page + 1 : null;
     const prevPage = hasPrevPage ? page - 1 : null;
-    const lastPage = Math.ceil(totalResourceFound / limit);
 
     return { totalResourceFound, currentPage: page, prevPage, nextPage, lastPage };
   }

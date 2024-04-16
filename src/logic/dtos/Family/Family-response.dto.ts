@@ -15,6 +15,7 @@ export class FamilyResponseDto {
       activeSubscribers: family.activeSubscribers,
       subscriptionStart: family.subscriptionStart,
       subscriptionEnd: family.subscriptionEnd,
+      tenure: family.tenure,
       isFull: family.isFull,
       createdAt: family.createdAt,
       updatedAt: family.updatedAt,

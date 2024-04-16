@@ -53,15 +53,16 @@ export class FamilyRepository extends BaseRepository {
       subscribers: { $nin: [userId] },
     };
 
+    const totalFamilies = await Family.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
+
     const families = await Family.find(_filter)
-      .skip((page - 1) * limit)
+      .skip((paginationDetails.currentPage - 1) * limit)
       .limit(limit)
       .sort({ [sortField]: sort })
       .populate('appId')
       .populate('planId');
 
-    const totalFamilies = await Family.countDocuments(_filter);
-    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
     return { paginationDetails, families };
   }
 
@@ -80,15 +81,17 @@ export class FamilyRepository extends BaseRepository {
   static async findOwner(filter: TFindFamiliesQuery, userId: string) {
     const { page, limit, sort, sortField, ...search } = filter;
     const _filter = { ...search, owner: userId };
+
+    const totalFamilies = await Family.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
+
     const families = await Family.find(_filter)
-      .skip((page - 1) * limit)
+      .skip((paginationDetails.currentPage - 1) * limit)
       .limit(limit)
       .sort({ [sortField]: sort })
       .populate('appId')
       .populate('planId');
 
-    const totalFamilies = await Family.countDocuments(_filter);
-    const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
     return { paginationDetails, families };
   }
 
