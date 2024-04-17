@@ -104,7 +104,7 @@ export const findFamily = incomingRequestSchema(
 
 const updateFamilyBody = z.object({
   name: nameSchema.optional(),
-  newOnboarding: onboarding.optional(),
+  activeSubscribers: positiveIntSchema.optional(),
   availableSlots: positiveIntSchema.optional(),
 });
 
