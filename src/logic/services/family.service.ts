@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   NotFoundException,
   ServerException,
@@ -9,6 +10,7 @@ import {
   TCreateFamilyBody,
   TFindFamiliesQuery,
   TFindFamilyQuery,
+  TFindSubFamiliesQuery,
   TUpdateFamilyBody,
 } from '@/web/validators/family.validation';
 import { SubscriptionService } from './subscription.service';
@@ -19,6 +21,7 @@ import { SubscriptionRepository } from '@/data/repositories';
 import { ISubscription } from '@/data/interfaces/ISubscription';
 import { SubscriberService } from './subscriber.service';
 import { createObjectId } from '@/data/lib/createId';
+import { TUpdateFamilyState } from '@/data/interfaces/IFamily';
 
 export class FamilyService {
   static async create(ownerId: string, familyData: TCreateFamilyBody) {
@@ -97,6 +100,7 @@ export class FamilyService {
     else if (family.isFull) throw new ForbiddenException({ message: 'this family is full' });
     else if (family.owner.equals(userId))
       throw new ForbiddenException({ message: 'family owner cannot be a subscriber' });
+    else if (!family.isActive) throw new ForbiddenException({ message: 'this family is inactive' });
 
     if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
@@ -191,7 +195,7 @@ export class FamilyService {
     };
   }
 
-  static async getSubscribedFamilies(filter: TFindFamiliesQuery, userId: string) {
+  static async getSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
     const { paginationDetails, subscribedFamilies } =
       await SubscriberService.findSubscribedFamilies(filter, userId);
     // if (!subscribedFamilies.length)
@@ -233,13 +237,52 @@ export class FamilyService {
     const updatedFamily = await FamilyRepository.update(familyId, newData);
 
     if (!updatedFamily) {
-      throw new NotFoundException('No family found after update');
+      throw new NotFoundException('no family found after update');
     }
 
     return {
       message: 'Family Updated',
       data: FamilyResponseDto.from(updatedFamily.toObject()),
     };
+  }
+
+  static async activate(familyId: string, reqUser: string) {
+    const family = await FamilyRepository.findById(familyId);
+    if (!family) throw new NotFoundException('No family found');
+    if (family.isActive) throw new ConflictException({ message: 'this family is already active' });
+
+    if (!family.owner.equals(reqUser))
+      throw new ForbiddenException({ message: "you are not the family's owner" });
+
+    const updatedFamily = await this.toggleActivate(familyId, { isActive: true });
+    if (!updatedFamily) throw new NotFoundException('no family found after update');
+
+    return {
+      message: 'family has been activated',
+      data: FamilyResponseDto.from(updatedFamily),
+    };
+  }
+
+  static async deactivate(familyId: string, reqUser: string) {
+    const family = await FamilyRepository.findById(familyId);
+    if (!family) throw new NotFoundException('No family found');
+    if (!family.isActive)
+      throw new ConflictException({ message: 'this family is already inactive' });
+
+    if (!family.owner.equals(reqUser))
+      throw new ForbiddenException({ message: "you are not the family's owner" });
+
+    const updatedFamily = await this.toggleActivate(familyId, { isActive: false });
+    if (!updatedFamily) throw new NotFoundException('no family found after update');
+
+    return {
+      message: 'family has been deactivated',
+      data: FamilyResponseDto.from(updatedFamily),
+    };
+  }
+
+  static async toggleActivate(familyId: string, data: TUpdateFamilyState) {
+    return await FamilyRepository.update(familyId, data);
   }
 
   static async delete(familyId: string, reqUser: string) {

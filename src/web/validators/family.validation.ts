@@ -34,6 +34,10 @@ const tenure = z.enum(['daily', 'weekly', 'monthly', 'quarterly', 'biannually', 
 
 export type TTenure = z.infer<typeof tenure>;
 
+const familyActions = z.enum(['activate', 'deactivate']).optional();
+
+export type TFamilyActions = z.infer<typeof familyActions>;
+
 const createFamilyBody = z.object({
   name: nameSchema,
   appId: objectIdSchema,
@@ -60,14 +64,16 @@ const findFamiliesQuery = z
     planId: objectIdSchema.optional(),
     // owner: objectIdSchema.optional(),
     // isFull: booleanSchema.optional(),
+    isActive: booleanSchema.default('true'),
     tenure: tenure.optional(),
   })
   .merge(paginationSchema);
 
 const findSubFamiliesQuery = z
   .object({
-    // familyId: objectIdSchema.optional(), //TODO query based on family.planId or .appId?
+    // familyId: objectIdSchema.optional(), //TODO sort subscribe docs based on family.planId or .appId?
     joinMethod: z.enum(['join', 'invite']).optional(), // TODO no duplication
+    isActive: booleanSchema.default('true'),
   })
   .merge(paginationSchema);
 
@@ -112,15 +118,21 @@ const updateFamilyParams = z.object({
   id,
 });
 
+const updateFamilyQuery = z.object({
+  action: familyActions,
+});
+
 export const updateFamily = incomingRequestSchema(
   updateFamilyBody,
   updateFamilyParams,
-  emptyObjectSchema,
+  updateFamilyQuery,
 );
 
 export type TUpdateFamilyBody = z.infer<typeof updateFamilyBody>;
 
 export type TUpdateFamilyParams = z.infer<typeof updateFamilyParams>;
+
+export type TUpdateFamilyQuery = z.infer<typeof updateFamilyQuery>;
 
 const deleteFamilyParams = z.object({
   id,

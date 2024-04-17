@@ -81,6 +81,7 @@ export const otpSchema = z.string().min(+process.env.OTP_SIZE!);
 
 export const urlSchema = z.string().url();
 
+// TODO use const asserted string & string[] helpers
 export const booleanSchema = z.enum(['true', 'false']).transform((value) => value === 'true');
 
 export const paginationSchema = z.object({

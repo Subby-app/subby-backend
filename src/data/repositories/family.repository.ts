@@ -1,11 +1,7 @@
-import {
-  TCreateFamilyBody,
-  TUpdateFamilyBody,
-  TFindFamiliesQuery,
-} from '@/web/validators/family.validation';
+import { TCreateFamilyBody, TFindFamiliesQuery } from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
-import { TOverview } from '../interfaces/IFamily';
+import { TOverview, TUpdateFamily } from '../interfaces/IFamily';
 
 export class FamilyRepository extends BaseRepository {
   static async create(
@@ -32,7 +28,7 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async getOverview(ownerId: string): Promise<TOverview> {
-    const familiesCreated = await Family.countDocuments({ owner: ownerId });
+    const familiesCreated = await Family.countDocuments({ owner: ownerId, isActive: true });
     let totalActiveSubs = 0;
     (await Family.find({ owner: ownerId }).exec()).forEach(
       (family) => (totalActiveSubs += family.activeSubscribers),
@@ -51,6 +47,7 @@ export class FamilyRepository extends BaseRepository {
       ...search,
       owner: { $ne: userId },
       subscribers: { $nin: [userId] },
+      isActive: true,
     };
 
     const totalFamilies = await Family.countDocuments(_filter);
@@ -80,7 +77,7 @@ export class FamilyRepository extends BaseRepository {
 
   static async findOwner(filter: TFindFamiliesQuery, userId: string) {
     const { page, limit, sort, sortField, ...search } = filter;
-    const _filter = { ...search, owner: userId };
+    const _filter = { ...search, owner: userId, isActive: true };
 
     const totalFamilies = await Family.countDocuments(_filter);
     const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
@@ -95,7 +92,7 @@ export class FamilyRepository extends BaseRepository {
     return { paginationDetails, families };
   }
 
-  static async update(id: string, newData: TUpdateFamilyBody) {
+  static async update(id: string, newData: TUpdateFamily) {
     try {
       return Family.findByIdAndUpdate(id, newData, { new: true });
     } catch (error) {

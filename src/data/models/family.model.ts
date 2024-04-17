@@ -91,6 +91,10 @@ const FamilySchema = new Schema(
       type: Boolean,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

@@ -28,7 +28,7 @@ module.exports = {
     'no-multi-spaces': 2,
     'no-spaced-func': 2,
     'no-console': 1,
-    indent: [1, 2],
+    indent: [1, 2, { "SwitchCase" : 1 }],
     'func-call-spacing': [2, 'never'],
     'prettier/prettier': 2,
   },

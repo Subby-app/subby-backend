@@ -20,7 +20,7 @@ export class SubscriberRepository extends BaseRepository {
 
   static async findSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
     const { page, limit, sort, sortField, ...search } = filter;
-    const _filter = { ...search, userId };
+    const _filter = { ...search, userId }; // TODO add check for family.isActive
 
     const totalSubscribedFamilies = await Subscriber.countDocuments(_filter);
     const paginationDetails = this.calcPaginationDetails(page, limit, totalSubscribedFamilies);

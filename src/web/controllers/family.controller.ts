@@ -2,7 +2,12 @@ import { Request, Response } from 'express';
 import { FamilyService } from '../../logic/services/family.service';
 import { BaseHttpResponse } from '../../utils/base-Http-response.utils';
 import { HttpStatus } from '../../utils/exceptions/http-status.enum';
-import { TFindFamiliesQuery, TFindFamilyQuery } from '../validators/family.validation';
+import {
+  TFindFamiliesQuery,
+  TFindFamilyQuery,
+  TFindSubFamiliesQuery,
+  TFamilyActions,
+} from '../validators/family.validation';
 
 export class FamilyController {
   static async create(req: Request, res: Response) {
@@ -65,7 +70,7 @@ export class FamilyController {
   }
 
   static async getSubscribedFamilies(req: Request, res: Response) {
-    const filter = req.query as unknown as TFindFamiliesQuery;
+    const filter = req.query as unknown as TFindSubFamiliesQuery;
     const { message, data } = await FamilyService.getSubscribedFamilies(filter, req.user?._id);
     const result = BaseHttpResponse.success(message, data);
 
@@ -75,8 +80,21 @@ export class FamilyController {
   static async update(req: Request, res: Response) {
     const familyId = req.params.id;
     const reqUser = req.user?._id;
+    const action = req.query.action as unknown as TFamilyActions;
+    let message: string, data: any;
 
-    const { message, data } = await FamilyService.update(familyId, req.body, reqUser);
+    switch (action) {
+      case 'deactivate':
+        ({ message, data } = await FamilyService.deactivate(familyId, reqUser));
+        break;
+      case 'activate':
+        ({ message, data } = await FamilyService.activate(familyId, reqUser));
+        break;
+      default:
+        ({ message, data } = await FamilyService.update(familyId, req.body, reqUser));
+        break;
+    }
+
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);
