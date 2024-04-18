@@ -5,8 +5,6 @@ import { UserResponseDto } from '../../logic/dtos/User';
 import { TCreateUserBody, TUpdateUserBody } from '@/web/validators/user.validation';
 import { Encryption } from '@/utils/encryption.utils';
 import { TUserFilter, TFilterOptions } from '@/data/interfaces/IUser';
-import { userOtpSubject, verificationMessage } from '@/utils/email-message-constant';
-import { sendSignupEmail } from './mail.service';
 import { generateOtp } from '@/utils/otp.util';
 
 export class UserService {
@@ -37,10 +35,8 @@ export class UserService {
     user.otpExpiration = expirationTime;
     await user.save();
 
-    const sendVerificationEmail = verificationMessage(userEntity.firstName, verificationToken);
-    await sendSignupEmail(userEntity.email, userOtpSubject, sendVerificationEmail);
     return {
-      message: 'Verification OTP sent to your Mail',
+      message: 'Signed up successfully ',
       data: UserResponseDto.signup(user.toObject()),
     };
   }
