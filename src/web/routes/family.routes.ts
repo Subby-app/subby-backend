@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { FamilyController } from '../controllers/family.controller';
-import { authenticated, validateRequest } from '../middlewares/index';
+import { authenticated, validateRequest, verifiedGuard } from '../middlewares/index';
 import {
   createFamily,
   findFamilies,
@@ -35,12 +35,19 @@ familyRouter.get(
 
 familyRouter.get('/:id', validateRequest(findFamily), FamilyController.getById);
 
-familyRouter.post('/', validateRequest(createFamily), authenticated, FamilyController.create);
+familyRouter.post(
+  '/',
+  validateRequest(createFamily),
+  authenticated,
+  verifiedGuard(true),
+  FamilyController.create,
+);
 
 familyRouter.post(
   `/:id/${subscribers}`,
   validateRequest(joinFamily),
   authenticated,
+  verifiedGuard(true),
   FamilyController.joinFamily,
 );
 
