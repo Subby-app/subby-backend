@@ -20,7 +20,6 @@ import { calcEndDate } from '@/utils/end-date.util';
 import { SubscriptionRepository } from '@/data/repositories';
 import { ISubscription } from '@/data/interfaces/ISubscription';
 import { SubscriberService } from './subscriber.service';
-import { createObjectId } from '@/data/lib/createId';
 import { TUpdateFamilyState } from '@/data/interfaces/IFamily';
 
 export class FamilyService {
@@ -40,7 +39,7 @@ export class FamilyService {
       throw new ForbiddenException({
         message: "the number of active accounts is larger than the plan's capacity",
       });
-    else if (familyData.availableSlots > plan.accountSlots - familyData.activeSubscribers)
+    if (familyData.availableSlots > plan.accountSlots - familyData.activeSubscribers)
       throw new ForbiddenException({
         message:
           'the available slots provided exceeds the expected available capacity for this plan',
@@ -92,7 +91,7 @@ export class FamilyService {
   }
 
   static async joinFamily(familyId: string, userId: string) {
-    const family = await FamilyRepository.findByIdWithSubs(familyId);
+    const family = await FamilyRepository.findById(familyId);
 
     if (!family) throw new NotFoundException('no family found');
     else if (!family.availableSlots)
@@ -111,7 +110,6 @@ export class FamilyService {
     family.activeSubscribers = activeSubs;
     family.availableSlots = slots;
     family.isFull = maxed;
-    family.subscribers.push(createObjectId(userId));
 
     await family.save();
     const subscription = await SubscriptionService.create({ userId, familyId });
@@ -124,10 +122,13 @@ export class FamilyService {
   }
 
   static async getFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
+    const subbedFamiliesId = await SubscriberService.getSubscribedFamiliesIds(userId);
     const { paginationDetails, families } = await FamilyRepository.findFamiliesToJoin(
       filter,
       userId,
+      subbedFamiliesId,
     );
+
     return {
       message: 'available families to join',
       data: FamilyResponseDto.paginateFamilies(paginationDetails, families),

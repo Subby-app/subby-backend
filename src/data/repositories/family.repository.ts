@@ -2,6 +2,7 @@ import { TCreateFamilyBody, TFindFamiliesQuery } from '@/web/validators/family.v
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
 import { TOverview, TUpdateFamily } from '../interfaces/IFamily';
+import { Types } from 'mongoose';
 
 export class FamilyRepository extends BaseRepository {
   static async create(
@@ -41,12 +42,16 @@ export class FamilyRepository extends BaseRepository {
     return Family.find(filter).populate('planId').exec();
   }
 
-  static async findFamiliesToJoin(filter: TFindFamiliesQuery, userId: string) {
+  static async findFamiliesToJoin(
+    filter: TFindFamiliesQuery,
+    userId: string,
+    subbedFamiliesId: Types.ObjectId[],
+  ) {
     const { page, limit, sort, sortField, ...search } = filter;
     const _filter = {
       ...search,
       owner: { $ne: userId },
-      subscribers: { $nin: [userId] },
+      _id: { $nin: subbedFamiliesId },
       isActive: true,
     };
 
@@ -54,7 +59,7 @@ export class FamilyRepository extends BaseRepository {
     const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
 
     const families = await Family.find(_filter)
-      .skip((paginationDetails.currentPage - 1) * limit)
+      .skip(paginationDetails.skip)
       .limit(limit)
       .sort({ [sortField]: sort })
       .populate('appId')
@@ -65,10 +70,6 @@ export class FamilyRepository extends BaseRepository {
 
   static async findById(id: string) {
     return Family.findById(id).populate('appId').populate('planId').exec();
-  }
-
-  static async findByIdWithSubs(id: string) {
-    return Family.findById(id).select('+subscribers').populate('appId').populate('planId').exec();
   }
 
   static async findOne(filter: TFindFamiliesQuery) {
@@ -83,7 +84,7 @@ export class FamilyRepository extends BaseRepository {
     const paginationDetails = this.calcPaginationDetails(page, limit, totalFamilies);
 
     const families = await Family.find(_filter)
-      .skip((paginationDetails.currentPage - 1) * limit)
+      .skip(paginationDetails.skip)
       .limit(limit)
       .sort({ [sortField]: sort })
       .populate('appId')

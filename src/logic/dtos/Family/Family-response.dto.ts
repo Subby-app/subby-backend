@@ -95,4 +95,12 @@ export class FamilyResponseDto {
       families: this.subscribedFamilies(subscribedFamilies),
     };
   }
+
+  static subbedFamilyId(subscriberDoc: ISubscriber) {
+    return subscriberDoc.familyId;
+  }
+
+  static subbedFamiliesId(subscriberDocs: ISubscriber[]) {
+    return subscriberDocs.map((subscriberDoc) => this.subbedFamilyId(subscriberDoc));
+  }
 }

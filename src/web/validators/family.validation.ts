@@ -64,7 +64,7 @@ const findFamiliesQuery = z
     planId: objectIdSchema.optional(),
     // owner: objectIdSchema.optional(),
     // isFull: booleanSchema.optional(),
-    isActive: booleanSchema.default('true'),
+    // isActive: booleanSchema.default('true'),
     tenure: tenure.optional(),
   })
   .merge(paginationSchema);
@@ -73,7 +73,7 @@ const findSubFamiliesQuery = z
   .object({
     // familyId: objectIdSchema.optional(), //TODO sort subscribe docs based on family.planId or .appId?
     joinMethod: z.enum(['join', 'invite']).optional(), // TODO no duplication
-    isActive: booleanSchema.default('true'),
+    // isActive: booleanSchema.default('true'),
   })
   .merge(paginationSchema);
 

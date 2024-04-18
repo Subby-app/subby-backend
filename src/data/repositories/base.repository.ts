@@ -15,6 +15,7 @@ export type TPaginate = {
   prevPage: number | null;
   nextPage: number | null;
   lastPage: number;
+  skip: number;
 };
 
 class BaseRepository {
@@ -113,8 +114,9 @@ class BaseRepository {
     const hasPrevPage = page > 1;
     const nextPage = hasNextPage ? page + 1 : null;
     const prevPage = hasPrevPage ? page - 1 : null;
+    const skip = totalResourceFound >= 1 ? (totalResourceFound - 1) * limit : 0;
 
-    return { totalResourceFound, currentPage: page, prevPage, nextPage, lastPage };
+    return { totalResourceFound, currentPage: page, prevPage, nextPage, lastPage, skip };
   }
 }
 
