@@ -31,6 +31,8 @@ export const nameSchema = z
 
 export const numberSchema = z.number().int().positive().min(0);
 
+export const positiveIntSchema = z.number().int().positive();
+
 export const objectIdSchema = z
   .string()
   .trim()
@@ -87,5 +89,3 @@ export const paginationSchema = z.object({
   sort: z.enum(['asc', 'desc']).default('asc'),
   sortField: z.enum(['name', 'createdAt']).default('createdAt'),
 });
-
-export type TPaginate = z.infer<typeof paginationSchema>;

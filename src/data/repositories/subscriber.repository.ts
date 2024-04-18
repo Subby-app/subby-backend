@@ -21,8 +21,12 @@ export class SubscriberRepository extends BaseRepository {
   static async findSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
     const { page, limit, sort, sortField, ...search } = filter;
     const _filter = { ...search, userId };
+
+    const totalSubscribedFamilies = await Subscriber.countDocuments(_filter);
+    const paginationDetails = this.calcPaginationDetails(page, limit, totalSubscribedFamilies);
+
     const subscribedFamilies = await Subscriber.find(_filter)
-      .skip((page - 1) * limit)
+      .skip((paginationDetails.currentPage - 1) * limit)
       .limit(limit)
       .sort({ [sortField]: sort })
       .populate({
@@ -31,8 +35,6 @@ export class SubscriberRepository extends BaseRepository {
         populate: { path: 'planId' },
       });
 
-    const totalSubscribedFamilies = await Subscriber.countDocuments(_filter);
-    const paginationDetails = this.calcPaginationDetails(page, limit, totalSubscribedFamilies);
     return { paginationDetails, subscribedFamilies };
   }
 
