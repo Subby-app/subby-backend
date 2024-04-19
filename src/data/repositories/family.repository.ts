@@ -8,7 +8,6 @@ export class FamilyRepository extends BaseRepository {
   static async create(
     familyData: TCreateFamilyBody,
     ownerId: string,
-    maxSubscribers: number,
     isFull: boolean,
     subscriptionEnd: Date,
   ) {
@@ -16,7 +15,6 @@ export class FamilyRepository extends BaseRepository {
       const family = new Family({
         ...familyData,
         owner: ownerId,
-        maxSubscribers,
         isFull,
         subscriptionEnd,
       });

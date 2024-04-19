@@ -53,13 +53,7 @@ export class FamilyService {
     const isFull = familyData.activeSubscribers === plan.accountSlots;
     const subscriptionEnd = calcEndDate(familyData.subscriptionStart, familyData.tenure);
 
-    const family = await FamilyRepository.create(
-      familyData,
-      ownerId,
-      plan.accountSlots,
-      isFull,
-      subscriptionEnd,
-    );
+    const family = await FamilyRepository.create(familyData, ownerId, isFull, subscriptionEnd);
 
     if (!family) {
       throw new ServerException({ message: 'Failed to create family' });
@@ -92,9 +86,9 @@ export class FamilyService {
 
   static async joinFamily(familyId: string, userId: string) {
     const family = await FamilyRepository.findById(familyId);
-
     if (!family) throw new NotFoundException('no family found');
-    else if (!family.availableSlots)
+
+    if (!family.availableSlots)
       throw new ForbiddenException({ message: 'this family has no available slots' });
     else if (family.isFull) throw new ForbiddenException({ message: 'this family is full' });
     else if (family.owner.equals(userId))
@@ -104,9 +98,12 @@ export class FamilyService {
     if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
 
+    const familyPlan = await PlanRepository.findById(family.planId.toString());
+    if (!familyPlan) throw new NotFoundException('family plan not found');
+
     const activeSubs = ++family.activeSubscribers;
     const slots = --family.availableSlots;
-    const maxed = activeSubs === family.maxSubscribers;
+    const maxed = activeSubs === familyPlan.accountSlots;
     family.activeSubscribers = activeSubs;
     family.availableSlots = slots;
     family.isFull = maxed;
@@ -217,10 +214,12 @@ export class FamilyService {
     if (!family.owner.equals(reqUser))
       throw new ForbiddenException({ message: "you are not the family's owner" });
 
+    const familyPlan = await PlanRepository.findById(family.planId.toString());
+    if (!familyPlan) throw new NotFoundException('family plan not found');
     //? DRY, search if req obj can be referenced in z.schema.parse() or encapsulate checks into a fn
     if (
       newData.availableSlots &&
-      newData.availableSlots > family.maxSubscribers - family.activeSubscribers
+      newData.availableSlots > familyPlan.accountSlots - family.activeSubscribers
     ) {
       throw new ForbiddenException({
         message: "the available slots provided exceeds the available family's capacity",
@@ -228,7 +227,7 @@ export class FamilyService {
     }
     if (
       newData.activeSubscribers &&
-      newData.activeSubscribers > family.maxSubscribers - family.availableSlots
+      newData.activeSubscribers > familyPlan.accountSlots - family.availableSlots
     ) {
       throw new ForbiddenException({
         message: "the active subscriber provided exceeds the available family's capacity",

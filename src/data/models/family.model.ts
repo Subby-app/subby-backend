@@ -51,10 +51,6 @@ const FamilySchema = new Schema(
       ref: 'Plan',
       required: true,
     },
-    maxSubscribers: {
-      type: Number,
-      required: true,
-    },
     activeSubscribers: {
       type: Number,
       required: true,
