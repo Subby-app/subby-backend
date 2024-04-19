@@ -19,4 +19,8 @@ export class SubscriberService {
     const familiesIds = await SubscriberRepository.findSubscribedFamiliesId(userId);
     return FamilyResponseDto.getFamiliesId(familiesIds);
   }
+
+  static async getOverview(userId: string) {
+    return await SubscriberRepository.getOverview(userId);
+  }
 }

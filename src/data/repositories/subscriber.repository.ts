@@ -48,6 +48,13 @@ export class SubscriberRepository extends BaseRepository {
     return subscriber;
   }
 
+  static async getOverview(userId: string) {
+    const activeSubscriptions = await Subscriber.countDocuments({ userId, isActive: true });
+    const inActiveSubscriptions = await Subscriber.countDocuments({ userId, isActive: false });
+
+    return { activeSubscriptions, inActiveSubscriptions };
+  }
+
   static async countSubscribers(createdFamiliesId: Types.ObjectId[]) {
     return await Subscriber.countDocuments({
       isActive: true,

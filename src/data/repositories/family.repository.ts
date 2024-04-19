@@ -1,7 +1,7 @@
 import { TCreateFamilyBody, TFindFamiliesQuery } from '@/web/validators/family.validation';
 import { Family } from '../models/index';
 import BaseRepository from './base.repository';
-import { TOverview, TUpdateFamily } from '../interfaces/IFamily';
+import { TUpdateFamily } from '../interfaces/IFamily';
 import { Types } from 'mongoose';
 import { SubscriberRepository } from './subscriber.repository';
 
@@ -27,7 +27,7 @@ export class FamilyRepository extends BaseRepository {
     }
   }
 
-  static async getOverview(ownerId: string): Promise<TOverview> {
+  static async getOverview(ownerId: string) {
     const _filter = { owner: ownerId, isActive: true };
     const familiesCreated = await Family.countDocuments(_filter);
 

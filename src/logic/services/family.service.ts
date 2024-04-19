@@ -76,11 +76,19 @@ export class FamilyService {
     };
   }
 
-  static async getOverview(ownerId: string) {
+  static async getFamilyOverview(ownerId: string) {
     const overview = await FamilyRepository.getOverview(ownerId);
     return {
       message: 'family owner overview',
-      data: FamilyResponseDto.overview(overview),
+      data: FamilyResponseDto.familyOverview(overview),
+    };
+  }
+
+  static async getSubscriptionsOverview(ownerId: string) {
+    const subOverview = await SubscriberService.getOverview(ownerId);
+    return {
+      message: 'subscriptions overview',
+      data: FamilyResponseDto.subscriptionsOverview(subOverview),
     };
   }
 

@@ -1,5 +1,5 @@
-import { IFamily, TOverview } from '@/data/interfaces/IFamily';
-import { ISubscriber } from '@/data/interfaces/ISubscriber';
+import { IFamily, TFamilyOverview } from '@/data/interfaces/IFamily';
+import { ISubscriber, TSubscriberOverview } from '@/data/interfaces/ISubscriber';
 import { TPaginate } from '@/data/repositories';
 
 export class FamilyResponseDto {
@@ -65,10 +65,17 @@ export class FamilyResponseDto {
     return subscribedFamilies.map((subscriber) => FamilyResponseDto.subscribedFamily(subscriber));
   }
 
-  static overview(overview: TOverview) {
+  static familyOverview(overview: TFamilyOverview) {
     return {
       totalFamiliesCreated: overview.familiesCreated,
       totalActiveSubscribers: overview.totalActiveSubs,
+    };
+  }
+
+  static subscriptionsOverview(subOverview: TSubscriberOverview) {
+    return {
+      activeSubscriptions: subOverview.activeSubscriptions,
+      inActiveSubscriptions: subOverview.inActiveSubscriptions,
     };
   }
 

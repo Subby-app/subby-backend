@@ -37,7 +37,14 @@ export class FamilyController {
   }
 
   static async getOverview(req: Request, res: Response) {
-    const { message, data } = await FamilyService.getOverview(req.user?._id);
+    const { message, data } = await FamilyService.getFamilyOverview(req.user?._id);
+    const result = BaseHttpResponse.success(message, data);
+
+    res.status(HttpStatus.OK).json(result);
+  }
+
+  static async getSubscriptionsOverview(req: Request, res: Response) {
+    const { message, data } = await FamilyService.getSubscriptionsOverview(req.user?._id);
     const result = BaseHttpResponse.success(message, data);
 
     res.status(HttpStatus.OK).json(result);

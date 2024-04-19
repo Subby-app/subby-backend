@@ -33,6 +33,12 @@ familyRouter.get(
   FamilyController.getSubscribedFamilies,
 );
 
+familyRouter.get(
+  '/subscriptions/overview',
+  authenticated,
+  FamilyController.getSubscriptionsOverview,
+);
+
 familyRouter.get('/:id', validateRequest(findFamily), FamilyController.getById);
 
 familyRouter.post(

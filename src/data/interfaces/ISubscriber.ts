@@ -18,3 +18,8 @@ export interface ISubscriber extends TSubscriberDoc, Document {
 }
 
 export type TSubscriberFilter = Partial<Pick<TSubscriber, 'userId' | 'familyId' | 'joinMethod'>>;
+
+export type TSubscriberOverview = {
+  activeSubscriptions: number;
+  inActiveSubscriptions: number;
+};

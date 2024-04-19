@@ -23,7 +23,7 @@ export type TFamilyFilter = Pick<
   'appId' | 'owner' | 'planId' | 'isFull' | 'tenure' | 'name'
 >;
 
-export type TOverview = {
+export type TFamilyOverview = {
   familiesCreated: number;
   totalActiveSubs: number;
 };
