@@ -2,9 +2,10 @@ import { Document, Types } from 'mongoose';
 
 export type TPlanCreate = {
   applicationId: string;
-  planName: string;
   planIcon: string;
-  price: string;
+  planName: string;
+  instructions: string;
+  price: number;
   accountSlots: number;
 };
 type TPlanDoc = Omit<TPlanCreate, 'applicationId'>;

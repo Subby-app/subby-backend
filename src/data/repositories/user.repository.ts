@@ -29,7 +29,7 @@ export class UserRepository extends BaseRepository {
 
   static async findEmail(email: string) {
     return User.findOne({ email })
-      .select(['email', '+password', 'otp', 'verified', 'otpExpiration'])
+      .select(['email', 'firstName', '+password', 'otp', 'verified', 'otpExpiration'])
       .exec();
   }
 

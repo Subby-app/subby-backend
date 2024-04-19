@@ -1,17 +1,21 @@
 import { z } from 'zod';
 import {
+  descriptionSchema,
   emptyObjectSchema,
   incomingRequestSchema,
   nameSchema,
   numberSchema,
   objectIdSchema,
   priceSchema,
+  urlSchema,
 } from './lib/common-schema-validation';
 
 //Create Plan Body
 const createPlanBodySchema = z.object({
   applicationId: objectIdSchema,
+  planIcon: urlSchema,
   planName: nameSchema,
+  instructions: descriptionSchema,
   price: priceSchema,
   accountSlots: numberSchema,
 });
@@ -39,6 +43,7 @@ export type TFindPlanQuery = z.infer<typeof findPlanQuerySchema>;
 
 //Update Plan via params
 const updatePlanBodySchema = z.object({
+  planIcon: urlSchema.optional(),
   planName: nameSchema.optional(),
   price: priceSchema.optional(),
   accountSlots: numberSchema.optional(),

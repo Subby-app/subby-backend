@@ -25,7 +25,7 @@ authRouter.post('/login', validateRequest(loginUser), AuthController.login);
 
 authRouter.post('/verify/otp', validateRequest(verifyEmail), AuthController.verify);
 
-authRouter.post('/send-otp', validateRequest(sendOTP), AuthController.sendOTP);
+authRouter.post('/send-otp', authenticated, validateRequest(sendOTP), AuthController.sendOTP);
 
 authRouter.post(
   '/change/password',

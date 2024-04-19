@@ -1,9 +1,9 @@
-import { google } from 'googleapis';
+import { OAuth2Client } from 'google-auth-library';
 import * as nodemailer from 'nodemailer';
 import { gmailConfig } from '../config/mail.config';
 
 export async function getOAuth2Client() {
-  const oAuth2Client = new google.auth.OAuth2(
+  const oAuth2Client = new OAuth2Client(
     gmailConfig.clientId,
     gmailConfig.clientSecret,
     gmailConfig.authRedirectUrl,
