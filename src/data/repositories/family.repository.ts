@@ -3,6 +3,7 @@ import { Family } from '../models/index';
 import BaseRepository from './base.repository';
 import { TOverview, TUpdateFamily } from '../interfaces/IFamily';
 import { Types } from 'mongoose';
+import { SubscriberRepository } from './subscriber.repository';
 
 export class FamilyRepository extends BaseRepository {
   static async create(
@@ -27,12 +28,15 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async getOverview(ownerId: string): Promise<TOverview> {
-    const familiesCreated = await Family.countDocuments({ owner: ownerId, isActive: true });
-    let totalActiveSubs = 0;
-    (await Family.find({ owner: ownerId }).exec()).forEach(
-      (family) => (totalActiveSubs += family.activeSubscribers),
-    );
+    const _filter = { owner: ownerId, isActive: true };
+    const familiesCreated = await Family.countDocuments(_filter);
 
+    // let totalActiveSubs = 0;
+    // (await Family.find(_filter).exec()).forEach(
+    //   (family) => (totalActiveSubs += family.activeSubscribers), //!some subscribers may be unknown to the app
+    // );
+    const createdFamiliesId = (await Family.find(_filter).exec()).map((family) => family._id);
+    const totalActiveSubs = await SubscriberRepository.countSubscribers(createdFamiliesId);
     return { familiesCreated, totalActiveSubs };
   }
 

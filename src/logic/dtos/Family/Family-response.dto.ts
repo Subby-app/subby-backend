@@ -94,11 +94,11 @@ export class FamilyResponseDto {
     };
   }
 
-  static subbedFamilyId(subscriberDoc: ISubscriber) {
+  static getFamilyId(subscriberDoc: ISubscriber) {
     return subscriberDoc.familyId;
   }
 
-  static subbedFamiliesId(subscriberDocs: ISubscriber[]) {
-    return subscriberDocs.map((subscriberDoc) => this.subbedFamilyId(subscriberDoc));
+  static getFamiliesId(subscriberDocs: ISubscriber[]) {
+    return subscriberDocs.map((subscriberDoc) => this.getFamilyId(subscriberDoc));
   }
 }

@@ -2,6 +2,7 @@ import { TFindSubFamiliesQuery } from '@/web/validators/family.validation';
 import { TSubscriber, TSubscriberFilter } from '../interfaces/ISubscriber';
 import { Subscriber } from '../models/subscriber.model';
 import BaseRepository from './base.repository';
+import { Types } from 'mongoose';
 
 export class SubscriberRepository extends BaseRepository {
   static async create(entity: TSubscriber) {
@@ -20,7 +21,7 @@ export class SubscriberRepository extends BaseRepository {
 
   static async findSubscribedFamilies(filter: TFindSubFamiliesQuery, userId: string) {
     const { page, limit, sort, sortField, ...search } = filter;
-    const _filter = { ...search, userId }; // TODO add check for sub.isActive : true
+    const _filter = { ...search, userId, isActive: true };
 
     const totalSubscribedFamilies = await Subscriber.countDocuments(_filter);
     const paginationDetails = this.calcPaginationDetails(page, limit, totalSubscribedFamilies);
@@ -45,6 +46,13 @@ export class SubscriberRepository extends BaseRepository {
   static async findOne(filter: TSubscriberFilter) {
     const subscriber = await Subscriber.findOne(filter);
     return subscriber;
+  }
+
+  static async countSubscribers(createdFamiliesId: Types.ObjectId[]) {
+    return await Subscriber.countDocuments({
+      isActive: true,
+      familyId: { $in: createdFamiliesId },
+    });
   }
 
   static async update(filter: TSubscriberFilter) {

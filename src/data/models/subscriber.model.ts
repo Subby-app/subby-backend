@@ -7,6 +7,7 @@ const SubscriberSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Family',
       required: true,
+      index: true,
     },
     userId: {
       type: Schema.Types.ObjectId,

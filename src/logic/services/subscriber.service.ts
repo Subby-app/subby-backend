@@ -17,6 +17,6 @@ export class SubscriberService {
 
   static async getSubscribedFamiliesIds(userId: string) {
     const familiesIds = await SubscriberRepository.findSubscribedFamiliesId(userId);
-    return FamilyResponseDto.subbedFamiliesId(familiesIds);
+    return FamilyResponseDto.getFamiliesId(familiesIds);
   }
 }
