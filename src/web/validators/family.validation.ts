@@ -173,8 +173,26 @@ const updateFamilySubscribersQuery = z.object({
   revokeAccess: booleanSchema.optional(),
 });
 
+// specific to the family owner
 export const updateFamilySubscriber = incomingRequestSchema(
   emptyObjectSchema,
   updateFamilySubscribersParam,
   updateFamilySubscribersQuery,
 );
+
+//specific to a family subscriber
+const updateSubscriberQuery = z.object({
+  action: familyActions, //! subscriber actions may change
+});
+
+const updateSubscriberParam = z.object({
+  id,
+});
+
+export const updateSubscriber = incomingRequestSchema(
+  emptyObjectSchema,
+  updateSubscriberParam,
+  updateSubscriberQuery,
+);
+
+export type TUpdateSubscriberQuery = z.infer<typeof updateSubscriberQuery>;

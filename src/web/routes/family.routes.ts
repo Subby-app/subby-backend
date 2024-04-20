@@ -9,6 +9,7 @@ import {
   joinFamily,
   findFamily,
   findSubFamilies,
+  updateSubscriber,
 } from '../../web/validators/family.validation';
 
 export const familyRouter = Router();
@@ -58,5 +59,12 @@ familyRouter.post(
 );
 
 familyRouter.patch('/:id', validateRequest(updateFamily), authenticated, FamilyController.update);
+
+familyRouter.patch(
+  `/:id/${subscribers}`,
+  validateRequest(updateSubscriber),
+  authenticated,
+  FamilyController.updateSubscriber,
+);
 
 familyRouter.delete('/:id', validateRequest(deleteFamily), authenticated, FamilyController.delete);

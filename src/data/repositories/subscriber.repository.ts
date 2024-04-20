@@ -1,5 +1,6 @@
 import { TFindSubFamiliesQuery } from '@/web/validators/family.validation';
 import { TSubscriber, TSubscriberFilter } from '../interfaces/ISubscriber';
+import { TUpdateSubscriber } from '@/data/interfaces/ISubscriber';
 import { Subscriber } from '../models/subscriber.model';
 import BaseRepository from './base.repository';
 import { Types } from 'mongoose';
@@ -62,8 +63,8 @@ export class SubscriberRepository extends BaseRepository {
     });
   }
 
-  static async update(filter: TSubscriberFilter) {
-    const subscriber = await Subscriber.findOneAndUpdate(filter, {}, { new: true });
+  static async update(filter: TSubscriberFilter, data: TUpdateSubscriber) {
+    const subscriber = await Subscriber.findOneAndUpdate(filter, data, { new: true });
     return subscriber;
   }
 

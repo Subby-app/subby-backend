@@ -17,6 +17,8 @@ export interface ISubscriber extends TSubscriberDoc, Document {
   updatedAt: Date;
 }
 
+export type TUpdateSubscriber = Partial<Pick<ISubscriber, 'isActive' | 'revokeAccess'>>;
+
 export type TSubscriberFilter = Partial<Pick<TSubscriber, 'userId' | 'familyId' | 'joinMethod'>>;
 
 export type TSubscriberOverview = {

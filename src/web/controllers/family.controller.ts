@@ -7,6 +7,7 @@ import {
   TFindFamilyQuery,
   TFindSubFamiliesQuery,
   TFamilyActions,
+  TUpdateSubscriberQuery,
 } from '../validators/family.validation';
 
 export class FamilyController {
@@ -104,6 +105,16 @@ export class FamilyController {
 
     const result = BaseHttpResponse.success(message, data);
 
+    res.status(HttpStatus.OK).json(result);
+  }
+
+  static async updateSubscriber(req: Request, res: Response) {
+    const userId = req.user?._id;
+    const familyId = req.params.id;
+    const query = req.query as unknown as TUpdateSubscriberQuery;
+
+    const { message, data } = await FamilyService.updateSubscriber(familyId, userId, query);
+    const result = BaseHttpResponse.success(message, data);
     res.status(HttpStatus.OK).json(result);
   }
 

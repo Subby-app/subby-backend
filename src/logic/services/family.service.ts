@@ -12,6 +12,7 @@ import {
   TFindFamilyQuery,
   TFindSubFamiliesQuery,
   TUpdateFamilyBody,
+  TUpdateSubscriberQuery,
 } from '@/web/validators/family.validation';
 import { SubscriptionService } from './subscription.service';
 import { ApplicationRepository } from '@/data/repositories/application.repository';
@@ -19,8 +20,8 @@ import { PlanRepository } from '@/data/repositories/plan.repository';
 import { calcEndDate } from '@/utils/end-date.util';
 import { SubscriptionRepository } from '@/data/repositories';
 import { ISubscription } from '@/data/interfaces/ISubscription';
+import { ISubscriber } from '@/data/interfaces/ISubscriber';
 import { SubscriberService } from './subscriber.service';
-import { TUpdateFamilyState } from '@/data/interfaces/IFamily';
 
 export class FamilyService {
   static async create(ownerId: string, familyData: TCreateFamilyBody) {
@@ -262,7 +263,9 @@ export class FamilyService {
     if (!family.owner.equals(reqUser))
       throw new ForbiddenException({ message: "you are not the family's owner" });
 
-    const updatedFamily = await this.toggleActivate(familyId, { isActive: true });
+    // business logic
+
+    const updatedFamily = await FamilyRepository.update(familyId, { isActive: true });
     if (!updatedFamily) throw new NotFoundException('no family found after update');
 
     return {
@@ -280,7 +283,9 @@ export class FamilyService {
     if (!family.owner.equals(reqUser))
       throw new ForbiddenException({ message: "you are not the family's owner" });
 
-    const updatedFamily = await this.toggleActivate(familyId, { isActive: false });
+    // business logic
+
+    const updatedFamily = await FamilyRepository.update(familyId, { isActive: false });
     if (!updatedFamily) throw new NotFoundException('no family found after update');
 
     return {
@@ -289,8 +294,29 @@ export class FamilyService {
     };
   }
 
-  static async toggleActivate(familyId: string, data: TUpdateFamilyState) {
-    return await FamilyRepository.update(familyId, data);
+  static async updateSubscriber(familyId: string, userId: string, query: TUpdateSubscriberQuery) {
+    const family = await FamilyRepository.findById(familyId);
+    if (!family) throw new NotFoundException('family not found');
+    let message: string, subscriber: ISubscriber;
+
+    switch (query.action) {
+      case 'activate':
+        ({ message, subscriber } = await SubscriberService.activate(familyId, userId));
+        break;
+      case 'deactivate':
+        ({ message, subscriber } = await SubscriberService.deactivate(familyId, userId));
+        break;
+      default:
+        subscriber = await SubscriberService.findOne(familyId, userId); //if data is in req.body, update subscriber
+        message = 'no updates where made to this subscriber';
+        break;
+    }
+
+    const data = FamilyResponseDto.subscribedFamily(subscriber);
+    return {
+      message,
+      data,
+    };
   }
 
   static async delete(familyId: string, reqUser: string) {
