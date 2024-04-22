@@ -71,6 +71,10 @@ export class FamilyRepository extends BaseRepository {
   }
 
   static async findById(id: string) {
+    return Family.findById(id).exec();
+  }
+
+  static async findByIdAndPopulate(id: string) {
     return Family.findById(id).populate('appId').populate('planId').exec();
   }
 

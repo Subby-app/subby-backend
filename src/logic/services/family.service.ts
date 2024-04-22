@@ -104,6 +104,7 @@ export class FamilyService {
       throw new ForbiddenException({ message: 'family owner cannot be a subscriber' });
     else if (!family.isActive) throw new ForbiddenException({ message: 'this family is inactive' });
 
+    // use subscriber service
     if (await SubscriptionRepository.findOne({ familyId, userId }))
       throw new ForbiddenException({ message: 'you already belong to this family' });
 
@@ -160,7 +161,7 @@ export class FamilyService {
     familyId: string,
     query: TFindFamilyQuery,
   ): Promise<{ message: string; data: FamilyResponseDto }> {
-    const family = await FamilyRepository.findById(familyId);
+    const family = await FamilyRepository.findByIdAndPopulate(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
     }
@@ -190,7 +191,7 @@ export class FamilyService {
   }
 
   static async getSubscribers(familyId: string) {
-    const family = await FamilyRepository.findById(familyId);
+    const family = await FamilyRepository.findByIdAndPopulate(familyId);
     if (!family) {
       throw new NotFoundException('No family found');
     }
