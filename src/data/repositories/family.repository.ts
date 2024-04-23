@@ -30,7 +30,6 @@ export class FamilyRepository extends BaseRepository {
   static async getOverview(ownerId: string) {
     const _filter = { owner: ownerId, isActive: true };
     const familiesCreated = await Family.countDocuments(_filter);
-
     // let totalActiveSubs = 0;
     // (await Family.find(_filter).exec()).forEach(
     //   (family) => (totalActiveSubs += family.activeSubscribers), //!some subscribers may be unknown to the app

@@ -99,7 +99,8 @@ export class FamilyService {
 
     if (!family.availableSlots)
       throw new ForbiddenException({ message: 'this family has no available slots' });
-    else if (family.isFull) throw new ForbiddenException({ message: 'this family is full' });
+    else if (family.isFull)
+      throw new ForbiddenException({ message: 'this family is already full' });
     else if (family.owner.equals(userId))
       throw new ForbiddenException({ message: 'family owner cannot be a subscriber' });
     else if (!family.isActive) throw new ForbiddenException({ message: 'this family is inactive' });

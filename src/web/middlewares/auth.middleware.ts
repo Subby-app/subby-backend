@@ -40,3 +40,16 @@ export async function authenticated(
     return next(authError);
   }
 }
+
+export async function isAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<Response | void> {
+  const authError = new UnauthorizedException({ message: 'You are not authorized' });
+  try {
+    return next();
+  } catch (error) {
+    return next(authError);
+  }
+}
