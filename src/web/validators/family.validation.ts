@@ -108,11 +108,12 @@ export const findFamily = incomingRequestSchema(
   findFamilyQuery,
 );
 
-const updateFamilyBody = z.object({
-  name: nameSchema.optional(),
-  activeSubscribers: positiveIntSchema.optional(),
-  availableSlots: positiveIntSchema.optional(),
-});
+const updateFamilyBody = z
+  .object({
+    activeSubscribers: positiveIntSchema.optional(),
+    availableSlots: positiveIntSchema.optional(),
+  })
+  .strict();
 
 const updateFamilyParams = z.object({
   id,
