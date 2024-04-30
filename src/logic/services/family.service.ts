@@ -98,16 +98,16 @@ export class FamilyService {
     if (!family) throw new NotFoundException('no family found');
 
     if (!family.availableSlots)
-      throw new ForbiddenException({ message: 'this family has no available slots' });
+      throw new ForbiddenException({ message: 'This family has no available slots' });
     else if (family.isFull)
-      throw new ForbiddenException({ message: 'this family is already full' });
+      throw new ForbiddenException({ message: 'This family is already full' });
     else if (family.owner.equals(userId))
-      throw new ForbiddenException({ message: 'family owner cannot be a subscriber' });
+      throw new ForbiddenException({ message: 'Family owner cannot be a subscriber' });
     else if (!family.isActive) throw new ForbiddenException({ message: 'this family is inactive' });
 
     // use subscriber service
     if (await SubscriptionRepository.findOne({ familyId, userId }))
-      throw new ForbiddenException({ message: 'you already belong to this family' });
+      throw new ForbiddenException({ message: 'You already belong to this family' });
 
     const familyPlan = await PlanRepository.findById(family.planId.toString());
     if (!familyPlan) throw new NotFoundException('family plan not found');
